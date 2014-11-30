@@ -1,14 +1,16 @@
 var SAMPLE_RATE = 44100;
 var PERIOD = Math.PI * 2;
-var MAX_SIDEBANDS = 20; // should be even. Total bands will be max sidebands + 1
+var MAX_SIDEBANDS = 50; // should be even. Total bands will be max sidebands + 1
+var ANTI_ALIAS = true;
 
+var synth = new Synth(Voice);
 var synth = new Synth(SidebandVoice);
 var midi = new MIDI(synth);
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var osc = ctx.createOscillator();
 var gain = ctx.createGain();
-var proc = ctx.createScriptProcessor(1024, 1, 1);
+var proc = ctx.createScriptProcessor(512, 1, 1);
 
 proc.connect(gain);
 
@@ -41,15 +43,10 @@ wavebox.enable();
 
 proc.onaudioprocess = function(e) {
 	var output = e.outputBuffer;
-
 	for (var channel = 0; channel < output.numberOfChannels; channel++) {
 		var chOut = output.getChannelData(channel);
-
 		for (var sample = 0, length = output.length; sample < length; sample++) {
-			// chOut[sample] = Math.round((Math.random() * 2 - 1)) * 0.2;
-			// chOut[sample] = 0.15 * voice1.render();
-			// chOut[sample] = 0.15 * voice1.render();
-			chOut[sample] = 0.5 * synth.render();
+			chOut[sample] = 0.5 * (synth.render());
 		}
 	}
 }
@@ -60,12 +57,6 @@ proc.onaudioprocess = function(e) {
 
 //------ bessel stuff -------
 // https://code.google.com/p/webkit-mirror/source/browse/Source/WebCore/platform/audio/AudioUtilities.cpp?r=5b585ab6ad799c8ed35ec7c27cbf78a7d83494e4#36
-
-var CARRIER = 200;
-var MOD = 200;
-var IDX = 4;
-var MOD2 = 200;
-var IDX2 = 1;
 
 function plotSidebands(bands) {
 	// 	// Flatten sidebands
@@ -171,14 +162,14 @@ function Voice(frequency, velocity) {
 	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
 	
 	// For operator 2
-	this.indexEnv = new Envelope(0.02, 1, 0.1, 0.2);
-	this.indexMax = 30;
+	this.indexEnv = new Envelope(0, 1, 0.1, 0.2);
+	this.indexMax = 20;
 	this.indexMin = 1;
 
 	this.frequency = frequency;
 	this.velocity = velocity;
 	this.op1 = new Operator(frequency, 0);
-	this.op2 = new Operator(frequency/5, this.indexMin);
+	this.op2 = new Operator(frequency/4, this.indexMin);
 	// this.op3 = new Operator(MOD2, IDX2);
 }
 
@@ -202,18 +193,26 @@ Voice.prototype.noteOff = function() {
 
 
 function SidebandVoice(frequency, velocity) {
-	this.ampEnv = new Envelope(0.002, 0.1, 0.4, 0.1);
-	this.sidebands = this.initSidebands();
-
+	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
 	// For operator 2
-	this.indexEnv = new Envelope(0.02, 1, 0.1, 0.2);
-	this.indexMax = 10;
+	this.indexEnv = new Envelope(0, 1, 0.1, 0.2);
+	this.indexMax = 20;
 	this.indexMin = 1;
 
 	this.frequency = frequency;
 	this.velocity = velocity;
 
-	this.updateInterval = 1024;
+	// Hacky sideband initial state setup
+	this.sidebands = this.initSidebands();
+	this.indexEnv.render();
+	this.update();
+	for (var i = 0; i < this.sidebands.length; i++) {
+		var band = this.sidebands[i];
+		band.amp = band.ampTo;
+	}
+
+	this.updateInterval = 128;
+	this.updateIntervalInverse = 1 / this.updateInterval;
 	this.updateCounter = 0;
 }
 
@@ -222,8 +221,9 @@ SidebandVoice.prototype.initSidebands = function() {
 	for (var i = 0; i < MAX_SIDEBANDS + 1; i++) {
 		sidebands.push({
 			freq: 0,
-			phase: Math.random() * PERIOD,
-			amp: 0
+			phase: PERIOD / (i + 1),
+			amp: 0,
+			ampTo: 0
 		});
 	}
 	return sidebands;
@@ -232,16 +232,18 @@ SidebandVoice.prototype.initSidebands = function() {
 SidebandVoice.prototype.updateSidebands = function(sidebands, carrier, mod, index) {
 	var centerIdx = MAX_SIDEBANDS / 2;
 	// Carson's Rule
-	for (var order = 0; order <= index + 3 && order < MAX_SIDEBANDS / 2; order++) {
+	for (var order = 0; order < MAX_SIDEBANDS / 2; order++) {
 		var amp = besselj(index, order);
 
 		var upperIdx = centerIdx + order;
 		sidebands[upperIdx].freq = carrier + mod * order;
-		sidebands[upperIdx].amp = sidebands[upperIdx].freq > SAMPLE_RATE/2 ? 0 : amp;
+		sidebands[upperIdx].amp = sidebands[upperIdx].ampTo;
+		sidebands[upperIdx].ampTo = ANTI_ALIAS ? (sidebands[upperIdx].freq > SAMPLE_RATE/2 ? 0 : amp) : amp;
 
 		var lowerIdx = centerIdx - order;
-		sidebands[lowerIdx].freq = Math.pow(-1, order) * carrier - mod * order; // TODO: double check this
-		sidebands[lowerIdx].amp = Math.abs(sidebands[lowerIdx].freq) > SAMPLE_RATE/2 ? 0 : amp;
+		sidebands[lowerIdx].freq = carrier - mod * order; // TODO: double check this
+		sidebands[lowerIdx].amp = sidebands[lowerIdx].ampTo;
+		sidebands[lowerIdx].ampTo = ANTI_ALIAS ? Math.pow(-1, order) * (Math.abs(sidebands[lowerIdx].freq) > SAMPLE_RATE/2 ? 0 : amp) : amp;
 	}
 	return sidebands;
 }
@@ -249,22 +251,27 @@ SidebandVoice.prototype.updateSidebands = function(sidebands, carrier, mod, inde
 
 SidebandVoice.prototype.update = function() {
 	var index = this.indexMin + this.indexEnv.val * (this.indexMax - this.indexMin);
-	this.sidebands = this.updateSidebands(this.sidebands, this.frequency, this.frequency/5, index);
+	this.sidebands = this.updateSidebands(this.sidebands, this.frequency, this.frequency/4, index);
 }
 
 SidebandVoice.prototype.render = function() {
 	this.indexEnv.render(); // just update the value.
-	if (this.updateCounter++ % this.updateInterval == 0) {
+	if (this.updateCounter++ == this.updateInterval) {
 		this.update();
+		this.updateCounter = 0;
 	}
 
 	var val = 0;
+	var updateRemaining = this.updateInterval - this.updateCounter;
 	for (var i = 0; i < this.sidebands.length; i++) {
 		var band = this.sidebands[i];
-		if (band && band.amp) {
-			val += band.amp * Math.sin(band.phase);
-			band.phase += PERIOD * parseInt(band.freq)/SAMPLE_RATE;
+		// update sideband amplitude if necessary
+		if (band && band.freq != 0) {
+			var amp = (band.amp * updateRemaining + band.ampTo * this.updateCounter) * this.updateIntervalInverse;
+			val += amp * Math.sin(band.phase);
+			band.phase += PERIOD * band.freq/SAMPLE_RATE;
 			if (band.phase >= PERIOD) band.phase -= PERIOD;
+			else if (band.phase <= PERIOD) band.phase += PERIOD;
 		}
 	}
 	return this.velocity * this.ampEnv.render() * val;

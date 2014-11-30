@@ -92,6 +92,7 @@ var MIDI = function(synth) {
         var str=input.name.toString().toLowerCase();
         var preferred = !midiIn && (
           (str.indexOf("mpk") != -1)||
+          (str.indexOf("lpk") != -1)||
           (str.indexOf("keyboard") != -1)||
           (str.indexOf("midi") != -1)
         );
