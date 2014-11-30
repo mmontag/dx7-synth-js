@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>Additive FM Synth</title>
+</head>
+<style>
+body { font-family: Helvetica; margin: 20px; }
+.canvas-title { position: absolute; font-weight: 500; font-size: 12px; padding: 3px; }
+canvas { display: block; }
+</style>
+<body>
+	<p>
+		<select id="midiIn"></select>
+		<input type="checkbox" id="analysis" checked></input><label for="analysis">Analysis</label>
+	</p>
+    <div class="boxes">
+      <div id="canvasbox">
+      	<span class="canvas-title">FFT Spectrum</span>
+        <canvas id="fftbox" width=1024 height=100></canvas>
+<!--
+        <span class="canvas-title">Bessel Spectrum</span>
+        <canvas id="sidebands" width=1024 height=100></canvas>
+    -->
+      	<span class="canvas-title">Waveform</span>
+        <canvas id="wavebox" width=1024 height=50></canvas>
+      </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="bessel.js"></script>
+	<script src="spectrumBox.js"></script>
+	<script src="synth.js"></script>
+	<script src="midi.js"></script>
+	<script src="addfm.js"></script>
+</body>
+</html>
