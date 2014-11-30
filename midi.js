@@ -89,8 +89,12 @@ var MIDI = function(synth) {
       inputs=midiAccess.inputs.values();
       for ( var input = inputs.next(); input && !input.done; input = inputs.next()){
         input = input.value;
-        var str=input.name.toString();
-        var preferred = !midiIn && ((str.indexOf("MPK") != -1)||(str.indexOf("Keyboard") != -1)||(str.indexOf("keyboard") != -1)||(str.indexOf("KEYBOARD") != -1));
+        var str=input.name.toString().toLowerCase();
+        var preferred = !midiIn && (
+          (str.indexOf("mpk") != -1)||
+          (str.indexOf("keyboard") != -1)||
+          (str.indexOf("midi") != -1)
+        );
 
         selectMIDI.appendChild(new Option(input.name,input.id,preferred,preferred));
         if (preferred) {

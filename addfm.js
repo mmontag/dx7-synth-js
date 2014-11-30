@@ -207,7 +207,7 @@ function SidebandVoice(frequency, velocity) {
 
 	// For operator 2
 	this.indexEnv = new Envelope(0.02, 1, 0.1, 0.2);
-	this.indexMax = 5;
+	this.indexMax = 10;
 	this.indexMin = 1;
 
 	this.frequency = frequency;
