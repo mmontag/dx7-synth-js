@@ -3,43 +3,13 @@ var PERIOD = Math.PI * 2;
 var MAX_SIDEBANDS = 50; // should be even. Total bands will be max sidebands + 1
 var ANTI_ALIAS = true;
 
-var synth = new Synth(FMVoice);
+//var synth = new Synth(FMVoice);
 var synth = new Synth(AdditiveFMVoice);
 var midi = new MIDI(synth);
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
-var osc = ctx.createOscillator();
-var gain = ctx.createGain();
 var proc = ctx.createScriptProcessor(512, 1, 1);
-
-proc.connect(gain);
-
-gain.connect(ctx.destination);
-
-// Setup frequency domain graph
-var frequencybox = new SpectrumBox(2048, 2048, "fftbox", ctx);
-frequencybox.foreground = "rgb(50, 50, 50)";
-frequencybox.background = "rgb(240, 240, 240)";
-proc.connect(frequencybox.getAudioNode());
-// Setup time domain graph
-var wavebox = new SpectrumBox(2048, 1024, "wavebox", ctx);
-wavebox.setType(SpectrumBox.Types.TIME);
-wavebox.foreground = "rgb(50, 50, 50)";
-wavebox.background = "rgb(220, 220, 220)";
-proc.connect(wavebox.getAudioNode());
-
-$('#analysis').on('click', function(){
-	if ($(this).is(':checked')) {
-		frequencybox.enable();
-		wavebox.enable();
-	} else {
-		frequencybox.disable();
-		wavebox.disable();
-	}
-});
-
-frequencybox.enable();
-wavebox.enable();
+proc.connect(ctx.destination);
 
 proc.onaudioprocess = function(e) {
 	var output = e.outputBuffer;
@@ -51,19 +21,42 @@ proc.onaudioprocess = function(e) {
 	}
 }
 
+// Setup frequency domain graph
+var frequencybox = new SpectrumBox(2048, 2048, "fftbox", ctx);
+frequencybox.foreground = "rgb(50, 50, 50)";
+frequencybox.background = "rgb(240, 240, 240)";
+proc.connect(frequencybox.getAudioNode());
 
+// Setup time domain graph
+var wavebox = new SpectrumBox(2048, 1024, "wavebox", ctx);
+wavebox.setType(SpectrumBox.Types.TIME);
+wavebox.foreground = "rgb(50, 50, 50)";
+wavebox.background = "rgb(220, 220, 220)";
+proc.connect(wavebox.getAudioNode());
 
+frequencybox.enable();
+wavebox.enable();
 
+$('#analysis').on('click', function(){
+	if ($(this).is(':checked')) {
+		frequencybox.enable();
+		wavebox.enable();
+	} else {
+		frequencybox.disable();
+		wavebox.disable();
+	}
+});
 
-//------ bessel stuff -------
-// https://code.google.com/p/webkit-mirror/source/browse/Source/WebCore/platform/audio/AudioUtilities.cpp?r=5b585ab6ad799c8ed35ec7c27cbf78a7d83494e4#36
-
+/**
+ * Plot the discrete Bessel sidebands to see if they match the FFT output.
+ * TODO: Fix this
+ * https://code.google.com/p/webkit-mirror/source/browse/Source/WebCore/platform/audio/AudioUtilities.cpp?r=5b585ab6ad799c8ed35ec7c27cbf78a7d83494e4#36
+ */
 function plotSidebands(bands) {
-	// 	// Flatten sidebands
+	// Flatten sidebands
 	// for (sideband in sidebands) {
 	// 	sidebands[sideband] = Math.abs(sidebands[sideband]);
 	// }
-
 	var sidebandCanvas = document.getElementById('sidebands');
 	var sidebandCtx = sidebandCanvas.getContext('2d');
 	var xscale = sidebandCanvas.width / (SAMPLE_RATE/2);
@@ -75,24 +68,3 @@ function plotSidebands(bands) {
 		sidebandCtx.fillRect(band * xscale, sidebandCanvas.height, 1, -bands[band] * sidebandCanvas.height);
 	}
 }
-
-//------ end  bessels -------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
