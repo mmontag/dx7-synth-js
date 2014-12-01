@@ -9,21 +9,21 @@ canvas { display: block; }
 </style>
 <body>
 	<p>
-		<select id="midiIn"></select>
+		MIDI Device: <select id="midiIn"></select>
 		<input type="checkbox" id="analysis" checked></input><label for="analysis">Analysis</label>
 	</p>
-    <div class="boxes">
-      <div id="canvasbox">
-      	<span class="canvas-title">FFT Spectrum</span>
-        <canvas id="fftbox" width=1024 height=100></canvas>
+	<div class="boxes">
+	<div id="canvasbox">
+		<span class="canvas-title">Magnitude Spectrum</span>
+		<canvas id="fftbox" width=1024 height=100></canvas>
 <!--
-        <span class="canvas-title">Bessel Spectrum</span>
-        <canvas id="sidebands" width=1024 height=100></canvas>
-    -->
-      	<span class="canvas-title">Waveform</span>
-        <canvas id="wavebox" width=1024 height=50></canvas>
-      </div>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<span class="canvas-title">Bessel Spectrum</span>
+		<canvas id="sidebands" width=1024 height=100></canvas>
+-->
+		<span class="canvas-title">Waveform</span>
+		<canvas id="wavebox" width=1024 height=50></canvas>
+	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="bessel.js"></script>
 	<script src="spectrumBox.js"></script>
 	<script src="envelope.js"></script>

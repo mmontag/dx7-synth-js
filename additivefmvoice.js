@@ -1,12 +1,17 @@
 function AdditiveFMVoice(frequency, velocity) {
 	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
 	// For operator 2
+	// TODO: move this into Operator class
 	this.indexEnv = new Envelope(0, 1, 0.1, 0.2);
 	this.indexMax = 20;
 	this.indexMin = 1;
 
 	this.frequency = frequency;
 	this.velocity = velocity;
+
+	this.updateInterval = 128;
+	this.updateIntervalInverse = 1 / this.updateInterval;
+	this.updateCounter = 0;
 
 	// Hacky sideband initial state setup
 	this.sidebands = this.initSidebands();
@@ -16,10 +21,6 @@ function AdditiveFMVoice(frequency, velocity) {
 		var band = this.sidebands[i];
 		band.amp = band.ampTo;
 	}
-
-	this.updateInterval = 128;
-	this.updateIntervalInverse = 1 / this.updateInterval;
-	this.updateCounter = 0;
 }
 
 AdditiveFMVoice.prototype.initSidebands = function() {
@@ -27,7 +28,7 @@ AdditiveFMVoice.prototype.initSidebands = function() {
 	for (var i = 0; i < MAX_SIDEBANDS + 1; i++) {
 		sidebands.push({
 			freq: 0,
-			phase: PERIOD / (i + 1),
+			phase: 0,
 			amp: 0,
 			ampTo: 0
 		});
