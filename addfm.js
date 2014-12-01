@@ -4,7 +4,7 @@ var MAX_SIDEBANDS = 50; // should be even. Total bands will be max sidebands + 1
 var ANTI_ALIAS = true;
 
 var synth = new Synth(FMVoice);
-var synth = new Synth(SidebandVoice);
+var synth = new Synth(AdditiveFMVoice);
 var midi = new MIDI(synth);
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -94,7 +94,7 @@ function plotSidebands(bands) {
 
 
 
-function SidebandVoice(frequency, velocity) {
+function AdditiveFMVoice(frequency, velocity) {
 	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
 	// For operator 2
 	this.indexEnv = new Envelope(0, 1, 0.1, 0.2);
@@ -118,7 +118,7 @@ function SidebandVoice(frequency, velocity) {
 	this.updateCounter = 0;
 }
 
-SidebandVoice.prototype.initSidebands = function() {
+AdditiveFMVoice.prototype.initSidebands = function() {
 	var sidebands = [];
 	for (var i = 0; i < MAX_SIDEBANDS + 1; i++) {
 		sidebands.push({
@@ -131,7 +131,7 @@ SidebandVoice.prototype.initSidebands = function() {
 	return sidebands;
 }
 
-SidebandVoice.prototype.updateSidebands = function(sidebands, carrier, mod, index) {
+AdditiveFMVoice.prototype.updateSidebands = function(sidebands, carrier, mod, index) {
 	var centerIdx = MAX_SIDEBANDS / 2;
 	// Carson's Rule
 	for (var order = 0; order < MAX_SIDEBANDS / 2; order++) {
@@ -151,12 +151,12 @@ SidebandVoice.prototype.updateSidebands = function(sidebands, carrier, mod, inde
 }
 
 
-SidebandVoice.prototype.update = function() {
+AdditiveFMVoice.prototype.update = function() {
 	var index = this.indexMin + this.indexEnv.val * (this.indexMax - this.indexMin);
 	this.sidebands = this.updateSidebands(this.sidebands, this.frequency, this.frequency/4, index);
 }
 
-SidebandVoice.prototype.render = function() {
+AdditiveFMVoice.prototype.render = function() {
 	this.indexEnv.render(); // just update the value.
 	if (this.updateCounter++ == this.updateInterval) {
 		this.update();
@@ -179,7 +179,7 @@ SidebandVoice.prototype.render = function() {
 	return this.velocity * this.ampEnv.render() * val;
 }
 
-SidebandVoice.prototype.noteOff = function() {
+AdditiveFMVoice.prototype.noteOff = function() {
 	this.ampEnv.noteOff();
 	this.indexEnv.noteOff();
 }
