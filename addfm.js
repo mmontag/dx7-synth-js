@@ -3,7 +3,7 @@ var PERIOD = Math.PI * 2;
 var MAX_SIDEBANDS = 50; // should be even. Total bands will be max sidebands + 1
 var ANTI_ALIAS = true;
 
-var synth = new Synth(Voice);
+var synth = new Synth(FMVoice);
 var synth = new Synth(SidebandVoice);
 var midi = new MIDI(synth);
 
@@ -90,7 +90,7 @@ function plotSidebands(bands) {
 
 
 
-function Voice(frequency, velocity) {
+function FMVoice(frequency, velocity) {
 	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
 	
 	// For operator 2
@@ -106,7 +106,7 @@ function Voice(frequency, velocity) {
 	// this.op3 = new Operator(MOD2, IDX2);
 }
 
-Voice.prototype.render = function() {
+FMVoice.prototype.render = function() {
 	var ampEnv = this.ampEnv.render();
 	return this.velocity * ampEnv *
 			this.op1.render(
@@ -117,7 +117,7 @@ Voice.prototype.render = function() {
 			);
 }
 
-Voice.prototype.noteOff = function() {
+FMVoice.prototype.noteOff = function() {
 	this.ampEnv.noteOff();
 	this.indexEnv.noteOff();
 }
