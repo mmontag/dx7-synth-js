@@ -2,9 +2,7 @@ function AdditiveFMVoice(frequency, velocity) {
 	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
 	// For operator 2
 	// TODO: move this into Operator class
-	this.indexEnv = new Envelope(0, 1, 0.1, 0.2);
-	this.indexMax = 20;
-	this.indexMin = 1;
+	this.indexEnv = new Envelope(0, 1, 0.1, 0.2, 1, 20);
 
 	this.frequency = frequency;
 	this.velocity = velocity;
@@ -57,7 +55,7 @@ AdditiveFMVoice.prototype.updateSidebands = function(sidebands, carrier, mod, in
 
 
 AdditiveFMVoice.prototype.update = function() {
-	var index = this.indexMin + this.indexEnv.val * (this.indexMax - this.indexMin);
+	var index = this.indexEnv.val;
 	this.sidebands = this.updateSidebands(this.sidebands, this.frequency, this.frequency/4, index);
 }
 

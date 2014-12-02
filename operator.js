@@ -3,14 +3,12 @@ function Operator(frequency, index) {
 	this.index = index;
 	this.phase = 0;
 
-	this.indexEnv = new Envelope(0, 1, 0.1, 0.2);
-	this.indexMax = 20;
-	this.indexMin = 1;
+	this.indexEnv = new Envelope(0, 1, 0.1, 0.2, 1, 20);
 }
 
 Operator.prototype.render = function(mod) {
 	mod = mod || 0;
-	var index = this.indexMin + this.indexEnv.render() * (this.indexMax - this.indexMin);
+	var index = this.indexEnv.render();
 	var value = Math.sin(this.phase + mod * index);
 	this.phase += this.phaseStep;
 	if (this.phase >= PERIOD) {
