@@ -17,7 +17,7 @@ function Envelope(attackTime, decayTime, sustainRatio, releaseTime, min, max) {
 	this.attackIncrement = this.range / (attackTime * SAMPLE_RATE);
 	this.sustainLevel = this.range * sustainRatio + this.min;
 	this.decayIncrement = -(this.max - this.sustainLevel) / (decayTime * SAMPLE_RATE);
-	this.releaseIncrement = -(this.sustainLevel - this.min) / (releaseTime * SAMPLE_RATE);
+	this.releaseTime = releaseTime;
 }
 
 Envelope.prototype.render = function() {
@@ -50,5 +50,6 @@ Envelope.prototype.render = function() {
 }
 
 Envelope.prototype.noteOff = function() {
+	this.releaseIncrement = -(this.val - this.min) / (this.releaseTime * SAMPLE_RATE);
 	this.state = ENV_RELEASE;
 }
