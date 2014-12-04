@@ -1,11 +1,8 @@
 function AdditiveFMVoice(frequency, velocity) {
-	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
-	// For operator 2
-	// TODO: move this into Operator class
-	this.indexEnv = new Envelope(0, 1, 0.1, 0.2, 1, 20);
-
 	this.frequency = frequency;
 	this.velocity = velocity;
+	this.ampEnv = new Envelope(0, 0.1, 0.4, 0.1);
+	this.indexEnv = new Envelope(0, 1, 0.1, 0.2, 1, 20);
 
 	this.updateInterval = 128;
 	this.updateIntervalInverse = 1 / this.updateInterval;
@@ -34,6 +31,7 @@ AdditiveFMVoice.prototype.initSidebands = function() {
 	return sidebands;
 }
 
+// Currently calculates sidebands for a 2-Operator series FM algorithm.
 AdditiveFMVoice.prototype.updateSidebands = function(sidebands, carrier, mod, index) {
 	var centerIdx = MAX_SIDEBANDS / 2;
 	// Carson's Rule
