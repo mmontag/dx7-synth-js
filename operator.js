@@ -1,15 +1,12 @@
-function Operator(frequency, index) {
-	this.phaseStep = PERIOD * frequency/SAMPLE_RATE; // radians per sample
-	this.index = index;
+function Operator(frequency, envelope) {
 	this.phase = 0;
-
-	this.indexEnv = new Envelope(0, 1, 0.1, 0.2, 1, 20);
+	this.phaseStep = PERIOD * frequency/SAMPLE_RATE; // radians per sample
+	this.envelope = envelope || new Envelope(0, 3, 0, 0.2);
 }
 
 Operator.prototype.render = function(mod) {
 	mod = mod || 0;
-	var index = this.indexEnv.render();
-	var value = Math.sin(this.phase + mod * index);
+	var value = Math.sin(this.phase + mod) * this.envelope.render();
 	this.phase += this.phaseStep;
 	if (this.phase >= PERIOD) {
 		this.phase -= PERIOD;
@@ -18,5 +15,5 @@ Operator.prototype.render = function(mod) {
 }
 
 Operator.prototype.noteOff = function() {
-	this.indexEnv.noteOff();
+	this.envelope.noteOff();
 }
