@@ -19,4 +19,8 @@ FMVoice.prototype.noteOff = function() {
 	this.op2.noteOff();
 	this.op3.noteOff();
 	this.op4.noteOff();
+FMVoice.prototype.isFinished = function() {
+	return this.op1.isFinished() && this.op2.isFinished();
+};
+
 }

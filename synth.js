@@ -35,7 +35,7 @@ Synth.prototype.render = function() {
 		var voice = this.voices[i];
 		if (voice) {
 			val += voice.render();
-			if (voice.ampEnv && voice.ampEnv.state == ENV_OFF) {
+			if (voice.isFinished()) {
 				// Clear the note after release
 				this.voices[i] = null;
 			}

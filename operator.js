@@ -17,3 +17,7 @@ Operator.prototype.render = function(mod) {
 Operator.prototype.noteOff = function() {
 	this.envelope.noteOff();
 }
+
+Operator.prototype.isFinished = function() {
+	return this.envelope.state == ENV_OFF;
+}
