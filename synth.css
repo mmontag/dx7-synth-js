@@ -1,0 +1,47 @@
+body { font-family: Helvetica; margin: 20px; }
+.canvas-title { position: absolute; font-weight: 500; font-size: 12px; padding: 3px; }
+canvas { display: block; }
+
+input[type='range'] {
+    -webkit-appearance: none;
+    height: 5px; 
+    width: 200px;
+    border: solid rgba(0,0,0,0.3) 1px;
+    border-bottom: solid rgba(0,0,0,0.5) 1px;
+    border-left: solid rgba(0,0,0,0.5) 1px;
+    xx-webkit-transform: rotate(90deg);
+    xx-webkit-transform-origin: top left;
+    xx-margin: 50px;
+    margin: 15px 0;
+    display: inline-block;
+    vertical-align: middle;
+    outline: 0;
+}  
+  
+input[type='range']::-webkit-slider-thumb {
+    width: 24px;  
+    height: 12px;  
+    -webkit-transform: rotate(-90deg);
+}
+
+.param-group {
+  float: left;
+  background: #ddd;
+  xmargin-right: 10px;
+  padding: 10px;
+}
+
+.param-label {
+  display: inline-block;
+  width: 100px;
+  font-size: 75%;
+  margin-right: 10px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.group-name {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 90%;
+}
