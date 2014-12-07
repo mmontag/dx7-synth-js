@@ -68,3 +68,33 @@ function plotSidebands(bands) {
 		sidebandCtx.fillRect(band * xscale, sidebandCanvas.height, 1, -bands[band] * sidebandCanvas.height);
 	}
 }
+
+// TODO: use Qwerty keyboard code from WebMIDI demo
+var keyNotes = [];
+function play(e) {
+	e = e || { keyCode: 0 };
+	if (e.keyCode == 32) { synth.panic(); return; }
+	if (e.originalEvent && e.originalEvent.repeat) return;
+	clearTimeout(window._timer);
+	var note = Math.floor(Math.random() * 15 + 8)*3  + baseNote;
+	keyNotes[e.keyCode] = note;
+	synth.noteOn(note, 0.25);
+	if (e.keyCode == 0) {
+		window._timer = setTimeout(function() {
+			synth.noteOff(note);
+		}, 1000);
+	}
+}
+
+setTimeout(play, 250);
+$(document).on('keydown', play);
+$(document).on('keyup', function(e) {
+	if (keyNotes[e.keyCode])
+		synth.noteOff(keyNotes[e.keyCode]);
+	keyNotes[e.keyCode] = null;
+});
+
+var baseNote = 0;
+setInterval(function() {
+	baseNote = (baseNote + 1) % 12;
+}, 4000);

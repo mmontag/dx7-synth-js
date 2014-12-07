@@ -29,6 +29,14 @@ Synth.prototype.noteOff = function(note) {
 	}
 }
 
+Synth.prototype.panic = function() {
+	for (voice in this.voices) {
+		if (this.voices[voice])
+			this.voices[voice].noteOff();
+	}
+	this.voices = [];
+}
+
 Synth.prototype.render = function() {
 	var val = 0;
 	for (var i = 0; i < this.voices.length; i++) {
