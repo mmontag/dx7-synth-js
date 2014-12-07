@@ -32,8 +32,12 @@ Envelope.prototype.render = function() {
 		case ENV_DECAY:
 			this.val += this.decayIncrement;
 			if (this.val < this.sustainLevel) {
-				this.val = this.sustainLevel;
-				this.state = ENV_SUSTAIN;
+				if (this.val <= 0) {
+					this.state = ENV_OFF;
+				} else {
+					this.val = this.sustainLevel;
+					this.state = ENV_SUSTAIN;
+				}
 			}
 			break;
 		case ENV_SUSTAIN:
