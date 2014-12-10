@@ -1,12 +1,15 @@
-ENV_ATTACK = 0;
-ENV_DECAY = 1;
-ENV_SUSTAIN = 2;
-ENV_RELEASE = 3;
-ENV_OFF = 4;
+var ENV_ATTACK = 0;
+var ENV_DECAY = 1;
+var ENV_SUSTAIN = 2;
+var ENV_RELEASE = 3;
+var ENV_OFF = 4;
+
+var LN_OF_SMALL_NUMBER = Math.log(0.001);
+var ε = 0.0015;
 
 function Envelope(attackTime, decayTime, sustainRatio, releaseTime, min, max) {
 	this.min = min || 0;
-	this.max = max || 1;
+	this.max = max == null ? 1 : max;
 	this.range = this.max - this.min;
 	this.val = this.min;
 	this.state = ENV_ATTACK;
