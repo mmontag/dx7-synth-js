@@ -19,23 +19,24 @@ function Envelope(attackTime, decayTime, sustainRatio, releaseTime, min, max) {
 	if (releaseTime < 0) throw Error("releaseTime must be positive");
 	this.attackIncrement = this.range / (attackTime * SAMPLE_RATE);
 	this.sustainLevel = this.range * sustainRatio + this.min;
-	this.decayIncrement = -(this.max - this.sustainLevel) / (decayTime * SAMPLE_RATE);
+	this.decayMult = Math.exp(LN_OF_SMALL_NUMBER/(decayTime * SAMPLE_RATE));
 	this.releaseTime = releaseTime;
 }
 
 Envelope.prototype.render = function() {
+	if (this.max == 0) return 0;
 	switch (this.state) {
 		case ENV_ATTACK:
 			this.val += this.attackIncrement;
-			if (this.val >= this.max) {
+			if (this.val >= this.max - ε) {
 				this.val = this.max;
 				this.state = ENV_DECAY;
 			}
 			break;
 		case ENV_DECAY:
-			this.val += this.decayIncrement;
-			if (this.val < this.sustainLevel) {
-				if (this.val <= 0) {
+			this.val *= this.decayMult;
+			if (this.val < this.sustainLevel + ε) {
+				if (this.val <= 0 + ε) {
 					this.state = ENV_OFF;
 				} else {
 					this.val = this.sustainLevel;
@@ -46,8 +47,8 @@ Envelope.prototype.render = function() {
 		case ENV_SUSTAIN:
 			break;
 		case ENV_RELEASE:
-			this.val += this.releaseIncrement;
-			if (this.val <= this.min) {
+			this.val *= this.releaseMult;
+			if (this.val <= this.min + ε) {
 				this.val = this.min;
 				this.state = ENV_OFF;
 			}
@@ -57,6 +58,6 @@ Envelope.prototype.render = function() {
 }
 
 Envelope.prototype.noteOff = function() {
-	this.releaseIncrement = -(this.val - this.min) / (this.releaseTime * SAMPLE_RATE);
+	this.releaseMult = Math.exp(LN_OF_SMALL_NUMBER/(this.releaseTime * SAMPLE_RATE));
 	this.state = ENV_RELEASE;
 }
