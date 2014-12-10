@@ -16,17 +16,262 @@ function FMVoice(frequency, velocity) {
 }
 
 FMVoice.prototype.render = function() {
-	return this.velocity * (
-			this.op1.render(this.op2.render()) +
-			this.op3.render(this.op4.render())
-		);
-}
+	return this.velocity * this.algorithm(this);
+};
 
 FMVoice.prototype.noteOff = function() {
 	this.op1.noteOff();
 	this.op2.noteOff();
 	this.op3.noteOff();
 	this.op4.noteOff();
+	this.op5.noteOff();
+	this.op6.noteOff();
+};
+
+FMVoice.prototype.algorithm1 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(this.op4.render(this.op5.render(this.op6.render(this.op6.val * this.feedback))));
+};
+
+FMVoice.prototype.algorithm2 = function() {
+	return this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
+			this.op3.render(this.op4.render(this.op5.render(this.op6.render())));
+}
+
+FMVoice.prototype.algorithm3 = function() {
+	return this.op1.render(this.op2.render(this.op3.render())) +
+			this.op4.render(this.op5.render(this.op6.render(this.op6.val * this.feedback)));
+}
+
+FMVoice.prototype.algorithm4 = function() {
+	return this.op1.render(this.op2.render(this.op3.render())) +
+			this.op4.render(this.op5.render(this.op6.render(this.op4.val * this.feedback)));
+}
+
+FMVoice.prototype.algorithm5 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(this.op4.render()) +
+			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+}
+
+FMVoice.prototype.algorithm6 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(this.op4.render()) +
+			this.op5.render(this.op6.render(this.op5.val * this.feedback));
+}
+
+FMVoice.prototype.algorithm7 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(
+				this.op4.render() +
+				this.op5.render(this.op6.render(this.op6.val * this.feedback))
+			);
+}
+
+FMVoice.prototype.algorithm8 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(
+				this.op4.render(this.op4.val * this.feedback) +
+				this.op5.render(this.op6.render())
+			);
+};
+
+FMVoice.prototype.algorithm9 = function() {
+	return this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
+			this.op3.render(
+				this.op4.render() +
+				this.op5.render(this.op6.render())
+			);
+};
+
+FMVoice.prototype.algorithm10 = function() {
+	return this.op1.render(this.op2.render(this.op3.render(this.op3.val * this.feedback))) +
+			this.op4.render(
+				this.op5.render() +
+				this.op6.render()
+			);
+};
+
+FMVoice.prototype.algorithm11 = function() {
+	return this.op1.render(this.op2.render(this.op3.render())) +
+			this.op4.render(
+				this.op5.render() +
+				this.op6.render(this.op6.val * this.feedback)
+			);
+};
+
+FMVoice.prototype.algorithm12 = function() {
+	return this.op3.render(
+				this.op4.render() +
+				this.op5.render() +
+				this.op6.render()) +
+			this.op1.render(this.op2.render(this.op2.val * this.feedback));
+};
+
+FMVoice.prototype.algorithm13 = function() {
+	return this.op3.render(
+				this.op4.render() +
+				this.op5.render() +
+				this.op6.render(this.op6.val * this.feedback)) +
+			this.op1.render(this.op2.render());
+};
+
+FMVoice.prototype.algorithm14 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(this.op4.render(
+				this.op5.render() +
+				this.op6.render(this.op6.val * this.feedback)
+			));
+};
+
+FMVoice.prototype.algorithm15 = function() {
+	return this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
+			this.op3.render(this.op4.render(
+				this.op5.render() +
+				this.op6.render()
+			));
+};
+
+FMVoice.prototype.algorithm16 = function() {
+	return this.op1.render(
+				this.op2.render() +
+				this.op3.render(this.op4.render()) +
+				this.op5.render(this.op6.render(this.op6.val * this.feedback))
+			);
+};
+
+FMVoice.prototype.algorithm17 = function() {
+	return this.op1.render(
+				this.op2.render(this.op2.val * this.feedback) +
+				this.op3.render(this.op4.render()) +
+				this.op5.render(this.op6.render())
+			);
+};
+
+FMVoice.prototype.algorithm18 = function() {
+	return this.op1.render(
+				this.op2.render() +
+				this.op3.render(this.op3.val * this.feedback) +
+				this.op4.render(this.op5.render(this.op6.render()))
+			);
+};
+
+FMVoice.prototype.algorithm19 = function() {
+	return this.op1.render(this.op2.render(this.op3.render())) +
+			this.op4.render(this.op6.render(this.op6.val * this.feedback)) +
+			this.op5.render(this.op6.render());
+};
+
+FMVoice.prototype.algorithm20 = function() {
+	return this.op1.render(this.op3.render(this.op3.val * this.feedback)) +
+			this.op2.render(this.op3.val) +
+			this.op4.render(
+				this.op5.render() +
+				this.op6.render()
+			);
+};
+
+FMVoice.prototype.algorithm21 = function() {
+	return this.op1.render(this.op3.render(this.op3.val * this.feedback)) +
+			this.op2.render(this.op3.val) +
+			this.op4.render(this.op6.render()) +
+			this.op5.render(this.op6.val);
+};
+
+FMVoice.prototype.algorithm22 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op4.render(this.op6.render(this.op6.val * this.feedback)) +
+			this.op3.render(this.op6.val) +
+			this.op5.render(this.op6.val);
+};
+
+FMVoice.prototype.algorithm23 = function() {
+	return this.op1.render() +
+			this.op2.render(this.op3.render()) +
+			this.op4.render(this.op6.render(this.op6.val * this.feedback)) +
+			this.op5.render(this.op6.val);
+};
+
+FMVoice.prototype.algorithm24 = function() {
+	return this.op1.render() +
+			this.op2.render() +
+			this.op3.render() +
+			this.op4.render(this.op6.render(this.op6.val)) +
+			this.op5.render(this.op6.val);
+};
+
+FMVoice.prototype.algorithm25 = function() {
+	return this.op1.render() +
+			this.op2.render() +
+			this.op3.render() +
+			this.op4.render(this.op6.render(this.op6.val)) +
+			this.op5.render(this.op6.val);
+};
+
+FMVoice.prototype.algorithm26 = function() {
+	return this.op1.render() +
+			this.op2.render(this.op3.render()) +
+			this.op4.render(
+				this.op5.render() +
+				this.op6.render(this.op6.val * this.feedback)
+			);
+};
+
+FMVoice.prototype.algorithm27 = function() {
+	return this.op1.render() +
+			this.op2.render(this.op3.render(this.op3.val * this.feedback)) +
+			this.op4.render(
+				this.op5.render() +
+				this.op6.render()
+			);
+};
+
+FMVoice.prototype.algorithm28 = function() {
+	return this.op1.render(this.op2.render()) +
+			this.op3.render(this.op4.render(this.op5.render(this.op5.val * this.feedback))) +
+			this.op6.render();
+};
+
+FMVoice.prototype.algorithm29 = function() {
+	return this.op1.render() +
+			this.op2.render() +
+			this.op3.render(this.op4.render()) +
+			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+};
+
+FMVoice.prototype.algorithm30 = function() {
+	return this.op1.render() +
+			this.op2.render() +
+			this.op3.render(this.op4.render()) +
+			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+};
+
+FMVoice.prototype.algorithm31 = function() {
+	return this.op1.render() +
+			this.op2.render() +
+			this.op3.render() +
+			this.op4.render() +
+			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+};
+
+FMVoice.prototype.algorithm32 = function() {
+	return this.op1.render() +
+			this.op2.render() +
+			this.op3.render() +
+			this.op4.render() +
+			this.op5.render() +
+			this.op6.render(this.op6.val * this.feedback);
+};
+
+FMVoice.prototype.opEnvFromParams = function(params) {
+	return new Envelope(params.A.get(),
+						params.D.get(),
+						params.S.get(),
+						params.R.get(),
+						0,
+						params.V.get());
+};
+
 FMVoice.prototype.isFinished = function() {
 	return this.op1.isFinished() && this.op2.isFinished();
 };
