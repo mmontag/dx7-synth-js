@@ -1,6 +1,7 @@
 function Synth(voiceClass) {
 	this.voices = [];
 	this.voiceClass = voiceClass;
+	this.parameters = this.voiceClass.createComponents($('#parameters'));
 }
 
 Synth.prototype.frequencyFromNoteNumber = function(note) {
