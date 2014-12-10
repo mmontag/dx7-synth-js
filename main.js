@@ -39,9 +39,11 @@ wavebox.enable();
 
 $('#analysis').on('click', function(){
 	if ($(this).is(':checked')) {
+		$('#canvasbox').show();
 		frequencybox.enable();
 		wavebox.enable();
 	} else {
+		$('#canvasbox').hide();
 		frequencybox.disable();
 		wavebox.disable();
 	}
