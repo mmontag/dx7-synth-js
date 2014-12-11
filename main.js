@@ -34,16 +34,13 @@ wavebox.foreground = "rgb(50, 50, 50)";
 wavebox.background = "rgb(220, 220, 220)";
 proc.connect(wavebox.getAudioNode());
 
-frequencybox.enable();
-wavebox.enable();
-
 $('#analysis').on('click', function(){
 	if ($(this).is(':checked')) {
-		$('#canvasbox').show();
+		$('.canvasbox').show();
 		frequencybox.enable();
 		wavebox.enable();
 	} else {
-		$('#canvasbox').hide();
+		$('.canvasbox').hide();
 		frequencybox.disable();
 		wavebox.disable();
 	}
