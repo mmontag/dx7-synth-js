@@ -33,3 +33,7 @@ https://github.com/SheetJS/bessel
 midi.js by Chris Wilson used with modifications under MIT license.
 Copyright (c) 2014 Chris Wilson
 https://github.com/cwilso/midi-synth
+
+mml-emitter.js by Nao Yonamine used under MIT license.
+Copyright (c) 2014 Nao Yonamine
+https://github.com/mohayonao/mml-emitter

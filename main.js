@@ -97,3 +97,33 @@ var baseNote = 0;
 setInterval(function() {
 	baseNote = (baseNote + 1) % 12;
 }, 4000);
+
+
+function createMML() {
+	// Preview song from Wavestation in Korg Legacy Collection
+	var korgDemo1 = "t92 l8 o4 $" +
+		"[>cg<cea]2. [>cg<ceg]4" +
+		"[>>a<a<c+fa+]2. [>>a <a <c+ e a]4" +
+		"[>>f <f g+ <c g]2. [>>f <f g+ <c f]4" + 
+		"[>>g <g g+ b <g+]2. [>>g <g <g]4";
+	var mml = new MMLEmitter(ctx, korgDemo1);
+	mml.tracks[0].on('note', function(e) {
+		synth.noteOn(e.midi, e.volume / 20);
+		e.noteOff(function() {
+			synth.noteOff(e.midi);
+		}, 0.1);
+	});
+	return mml;
+}
+
+var mml = null;
+$('.demo-button').on('click', function() {
+	if (mml && mml._ended == 0) {
+		mml.stop();
+		synth.panic();
+		mml = null;
+	} else {
+		mml = createMML();
+		mml.start();
+	}
+});
