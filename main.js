@@ -99,20 +99,28 @@ setInterval(function() {
 }, 4000);
 
 
-function createMML() {
+function createMML(idx) {
 	// Preview song from Wavestation in Korg Legacy Collection
-	var korgDemo1 = "t92 l8 o4 $" +
-		"[>cg<cea]2. [>cg<ceg]4" +
-		"[>>a<a<c+fa+]2. [>>a <a <c+ e a]4" +
+	var korg = "t92 l8 o4 $" +
+		"[>cg<cea]2.        [>cg<ceg]4" +
+		"[>>a<a<c+fa+]2.    [>>a <a <c+ e a]4" +
 		"[>>f <f g+ <c g]2. [>>f <f g+ <c f]4" + 
-		"[>>g <g g+ b <g+]2. [>>g <g <g]4";
-
-	var mml = new MMLEmitter(ctx, korgDemo1);
+		"[>>g <g g+ b <g+]2.[>>g <g <g]4";
+	var zoot = "t110$ l8 o3    >g+2.. g+ a+4. a+ <c2 >a+    g+2.. a+4 a+4 <c4. >d+" +
+				"              a+ g+2. g+ a+4. a+ <c2 >a+   g+2.. a+4 a+4 <c2.;" +
+				"t110$l8 o4    rr g g4 g+ a+4 d4 d4 d+2     d c g g4 g+ a+4 d4 d4 d+2" + 
+				"              rr g g4 g+ a+4 d4 d4 d+2     d c g g4 g+ a+4 d4 d4 d+2.;" +
+				"t110$l8 o4 v9 rr d+ d+2 r >a+4 a+4 <c2     >a+ g+ <d+ d+2 r >a+4 a+4 a+2" +
+				"              rr d+ d+2 r >a+4 a+4 <c2     >a+ g+ <d+ d+2 r >a+4 a+4 a+2.;" +
+				"t110$l8 o4 v8 rr c c2 r   >f4 f4 g2        a+ g+ <c c2 >f f4 r f g2<" + 
+				"              rr c c2 r   >f4 f4 g2        a+ g+ <c c2 >f f4 r f g2.<;";
+	var demos = [korg, zoot];
+	var mml = new MMLEmitter(ctx, demos[idx]);
 	var noteHandler = function(e) {
 		synth.noteOn(e.midi, e.volume / 20);
 		e.noteOff(function() {
 			synth.noteOff(e.midi);
-		}, 0.1);
+		});
 	};
 	mml.tracks.map(function(track) { track.on('note', noteHandler); });
 	return mml;
@@ -125,7 +133,7 @@ $('.demo-button').on('click', function() {
 		synth.panic();
 		mml = null;
 	} else {
-		mml = createMML();
+		mml = createMML($(this).data('idx'));
 		mml.start();
 	}
 });
