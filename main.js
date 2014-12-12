@@ -98,6 +98,12 @@ setInterval(function() {
 	baseNote = (baseNote + 1) % 12;
 }, 4000);
 
+// Polyphony counter
+setInterval(function() {
+	var count = 0;
+	synth.voices.map(function(voice) { if (voice) count++; });
+	if (count) console.log("Current polyphony:", count);
+}, 1000);
 
 function createMML(idx) {
 	// Preview song from Wavestation in Korg Legacy Collection
