@@ -106,13 +106,15 @@ function createMML() {
 		"[>>a<a<c+fa+]2. [>>a <a <c+ e a]4" +
 		"[>>f <f g+ <c g]2. [>>f <f g+ <c f]4" + 
 		"[>>g <g g+ b <g+]2. [>>g <g <g]4";
+
 	var mml = new MMLEmitter(ctx, korgDemo1);
-	mml.tracks[0].on('note', function(e) {
+	var noteHandler = function(e) {
 		synth.noteOn(e.midi, e.volume / 20);
 		e.noteOff(function() {
 			synth.noteOff(e.midi);
 		}, 0.1);
-	});
+	};
+	mml.tracks.map(function(track) { track.on('note', noteHandler); });
 	return mml;
 }
 
