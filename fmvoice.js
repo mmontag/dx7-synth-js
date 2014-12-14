@@ -3,10 +3,10 @@ ONE_CENT = Math.exp(Math.log(2)/1200);
 function FMVoice(frequency, velocity) {
 	var params = window.PARAMS; //PRESETS[PRESET_INDEX];
 	var ops = params.operators;
-	this.frequency = frequency;
-	this.velocity = velocity;
+	this.frequency = parseFloat(frequency);
+	this.velocity = parseFloat(velocity);
 	this.algorithm = this['algorithm' + parseInt(params.algorithm)];
-	this.feedback = params.feedback;
+	this.feedback = parseFloat(params.feedback);
 	this.op1 = new Operator(frequency * ops[0].freqMult * Math.pow(ONE_CENT, ops[0].detune), this.opEnvFromParams(ops[0]));
 	this.op2 = new Operator(frequency * ops[1].freqMult * Math.pow(ONE_CENT, ops[1].detune), this.opEnvFromParams(ops[1]));
 	this.op3 = new Operator(frequency * ops[2].freqMult * Math.pow(ONE_CENT, ops[2].detune), this.opEnvFromParams(ops[2]));
@@ -14,6 +14,15 @@ function FMVoice(frequency, velocity) {
 	this.op5 = new Operator(frequency * ops[4].freqMult * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]));
 	this.op6 = new Operator(frequency * ops[5].freqMult * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]));
 }
+
+FMVoice.prototype.opEnvFromParams = function(params) {
+	return new Envelope(parseFloat(params.attack),
+						parseFloat(params.decay),
+						parseFloat(params.sustain),
+						parseFloat(params.release),
+						0,
+						parseFloat(params.volume));
+};
 
 FMVoice.prototype.render = function() {
 	return this.velocity * this.algorithm(this);
@@ -261,15 +270,6 @@ FMVoice.prototype.algorithm32 = function() {
 			this.op4.render() +
 			this.op5.render() +
 			this.op6.render(this.op6.val * this.feedback);
-};
-
-FMVoice.prototype.opEnvFromParams = function(params) {
-	return new Envelope(params.attack,
-						params.decay,
-						params.sustain,
-						params.release,
-						0,
-						params.volume);
 };
 
 FMVoice.prototype.isFinished = function() {
