@@ -1,19 +1,27 @@
 (function() {
-	var app = angular.module('synthApp', []);
+	var app = angular.module('synthApp', ['ngStorage']);
 
 	app.controller('ParamsCtrl', function ($scope) {
 		$scope.model = PRESETS[0];
 		$scope.presetz = PRESETS;
 	});
 
-	app.controller('PresetCtrl', function () {
-		this.selectedIndex = 0;
-		this.presets = PRESETS;
+	app.controller('PresetCtrl', ['$localStorage', function ($localStorage) {
+		this.storage = $localStorage.$default(PRESETS);
+		this.presets = angular.copy(this.storage);
+		this.selectedIndex = "1";
+		window.PARAMS = this.presets[this.selectedIndex];
 		this.onChange = function() {
 			console.log("changed preset!", this.selectedIndex);
-			window.PRESET_INDEX = this.selectedIndex;
+			// window.PRESET_INDEX = this.selectedIndex;
+			window.PARAMS = this.presets[this.selectedIndex];
 		};
-	});
+		this.save = function() {
+			this.storage[this.selectedIndex] = angular.copy(this.presets[this.selectedIndex]);
+			debugger;
+			console.log("Saved preset %s.", this.presets[this.selectedIndex].name);
+		};
+	}]);
 })();
 
 var FM_PARAMS = {

@@ -1,7 +1,7 @@
 ONE_CENT = Math.exp(Math.log(2)/1200);
 
 function FMVoice(frequency, velocity) {
-	var params = PRESETS[PRESET_INDEX];
+	var params = window.PARAMS; //PRESETS[PRESET_INDEX];
 	var ops = params.operators;
 	this.frequency = frequency;
 	this.velocity = velocity;
