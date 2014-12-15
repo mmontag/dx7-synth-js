@@ -27,49 +27,49 @@
 			<div class="param">
 				<div class="param-label">Algorithm</div>
 				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].algorithm | number }}</div>
-				<input type="range" step="1" min="1" max="32" ng-model="presetCtrl.presets[presetCtrl.selectedIndex].algorithm">
+				<input type="range" step="1" min="1" max="32" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].algorithm">
 			</div>
 			<div class="param">
 				<div class="param-label">Feedback</div>
 				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 2 }}</div>
-				<input type="range" step="0.01" min="0" max="1" ng-model="presetCtrl.presets[presetCtrl.selectedIndex].feedback">
+				<input type="range" step="0.01" min="0" max="1" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].feedback">
 			</div>
 			<div class="param-group" ng-repeat="operator in presetCtrl.presets[presetCtrl.selectedIndex].operators">
 				<div class="group-name">OP {{ $index + 1 }}</div>
 				<div class="param">
 					<div class="param-label">Attack</div>
 					<div class="param-value">{{ operator.attack | number : 2 }}</div>
-					<input type="range" step="0.01" min="0" max="3" ng-model="operator.attack"></input>
+					<input type="range" step="0.01" min="0" max="3" to-number ng-model="operator.attack"></input>
 				</div>
 				<div class="param">
 					<div class="param-label">Decay</div>
 					<div class="param-value">{{ operator.decay | number : 2 }}</div>
-					<input type="range" step="0.01" min="0" max="3" ng-model="operator.decay"></input>
+					<input type="range" step="0.01" min="0" max="3" to-number ng-model="operator.decay"></input>
 				</div>
 				<div class="param">
 					<div class="param-label">Sustain</div>
 					<div class="param-value">{{ operator.sustain | number : 2 }}</div>
-					<input type="range" step="0.01" min="0" max="1" ng-model="operator.sustain"></input>
+					<input type="range" step="0.01" min="0" max="1" to-number ng-model="operator.sustain"></input>
 				</div>
 				<div class="param">
 					<div class="param-label">Release</div>
 					<div class="param-value">{{ operator.release | number : 2 }}</div>
-					<input type="range" step="0.01" min="0" max="8" ng-model="operator.release"></input>
+					<input type="range" step="0.01" min="0" max="8" to-number ng-model="operator.release"></input>
 				</div>
 				<div class="param">
 					<div class="param-label">Freq. Multiplier</div>
 					<div class="param-value">{{ operator.freqMult | number : 1 }}</div>
-					<input type="range" step="0.5" min="0.5" max="12" ng-model="operator.freqMult"></input>
+					<input type="range" step="0.5" min="0.5" max="12" to-number ng-model="operator.freqMult"></input>
 				</div>
 				<div class="param">
 					<div class="param-label">Volume</div>
 					<div class="param-value">{{ operator.volume | number : 2 }}</div>
-					<input type="range" step="0.01" min="0" max="20" ng-model="operator.volume"></input>
+					<input type="range" step="0.01" min="0" max="20" to-number ng-model="operator.volume"></input>
 				</div>
 				<div class="param">
 					<div class="param-label">Detune</div>
 					<div class="param-value">{{ operator.detune | number : 0 }}</div>
-					<input type="range" step="1" min="-50" max="50" ng-model="operator.detune"></input>
+					<input type="range" step="1" min="-50" max="50" to-number ng-model="operator.detune"></input>
 				</div>
 			</div>
 		</div>

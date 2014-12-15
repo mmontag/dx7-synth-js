@@ -1,6 +1,17 @@
 (function() {
 	var app = angular.module('synthApp', ['ngStorage']);
 
+	app.directive('toNumber', function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+                ctrl.$parsers.push(function (value) {
+                    return parseFloat(value || '');
+                });
+            }
+        };
+    });
+
 	app.controller('ParamsCtrl', function ($scope) {
 		$scope.model = PRESETS[0];
 		$scope.presetz = PRESETS;
