@@ -1,5 +1,6 @@
 function Synth(voiceClass) {
-	this.voices = [];
+	this.voices = Array(128);
+	for (var i = 0; i < 128; i++) this.voices[i] = null;
 	this.voiceClass = voiceClass;
 }
 
@@ -39,7 +40,7 @@ Synth.prototype.panic = function() {
 
 Synth.prototype.render = function() {
 	var val = 0;
-	for (var i = 0; i < this.voices.length; i++) {
+	for (var i = 0, length = this.voices.length; i < length; i++) {
 		var voice = this.voices[i];
 		if (voice) {
 			val += voice.render();
