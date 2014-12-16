@@ -16,7 +16,7 @@ proc.onaudioprocess = function(e) {
 	for (var channel = 0; channel < output.numberOfChannels; channel++) {
 		var chOut = output.getChannelData(channel);
 		for (var sample = 0, length = output.length; sample < length; sample++) {
-			chOut[sample] = 0.5 * (synth.render());
+			chOut[sample] = synth.render();
 		}
 	}
 }
