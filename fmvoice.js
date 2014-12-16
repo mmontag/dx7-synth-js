@@ -38,238 +38,270 @@ FMVoice.prototype.noteOff = function() {
 };
 
 FMVoice.prototype.algorithm1 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(this.op4.render(this.op5.render(this.op6.render(this.op6.val * this.feedback))));
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm2 = function() {
-	return this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
+	var v = this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
 			this.op3.render(this.op4.render(this.op5.render(this.op6.render())));
-}
+	return v * 0.5;
+};
 
 FMVoice.prototype.algorithm3 = function() {
-	return this.op1.render(this.op2.render(this.op3.render())) +
+	var v = this.op1.render(this.op2.render(this.op3.render())) +
 			this.op4.render(this.op5.render(this.op6.render(this.op6.val * this.feedback)));
-}
+	return v * 0.5;
+};
 
 FMVoice.prototype.algorithm4 = function() {
-	return this.op1.render(this.op2.render(this.op3.render())) +
+	var v = this.op1.render(this.op2.render(this.op3.render())) +
 			this.op4.render(this.op5.render(this.op6.render(this.op4.val * this.feedback)));
-}
+	return v * 0.5;
+};
 
 FMVoice.prototype.algorithm5 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(this.op4.render()) +
 			this.op5.render(this.op6.render(this.op6.val * this.feedback));
-}
+	return v * 0.33333;
+};
 
 FMVoice.prototype.algorithm6 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(this.op4.render()) +
 			this.op5.render(this.op6.render(this.op5.val * this.feedback));
-}
+	return v * 0.33333;
+};
 
 FMVoice.prototype.algorithm7 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(
 				this.op4.render() +
 				this.op5.render(this.op6.render(this.op6.val * this.feedback))
 			);
-}
+	return v * 0.5;
+};
 
 FMVoice.prototype.algorithm8 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(
 				this.op4.render(this.op4.val * this.feedback) +
 				this.op5.render(this.op6.render())
 			);
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm9 = function() {
-	return this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
+	var v = this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
 			this.op3.render(
 				this.op4.render() +
 				this.op5.render(this.op6.render())
 			);
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm10 = function() {
-	return this.op1.render(this.op2.render(this.op3.render(this.op3.val * this.feedback))) +
+	var v = this.op1.render(this.op2.render(this.op3.render(this.op3.val * this.feedback))) +
 			this.op4.render(
 				this.op5.render() +
 				this.op6.render()
 			);
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm11 = function() {
-	return this.op1.render(this.op2.render(this.op3.render())) +
+	var v = this.op1.render(this.op2.render(this.op3.render())) +
 			this.op4.render(
 				this.op5.render() +
 				this.op6.render(this.op6.val * this.feedback)
 			);
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm12 = function() {
-	return this.op3.render(
+	var v = this.op3.render(
 				this.op4.render() +
 				this.op5.render() +
 				this.op6.render()) +
 			this.op1.render(this.op2.render(this.op2.val * this.feedback));
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm13 = function() {
-	return this.op3.render(
+	var v = this.op3.render(
 				this.op4.render() +
 				this.op5.render() +
 				this.op6.render(this.op6.val * this.feedback)) +
 			this.op1.render(this.op2.render());
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm14 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(this.op4.render(
 				this.op5.render() +
 				this.op6.render(this.op6.val * this.feedback)
 			));
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm15 = function() {
-	return this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
+	var v = this.op1.render(this.op2.render(this.op2.val * this.feedback)) +
 			this.op3.render(this.op4.render(
 				this.op5.render() +
 				this.op6.render()
 			));
+	return v * 0.5;
 };
 
 FMVoice.prototype.algorithm16 = function() {
-	return this.op1.render(
+	var v = this.op1.render(
 				this.op2.render() +
 				this.op3.render(this.op4.render()) +
 				this.op5.render(this.op6.render(this.op6.val * this.feedback))
 			);
+	return v * 1.0;
 };
 
 FMVoice.prototype.algorithm17 = function() {
-	return this.op1.render(
+	var v = this.op1.render(
 				this.op2.render(this.op2.val * this.feedback) +
 				this.op3.render(this.op4.render()) +
 				this.op5.render(this.op6.render())
 			);
+	return v * 1.0;
 };
 
 FMVoice.prototype.algorithm18 = function() {
-	return this.op1.render(
+	var v = this.op1.render(
 				this.op2.render() +
 				this.op3.render(this.op3.val * this.feedback) +
 				this.op4.render(this.op5.render(this.op6.render()))
 			);
+	return v * 1.0;
 };
 
 FMVoice.prototype.algorithm19 = function() {
-	return this.op1.render(this.op2.render(this.op3.render())) +
+	var v = this.op1.render(this.op2.render(this.op3.render())) +
 			this.op4.render(this.op6.render(this.op6.val * this.feedback)) +
 			this.op5.render(this.op6.render());
+	return v * 0.33333;
 };
 
 FMVoice.prototype.algorithm20 = function() {
-	return this.op1.render(this.op3.render(this.op3.val * this.feedback)) +
+	var v = this.op1.render(this.op3.render(this.op3.val * this.feedback)) +
 			this.op2.render(this.op3.val) +
 			this.op4.render(
 				this.op5.render() +
 				this.op6.render()
 			);
+	return v * 0.33333;
 };
 
 FMVoice.prototype.algorithm21 = function() {
-	return this.op1.render(this.op3.render(this.op3.val * this.feedback)) +
+	var v = this.op1.render(this.op3.render(this.op3.val * this.feedback)) +
 			this.op2.render(this.op3.val) +
 			this.op4.render(this.op6.render()) +
 			this.op5.render(this.op6.val);
+	return v * 0.25;
 };
 
 FMVoice.prototype.algorithm22 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op4.render(this.op6.render(this.op6.val * this.feedback)) +
 			this.op3.render(this.op6.val) +
 			this.op5.render(this.op6.val);
+	return v * 0.25;
 };
 
 FMVoice.prototype.algorithm23 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render(this.op3.render()) +
 			this.op4.render(this.op6.render(this.op6.val * this.feedback)) +
 			this.op5.render(this.op6.val);
+	return v * 0.25;
 };
 
 FMVoice.prototype.algorithm24 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render() +
 			this.op3.render() +
 			this.op4.render(this.op6.render(this.op6.val)) +
 			this.op5.render(this.op6.val);
+	return v * 0.2;
 };
 
 FMVoice.prototype.algorithm25 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render() +
 			this.op3.render() +
 			this.op4.render(this.op6.render(this.op6.val)) +
 			this.op5.render(this.op6.val);
+	return v * 0.2;
 };
 
 FMVoice.prototype.algorithm26 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render(this.op3.render()) +
 			this.op4.render(
 				this.op5.render() +
 				this.op6.render(this.op6.val * this.feedback)
 			);
+	return v * 0.33333;
 };
 
 FMVoice.prototype.algorithm27 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render(this.op3.render(this.op3.val * this.feedback)) +
 			this.op4.render(
 				this.op5.render() +
 				this.op6.render()
 			);
+	return v * 0.33333;
 };
 
 FMVoice.prototype.algorithm28 = function() {
-	return this.op1.render(this.op2.render()) +
+	var v = this.op1.render(this.op2.render()) +
 			this.op3.render(this.op4.render(this.op5.render(this.op5.val * this.feedback))) +
 			this.op6.render();
+	return v * 0.33333;
 };
 
 FMVoice.prototype.algorithm29 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render() +
 			this.op3.render(this.op4.render()) +
 			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+	return v * 0.25;
 };
 
 FMVoice.prototype.algorithm30 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render() +
 			this.op3.render(this.op4.render()) +
 			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+	return v * 0.25;
 };
 
 FMVoice.prototype.algorithm31 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render() +
 			this.op3.render() +
 			this.op4.render() +
 			this.op5.render(this.op6.render(this.op6.val * this.feedback));
+	return v * 0.2;
 };
 
 FMVoice.prototype.algorithm32 = function() {
-	return this.op1.render() +
+	var v = this.op1.render() +
 			this.op2.render() +
 			this.op3.render() +
 			this.op4.render() +
 			this.op5.render() +
 			this.op6.render(this.op6.val * this.feedback);
+	return v * 0.16667;
 };
 
 FMVoice.prototype.isFinished = function() {
