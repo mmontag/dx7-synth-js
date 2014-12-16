@@ -111,14 +111,15 @@ function createMML(idx) {
 		"[>cg<cea]2.        [>cg<ceg]4" +
 		"[>>a<a<c+fa+]2.    [>>a <a <c+ e a]4" +
 		"[>>f <f g+ <c g]2. [>>f <f g+ <c f]4" + 
-		"[>>g <g g+ b <g+]2.[>>g <g <g]4";
-	var zoot = "t110$ l8 o3    >g+2.. g+ a+4. a+ <c2 >a+    g+2.. a+4 a+4 <c4. >d+" +
+		"[>>g <g g+ b <g+]2.[>>g <g <g]4;" +
+		"t92 $ l1 o3 v12 r r r r2 r8 l32 v6 cdef v8 ga v10 b<c v12 de v14 fg;";
+	var zoot = "t120$ l8 o3    >g+2.. g+ a+4. a+ <c2 >a+    g+2.. a+4 a+4 <c4. >d+" +
 				"              a+ g+2. g+ a+4. a+ <c2 >a+   g+2.. a+4 a+4 <c2.;" +
-				"t110$l8 o4    rr g g4 g+ a+4 d4 d4 d+2     d c g g4 g+ a+4 d4 d4 d+2" + 
+				"t120$l8 o4    rr g g4 g+ a+4 d4 d4 d+2     d c g g4 g+ a+4 d4 d4 d+2" + 
 				"              rr g g4 g+ a+4 d4 d4 d+2     d c g g4 g+ a+4 d4 d4 d+2.;" +
-				"t110$l8 o4 v9 rr d+ d+2 r >a+4 a+4 <c2     >a+ g+ <d+ d+2 r >a+4 a+4 a+2" +
+				"t120$l8 o4 v9 rr d+ d+2 r >a+4 a+4 <c2     >a+ g+ <d+ d+2 r >a+4 a+4 a+2" +
 				"              rr d+ d+2 r >a+4 a+4 <c2     >a+ g+ <d+ d+2 r >a+4 a+4 a+2.;" +
-				"t110$l8 o4 v8 rr c c2 r   >f4 f4 g2        a+ g+ <c c2 >f f4 r f g2<" + 
+				"t120$l8 o4 v8 rr c c2 r   >f4 f4 g2        a+ g+ <c c2 >f f4 r f g2<" + 
 				"              rr c c2 r   >f4 f4 g2        a+ g+ <c c2 >f f4 r f g2.<;";
 	var demos = [korg, zoot];
 	var mml = new MMLEmitter(ctx, demos[idx]);
