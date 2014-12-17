@@ -307,19 +307,3 @@ FMVoice.prototype.algorithm32 = function() {
 FMVoice.prototype.isFinished = function() {
 	return this.op1.isFinished() && this.op2.isFinished();
 };
-
-FMVoice.createComponents = function(el) {
-	for (m in FMVoice.params.OPERATORS) {
-		var op = FMVoice.params.OPERATORS[m];
-		var groupEl = $('<div class="param-group">').append($('<div class="group-name">').text(m));
-		for (n in op) {
-			var param = op[n];
-			$(groupEl).append(param.render());
-		}
-		$(el).append(groupEl);
-	}
-	$(el).append($('<hr style="clear: both">'));
-	$(el).append(FMVoice.params.ALGO.render());
-	$(el).append(FMVoice.params.FEEDBACK.render());
-	$(el).append($('<img src="algorithms.png" class="algo-diagram">'));
-};
