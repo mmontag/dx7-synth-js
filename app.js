@@ -32,6 +32,10 @@
 			debugger;
 			console.log("Saved preset %s.", this.presets[this.selectedIndex].name);
 		};
+		this.onFeedbackChange = function() {
+			PARAMS.fbRatio = Math.pow(2, (PARAMS.feedback - 7)); // feedback of range 0 to 7
+			console.log("fbRatio changed", PARAMS.fbRatio);
+		}
 	}]);
 })();
 
