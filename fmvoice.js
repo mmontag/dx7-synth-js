@@ -34,9 +34,7 @@ FMVoice.prototype.opEnvFromParams = function(params) {
 	return new Envelope(parseFloat(params.attack),
 						parseFloat(params.decay),
 						parseFloat(params.sustain),
-						parseFloat(params.release),
-						0,
-						parseFloat(params.volume));
+						parseFloat(params.release));
 };
 
 FMVoice.prototype.render = function() {
