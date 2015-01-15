@@ -4,11 +4,10 @@ var MAX_SIDEBANDS = 50; // should be even. Total bands will be max sidebands + 1
 var ANTI_ALIAS = true;
 
 var synth = new Synth(FMVoice);
-// var synth = new Synth(AdditiveFMVoice);
 var midi = new MIDI(synth);
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
-var proc = ctx.createScriptProcessor(512, 1, 1);
+var proc = ctx.createScriptProcessor(1024, 1, 1);
 proc.connect(ctx.destination);
 
 proc.onaudioprocess = function(e) {
@@ -72,6 +71,7 @@ function plotSidebands(bands) {
 var keyNotes = [];
 function play(e) {
 	e = e || { keyCode: 0 };
+	if (e.shiftKey || e.altKey || e.metaKey || e.ctrlKey) return;
 	if (e.keyCode == 32) { synth.panic(); return; }
 	if (e.originalEvent && e.originalEvent.repeat) return;
 	clearTimeout(window._timer);
@@ -85,7 +85,6 @@ function play(e) {
 	}
 }
 
-setTimeout(play, 250);
 $(document).on('keydown', play);
 $(document).on('keyup', function(e) {
 	if (keyNotes[e.keyCode])
