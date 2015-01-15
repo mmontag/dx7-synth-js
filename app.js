@@ -29,9 +29,16 @@
 		};
 		this.save = function() {
 			this.storage[this.selectedIndex] = angular.copy(this.presets[this.selectedIndex]);
-			debugger;
 			console.log("Saved preset %s.", this.presets[this.selectedIndex].name);
 		};
+		this.reset = function() {
+			if (confirm('Are you sure you want to reset this patch?')) {
+				delete $localStorage.$storage[selectedIndex];
+				this.presets[this.selectedIndex] = angular.copy(PRESETS[this.selectedIndex]);
+
+				console.log("Reset preset %s.", this.presets[this.selectedIndex].name);
+			}
+		}
 		this.onFeedbackChange = function() {
 			PARAMS.fbRatio = Math.pow(2, (PARAMS.feedback - 7)); // feedback of range 0 to 7
 			console.log("fbRatio changed", PARAMS.fbRatio);
@@ -147,7 +154,7 @@ var FM_PARAMS2 = {
 			sustain: 0,
 			release: 1.04,
 			freqMult: 5,
-			volume: 2.39,
+			volume: 0.93,
 			detune: -5
 		},
 		{
