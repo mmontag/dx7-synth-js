@@ -26,7 +26,7 @@ SpectrumBox.prototype.init = function(
   this.num_bins = num_bins;
   this.num_points = num_points;
   this.canvas_id = canvas_id;
-  this.update_rate_ms = 16;
+  this.update_rate_ms = 16.66667;
   this.smoothing = 0.25;
   this.type = type || SpectrumBox.Types.FREQUENCY;
 
@@ -148,7 +148,7 @@ SpectrumBox.prototype.update = function() {
         i * bar_width, this.height,
         bar_width - this.bar_spacing, -mag * this.height);
     } else {
-      this.ctx.putImageData(this.blackPixel, i, this.height/2 - (data[i]-128)/64 * this.height + 2);
+      this.ctx.putImageData(this.blackPixel, i, this.height/2 - (data[i]-128)/256 * (this.height - 1));
     }
   }
 }
