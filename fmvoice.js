@@ -7,12 +7,12 @@ function FMVoice(frequency, velocity) {
 	this.velocity = parseFloat(velocity);
 	this.algorithm = this['algorithm' + parseInt(params.algorithm)];
 	this.feedback = parseFloat(params.feedback);
-	this.op1 = new Operator(frequency * ops[0].freqMult * Math.pow(ONE_CENT, ops[0].detune), this.opEnvFromParams(ops[0]));
-	this.op2 = new Operator(frequency * ops[1].freqMult * Math.pow(ONE_CENT, ops[1].detune), this.opEnvFromParams(ops[1]));
-	this.op3 = new Operator(frequency * ops[2].freqMult * Math.pow(ONE_CENT, ops[2].detune), this.opEnvFromParams(ops[2]));
-	this.op4 = new Operator(frequency * ops[3].freqMult * Math.pow(ONE_CENT, ops[3].detune), this.opEnvFromParams(ops[3]));
-	this.op5 = new Operator(frequency * ops[4].freqMult * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]));
-	this.op6 = new Operator(frequency * ops[5].freqMult * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]));
+	this.op1 = new Operator(frequency * ops[0].freqMult * Math.pow(ONE_CENT, ops[0].detune), this.opEnvFromParams(ops[0]), ops[0]);
+	this.op2 = new Operator(frequency * ops[1].freqMult * Math.pow(ONE_CENT, ops[1].detune), this.opEnvFromParams(ops[1]), ops[1]);
+	this.op3 = new Operator(frequency * ops[2].freqMult * Math.pow(ONE_CENT, ops[2].detune), this.opEnvFromParams(ops[2]), ops[2]);
+	this.op4 = new Operator(frequency * ops[3].freqMult * Math.pow(ONE_CENT, ops[3].detune), this.opEnvFromParams(ops[3]), ops[3]);
+	this.op5 = new Operator(frequency * ops[4].freqMult * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]), ops[4]);
+	this.op6 = new Operator(frequency * ops[5].freqMult * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]), ops[5]);
 }
 
 FMVoice.prototype.opEnvFromParams = function(params) {
