@@ -6,7 +6,7 @@ var MIDI = function(synth) {
     var velocity = ev.data[2];
 
     if (channel == 9)
-      return
+      return;
     if ( cmd==8 || ((cmd==9)&&(velocity==0)) ) { // with MIDI, note on with velocity zero is the same as note off
       // note off
       synth.noteOff( noteNumber );

@@ -22,15 +22,18 @@
 		this.presets = angular.copy(this.storage);
 		this.selectedIndex = "1";
 		window.PARAMS = this.presets[this.selectedIndex];
+
 		this.onChange = function() {
 			console.log("changed preset!", this.selectedIndex);
 			// window.PRESET_INDEX = this.selectedIndex;
 			window.PARAMS = this.presets[this.selectedIndex];
 		};
+
 		this.save = function() {
 			this.storage[this.selectedIndex] = angular.copy(this.presets[this.selectedIndex]);
 			console.log("Saved preset %s.", this.presets[this.selectedIndex].name);
 		};
+
 		this.reset = function() {
 			if (confirm('Are you sure you want to reset this patch?')) {
 				delete $localStorage.$storage[selectedIndex];
@@ -38,7 +41,7 @@
 
 				console.log("Reset preset %s.", this.presets[this.selectedIndex].name);
 			}
-		}
+		};
 		this.onFeedbackChange = function() {
 			PARAMS.fbRatio = Math.pow(2, (PARAMS.feedback - 7)); // feedback of range 0 to 7
 			console.log("fbRatio changed", PARAMS.fbRatio);
