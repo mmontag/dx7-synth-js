@@ -42,8 +42,18 @@
 				console.log("Reset preset %s.", this.presets[this.selectedIndex].name);
 			}
 		};
+
+		// TODO: separate UI parameters from internal synth parameters
+		for (var i = 0; i < PARAMS.operators.length; i++) {
+			var op = PARAMS.operators[i];
+			FMVoice.setOutputLevel(i, op.volume);
+		}
+		this.onVolumeChange = function(operatorIndex, operator) {
+			FMVoice.setOutputLevel(operatorIndex, operator.volume);
+			console.log("outputLevel changed", operator.outputLevel);
+		};
 		this.onFeedbackChange = function() {
-			PARAMS.fbRatio = Math.pow(2, (PARAMS.feedback - 7)); // feedback of range 0 to 7
+			FMVoice.setFeedback(PARAMS.feedback);
 			console.log("fbRatio changed", PARAMS.fbRatio);
 		}
 	}]);
