@@ -3,7 +3,7 @@ function Operator(frequency, envelope, params) {
 	this.phase = 0;
 	this.val = 0;
 	this.phaseStep = PERIOD * frequency/SAMPLE_RATE; // radians per sample
-	this.envelope = envelope || new Envelope(0, 3, 0, 0.2);
+	this.envelope = envelope;
 	this.params = params;
 }
 
@@ -16,12 +16,12 @@ Operator.prototype.render = function(mod) {
 		this.phase -= PERIOD;
 	}
 	return this.val * this.params.outputLevel;
-}
+};
 
 Operator.prototype.noteOff = function() {
 	this.envelope.noteOff();
-}
+};
 
 Operator.prototype.isFinished = function() {
 	return this.envelope.state == ENV_OFF;
-}
+};
