@@ -6,7 +6,7 @@
 <body>
 	<p>
 		MIDI Device: <select id="midiIn"></select>
-		<input type="checkbox" id="analysis"></input><label for="analysis">Analysis</label>
+		<input type="checkbox" id="analysis"><label for="analysis">Analysis</label>
 		<button class="demo-button" data-idx="0">Demo 1</button>
 		<button class="demo-button" data-idx="1">Demo 2</button>
 	</p>
@@ -57,8 +57,8 @@
 				</div>
 				<div class="param">
 					<div class="param-label">Volume</div>
-					<div class="param-value">{{ operator.volume | number : 2 }}</div>
-					<input type="range" step="0.01" min="0" max="1" to-number ng-model="operator.volume" ng-change="presetCtrl.onVolumeChange(i, operator)">
+					<div class="param-value">{{ operator.volume | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="99" to-number ng-model="operator.volume" ng-change="presetCtrl.onVolumeChange(i, operator)">
 				</div>
 				<div class="param">
 					<div class="param-label">Detune</div>

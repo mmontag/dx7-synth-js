@@ -1,7 +1,7 @@
 ONE_CENT = Math.exp(Math.log(2)/1200);
 
 function FMVoice(frequency, velocity) {
-	var params = window.PARAMS; //PRESETS[PRESET_INDEX];
+	var params = PARAMS;
 	var ops = params.operators;
 	this.frequency = parseFloat(frequency);
 	this.velocity = parseFloat(velocity);
@@ -39,7 +39,7 @@ FMVoice.setOutputLevel = function(operatorIndex, value) {
 };
 
 FMVoice.mapOutputLevel = function(input) {
-	var idx = Math.min(99, Math.max(0, Math.floor(input * 100)));
+	var idx = Math.min(99, Math.max(0, Math.floor(input)));
 	return FMVoice.egToOutputLevel[idx];
 };
 

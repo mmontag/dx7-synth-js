@@ -72,52 +72,52 @@ var PRESETS = [
 				rate1: 90,
 				rate2: 33,
 				rate3: 71,
-				rate4: 25,
+				rate4: 32,
 				level1: 99,
 				level2: 0,
-				level3: 32,
+				level3: 35,
 				level4: 0,
 				freqMult: 1,
-				volume: 0.95,
+				volume: 95,
 				detune: 2
 			},
 			{
 				rate1: 98,
 				rate2: 12,
 				rate3: 71,
-				rate4: 28,
+				rate4: 35,
 				level1: 99,
 				level2: 0,
 				level3: 32,
 				level4: 0,
 				freqMult: 2,
-				volume: 0.78,
+				volume: 78,
 				detune: 3
 			},
 			{
 				rate1: 95,
 				rate2: 33,
 				rate3: 71,
-				rate4: 25,
+				rate4: 35,
 				level1: 99,
 				level2: 0,
 				level3: 32,
 				level4: 0,
 				freqMult: 1,
-				volume: 1,
+				volume: 99,
 				detune: -5
 			},
 			{
 				rate1: 98,
 				rate2: 12,
 				rate3: 71,
-				rate4: 28,
+				rate4: 35,
 				level1: 99,
 				level2: 0,
 				level3: 32,
 				level4: 0,
 				freqMult: 3,
-				volume: .75,
+				volume: 75,
 				detune: -2
 			},
 			{
@@ -130,20 +130,20 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 1,
-				volume: 1,
+				volume: 99,
 				detune: 0
 			},
 			{
 				rate1: 98,
 				rate2: 91,
 				rate3: 0,
-				rate4: 28,
+				rate4: 35,
 				level1: 99,
 				level2: 0,
 				level3: 0,
 				level4: 0,
 				freqMult: 1,
-				volume: 0.85,
+				volume: 85,
 				detune: -7
 			}
 		]
@@ -163,7 +163,7 @@ var PRESETS = [
 				level3: 32,
 				level4: 0,
 				freqMult: 1,
-				volume: 0.95,
+				volume: 95,
 				detune: 2
 			},
 			{
@@ -176,7 +176,7 @@ var PRESETS = [
 				level3: 32,
 				level4: 0,
 				freqMult: 3.5,
-				volume: 0.78,
+				volume: 78,
 				detune: 3
 			},
 			{
@@ -189,7 +189,7 @@ var PRESETS = [
 				level3: 32,
 				level4: 0,
 				freqMult: 1,
-				volume: 1,
+				volume: 99,
 				detune: -5
 			},
 			{
@@ -202,7 +202,7 @@ var PRESETS = [
 				level3: 32,
 				level4: 0,
 				freqMult: 3.5,
-				volume: .75,
+				volume: 75,
 				detune: -2
 			},
 			{
@@ -215,7 +215,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 1,
-				volume: 1,
+				volume: 99,
 				detune: 0
 			},
 			{
@@ -228,7 +228,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 2,
-				volume: 0.85,
+				volume: 85,
 				detune: -7
 			}
 		]
@@ -248,7 +248,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 1,
-				volume: 0.99,
+				volume: 99,
 				detune: 0
 			},
 			{
@@ -261,7 +261,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 1.7,
-				volume: 0.64,
+				volume: 64,
 				detune: 0
 			},
 			{
@@ -274,7 +274,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 1,
-				volume: 1,
+				volume: 99,
 				detune: 0
 			},
 			{
@@ -287,7 +287,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 2,
-				volume: .88,
+				volume: 88,
 				detune: 7
 			},
 			{
@@ -300,7 +300,7 @@ var PRESETS = [
 				level3: 0,
 				level4: 0,
 				freqMult: 5.32,
-				volume: .64,
+				volume: 64,
 				detune: 0
 			},
 			{
