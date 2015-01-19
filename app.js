@@ -17,8 +17,8 @@
 	});
 
 	app.controller('PresetCtrl', ['$localStorage', function ($localStorage) {
-		this.storage = $localStorage.$default(PRESETS);
-		this.presets = angular.copy(this.storage);
+		this.$storage = $localStorage.$default(PRESETS);
+		this.presets = angular.copy(this.$storage);
 		this.selectedIndex = "1";
 		PARAMS = this.presets[this.selectedIndex];
 
@@ -35,15 +35,16 @@
 		};
 
 		this.save = function() {
-			this.storage[this.selectedIndex] = angular.copy(this.presets[this.selectedIndex]);
+			this.$storage[this.selectedIndex] = angular.copy(this.presets[this.selectedIndex]);
 			console.log("Saved preset %s.", this.presets[this.selectedIndex].name);
 		};
 
 		this.reset = function() {
 			if (confirm('Are you sure you want to reset this patch?')) {
-				this.storage[this.selectedIndex] = PRESETS[this.selectedIndex];
-				this.presets[this.selectedIndex] = angular.copy(PRESETS[this.selectedIndex]);
+				delete this.$storage[this.selectedIndex];
 				console.log("Reset preset %s.", this.presets[this.selectedIndex].name);
+				this.presets[this.selectedIndex] = angular.copy(PRESETS[this.selectedIndex]);
+				this.onChange();
 			}
 		};
 
