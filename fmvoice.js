@@ -348,5 +348,6 @@ FMVoice.prototype.algorithm32 = function() {
 };
 
 FMVoice.prototype.isFinished = function() {
-	return this.op1.isFinished() && this.op2.isFinished();
+	return this.op1.isFinished() && this.op2.isFinished() && this.op3.isFinished() &&
+					this.op4.isFinished() && this.op5.isFinished() && this.op6.isFinished();
 };
