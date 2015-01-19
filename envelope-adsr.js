@@ -7,7 +7,7 @@ var ENV_OFF = 4;
 var LN_OF_SMALL_NUMBER = Math.log(0.001);
 var ε = 0.0015;
 
-function Envelope(attackTime, decayTime, sustainRatio, releaseTime, min, max) {
+function EnvelopeADSR(attackTime, decayTime, sustainRatio, releaseTime, min, max) {
 	this.min = min || 0;
 	this.max = max == null ? 1 : max;
 	this.range = this.max - this.min;
@@ -23,7 +23,7 @@ function Envelope(attackTime, decayTime, sustainRatio, releaseTime, min, max) {
 	this.releaseTime = releaseTime;
 }
 
-Envelope.prototype.render = function() {
+EnvelopeADSR.prototype.render = function() {
 	if (this.max == 0) return 0;
 	switch (this.state) {
 		case ENV_ATTACK:
@@ -57,7 +57,7 @@ Envelope.prototype.render = function() {
 	return this.val;
 }
 
-Envelope.prototype.noteOff = function() {
+EnvelopeADSR.prototype.noteOff = function() {
 	this.releaseMult = Math.exp(LN_OF_SMALL_NUMBER/(this.releaseTime * SAMPLE_RATE));
 	this.state = ENV_RELEASE;
 }
