@@ -1,32 +1,32 @@
+var POLYPHONY = 16;
+
 function Synth(voiceClass) {
-	this.voices = new Array(128);
-	for (var i = 0; i < 128; i++) this.voices[i] = null;
+	this.voices = [];
 	this.voiceClass = voiceClass;
 }
 
-Synth.prototype.frequencyFromNoteNumber = function(note) {
-	return 440 * Math.pow(2,(note-69)/12);
-};
-
 Synth.prototype.noteOn = function(note, velocity) {
-	// if (this.voices[note] == null) {
-		// Create a new synth node
-		var frequency = this.frequencyFromNoteNumber(note);
-		this.voices[note] = new this.voiceClass(frequency, velocity);
-		// var e = document.getElementById( "k" + note );
-		// if (e)
-		// 	e.classList.add("pressed");
-	// }
+		var voice = new this.voiceClass(note, velocity);
+		this.cursor++;
+		if (this.voices.length >= POLYPHONY) {
+			this.voices.shift(); // remove first
+//		} else {
+//			var now = new Date().getTime();
+//			this.voices.sort(function(a, b) {
+//				var ageA = now - a.time;
+//				var ageB = now - b.time;
+//				return a.velocity - b.velocity;
+//			});
+		}
+		this.voices.push(voice);
 };
 
 Synth.prototype.noteOff = function(note) {
-	if (this.voices[note] != null) {
-		// Shut off the note playing and clear it 
-		this.voices[note].noteOff();
-		// this.voices[note] = null;
-		// var e = document.getElementById( "k" + note );
-		// if (e)
-		// 	e.classList.remove("pressed");
+	for (var i = 0; i < this.voices.length; i++) {
+		if (this.voices[i] && this.voices[i].note == note && this.voices[i].down == true) {
+			this.voices[i].noteOff();
+			break;
+		}
 	}
 };
 
@@ -48,7 +48,7 @@ Synth.prototype.render = function() {
 			val += voice.render() * perVoiceLevel;
 			if (voice.isFinished()) {
 				// Clear the note after release
-				this.voices[i] = null;
+				this.voices.splice(i, 1);
 			}
 		}
 	}

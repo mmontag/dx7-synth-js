@@ -1,9 +1,11 @@
 ONE_CENT = Math.exp(Math.log(2)/1200);
 
-function FMVoice(frequency, velocity) {
+function FMVoice(note, velocity) {
 	var params = PARAMS;
 	var ops = params.operators;
-	this.frequency = parseFloat(frequency);
+	var frequency = this.frequencyFromNoteNumber(note);
+	this.note = parseInt(note, 10);
+	this.down = true;
 	this.velocity = parseFloat(velocity);
 	this.algorithm = this['algorithm' + parseInt(params.algorithm)];
 	/* 
@@ -29,6 +31,10 @@ function FMVoice(frequency, velocity) {
 	this.op5 = new Operator(frequency * ops[4].freqMult * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]), ops[4]);
 	this.op6 = new Operator(frequency * ops[5].freqMult * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]), ops[5]);
 }
+
+FMVoice.prototype.frequencyFromNoteNumber = function(note) {
+	return 440 * Math.pow(2,(note-69)/12);
+};
 
 FMVoice.setFeedback = function(value) {
 	PARAMS.fbRatio = Math.pow(2, (value - 7)); // feedback of range 0 to 7
@@ -72,6 +78,7 @@ FMVoice.prototype.render = function() {
 };
 
 FMVoice.prototype.noteOff = function() {
+	this.down = false;
 	this.op1.noteOff();
 	this.op2.noteOff();
 	this.op3.noteOff();
