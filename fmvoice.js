@@ -24,12 +24,12 @@ function FMVoice(note, velocity) {
 	Feedback level, 0 to 7, was the number of bits by which the feedback was shifted.
 	(http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html)
 	*/
-	this.op1 = new Operator(frequency * ops[0].freqMult * Math.pow(ONE_CENT, ops[0].detune), this.opEnvFromParams(ops[0]), ops[0]);
-	this.op2 = new Operator(frequency * ops[1].freqMult * Math.pow(ONE_CENT, ops[1].detune), this.opEnvFromParams(ops[1]), ops[1]);
-	this.op3 = new Operator(frequency * ops[2].freqMult * Math.pow(ONE_CENT, ops[2].detune), this.opEnvFromParams(ops[2]), ops[2]);
-	this.op4 = new Operator(frequency * ops[3].freqMult * Math.pow(ONE_CENT, ops[3].detune), this.opEnvFromParams(ops[3]), ops[3]);
-	this.op5 = new Operator(frequency * ops[4].freqMult * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]), ops[4]);
-	this.op6 = new Operator(frequency * ops[5].freqMult * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]), ops[5]);
+	this.op1 = new Operator(frequency * ops[0].freqRatio * Math.pow(ONE_CENT, ops[0].detune), this.opEnvFromParams(ops[0]), ops[0]);
+	this.op2 = new Operator(frequency * ops[1].freqRatio * Math.pow(ONE_CENT, ops[1].detune), this.opEnvFromParams(ops[1]), ops[1]);
+	this.op3 = new Operator(frequency * ops[2].freqRatio * Math.pow(ONE_CENT, ops[2].detune), this.opEnvFromParams(ops[2]), ops[2]);
+	this.op4 = new Operator(frequency * ops[3].freqRatio * Math.pow(ONE_CENT, ops[3].detune), this.opEnvFromParams(ops[3]), ops[3]);
+	this.op5 = new Operator(frequency * ops[4].freqRatio * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]), ops[4]);
+	this.op6 = new Operator(frequency * ops[5].freqRatio * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]), ops[5]);
 }
 
 FMVoice.prototype.frequencyFromNoteNumber = function(note) {
