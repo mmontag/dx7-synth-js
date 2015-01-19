@@ -63,14 +63,7 @@ FMVoice.egToOutputLevel = [
 ];
 
 FMVoice.prototype.opEnvFromParams = function(params) {
-	return new EnvelopeDX7([params.level1,
-													params.level2,
-													params.level3,
-													params.level4,
-													params.rate1,
-													params.rate2,
-													params.rate3,
-													params.rate4 ]);
+	return new EnvelopeDX7(params.levels, params.rates);
 };
 
 FMVoice.prototype.render = function() {

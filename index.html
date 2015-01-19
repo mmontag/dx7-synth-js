@@ -38,16 +38,16 @@
 			<div class="param-group" ng-repeat="(i, operator) in presetCtrl.presets[presetCtrl.selectedIndex].operators">
 				<div class="group-name">OP {{ $index + 1 }}</div>
 
-				<div ng-repeat="i in [1,2,3,4]">
+				<div ng-repeat="i in [0,1,2,3]">
 					<div class="param">
-						<div class="param-label">L{{ i }}</div>
-						<div class="param-value">{{ operator['level' + i] | number : 0 }}</div>
-						<input type="range" step="1" min="0" max="99" to-number ng-model="operator['level' + i]">
+						<div class="param-label">L{{ i + 1 }}</div>
+						<div class="param-value">{{ operator.levels[i] | number : 0 }}</div>
+						<input type="range" step="1" min="0" max="99" to-number ng-model="operator.levels[i]">
 					</div>
 					<div class="param">
-						<div class="param-label">R{{ i }}</div>
-						<div class="param-value">{{ operator['rate' + i] | number : 0 }}</div>
-						<input type="range" step="1" min="0" max="99" to-number ng-model="operator['rate' + i]">
+						<div class="param-label">R{{ i + 1 }}</div>
+						<div class="param-value">{{ operator.rates[i] | number : 0 }}</div>
+						<input type="range" step="1" min="0" max="99" to-number ng-model="operator.rates[i]">
 					</div>
 				</div>
 				<div class="param">

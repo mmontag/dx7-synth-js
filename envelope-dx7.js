@@ -37,8 +37,9 @@ function decaystep(lev, i, qr) {
 	return lev;
 }
 
-function EnvelopeDX7(params) {
-	this.params = params;
+function EnvelopeDX7(levels, rates) {
+	this.levels = levels;
+	this.rates = rates;
 	this.level = 0; // should start here
 	this.i = 0;
 	this.down = true;
@@ -77,11 +78,11 @@ EnvelopeDX7.prototype.render = function() {
 EnvelopeDX7.prototype.advance = function(newstate) {
 	this.state = newstate;
 	if (this.state < 4) {
-		var newlevel = this.params[this.state];
+		var newlevel = this.levels[this.state];
 		this.targetlevel = Math.max(0, (outputlevel[newlevel] << 5) - 224);
 		this.rising = (this.targetlevel - this.level) > 0;
 		var rate_scaling = 0;
-		this.qr = Math.min(63, rate_scaling + ((this.params[this.state + 4] * 41) >> 6));
+		this.qr = Math.min(63, rate_scaling + ((this.rates[this.state] * 41) >> 6));
 	}
 	//console.log("advance state="+this.state+", qr="+this.qr+", target="+this.targetlevel+", rising="+this.rising);
 };
