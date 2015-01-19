@@ -71,7 +71,7 @@ EnvelopeDX7.prototype.render = function() {
 	//	return this.level;
 	// Convert DX7 level -> dB -> amplitude
 	var dB = (this.level - 3824) * 0.0235;
-	return Math.pow(10, (dB/20));
+	return Math.pow(20, (dB/20));
 };
 
 EnvelopeDX7.prototype.advance = function(newstate) {
