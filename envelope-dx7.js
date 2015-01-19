@@ -90,3 +90,7 @@ EnvelopeDX7.prototype.noteOff = function() {
 	this.down = false;
 	this.advance(3);
 };
+
+EnvelopeDX7.prototype.isFinished = function() {
+	return this.state == ENV_OFF;
+}

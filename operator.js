@@ -23,5 +23,5 @@ Operator.prototype.noteOff = function() {
 };
 
 Operator.prototype.isFinished = function() {
-	return this.envelope.state == ENV_OFF;
+	return this.envelope.isFinished();
 };
