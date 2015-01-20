@@ -70,6 +70,13 @@
 					<div class="param-value">{{ operator.volume | number : 0 }}</div>
 					<input type="range" step="1" min="0" max="99" to-number ng-model="operator.volume" ng-change="presetCtrl.onVolumeChange(i, operator)">
 				</div>
+				<div class="param">
+					<div class="param-label">Osc. Mode</div>
+					<label for="oscMode{{ $index }}">
+						<input id="oscMode{{ $index }}" type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="operator.oscMode" ng-change="presetCtrl.onUpdateFrequency(i)">
+						Fixed
+					</label>
+				</div>
 			</div>
 		</div>
 	</div>

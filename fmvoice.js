@@ -29,7 +29,7 @@ function FMVoice(note, velocity) {
 		// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L789
 		// https://github.com/asb2m10/dexed/blob/1eda313316411c873f8388f971157664827d1ac9/Source/msfa/dx7note.cc#L55
 		// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
-		var freq = frequency * ops[i].freqRatio * Math.pow(OCTAVE_1024, ops[i].detune);
+		var freq = ops[i].oscMode ? ops[i].freqFixed : frequency * ops[i].freqRatio * Math.pow(OCTAVE_1024, ops[i].detune);
 		this['op' + (i + 1)] = new Operator(freq, this.opEnvFromParams(ops[i]), ops[i]);
 	}
 }
@@ -52,7 +52,7 @@ FMVoice.updateFrequency = function(operatorIndex) {
 		var freqCoarse = op.freqCoarse || 0.5; // freqCoarse of 0 is used for ratio of 0.5
 		op.freqRatio = freqCoarse * (1 + op.freqFine / 100);
 	} else {
-		op.freqFixed = Math.pow(10, Math.max(4, op.freqCoarse)) * (1 + (op.freqFine / 99) * 8.772);
+		op.freqFixed = Math.pow(10, op.freqCoarse % 4) * (1 + (op.freqFine / 99) * 8.772);
 	}
 };
 
