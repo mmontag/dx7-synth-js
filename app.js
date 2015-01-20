@@ -12,15 +12,18 @@
 		};
 	});
 
-	app.controller('ParamsCtrl', function ($scope) {
-		$scope.model = PRESETS[0];
-	});
+	app.controller('ParamsCtrl', function ($scope) {});
 
-	app.controller('PresetCtrl', ['$localStorage', function ($localStorage) {
-		this.$storage = $localStorage.$default(PRESETS);
-		this.presets = angular.copy(this.$storage);
-		this.selectedIndex = "1";
-		PARAMS = this.presets[this.selectedIndex];
+	app.controller('PresetCtrl', ['$localStorage', '$http', function ($localStorage, $http) {
+		var self = this;
+		$http.get('roms/ROM1A.SYX')
+			.success(function(data) {
+				PRESETS = PRESETS.concat(SysexDX7.loadBank(data));
+				self.$storage = $localStorage.$default(PRESETS);
+				self.presets = angular.copy(self.$storage);
+				self.selectedIndex = "0";
+				self.onChange();
+			});
 
 		this.onChange = function() {
 			console.log("changed preset!", this.selectedIndex);
