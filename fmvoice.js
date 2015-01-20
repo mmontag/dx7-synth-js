@@ -1,11 +1,11 @@
-ONE_CENT = Math.exp(Math.log(2)/1200);
+var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
 
 function FMVoice(note, velocity) {
 	var params = PARAMS;
 	var ops = params.operators;
 	var frequency = this.frequencyFromNoteNumber(note);
-	this.note = parseInt(note, 10);
 	this.down = true;
+	this.note = parseInt(note, 10);
 	this.velocity = parseFloat(velocity);
 	this.algorithm = this['algorithm' + parseInt(params.algorithm)];
 	/* 
@@ -24,12 +24,14 @@ function FMVoice(note, velocity) {
 	Feedback level, 0 to 7, was the number of bits by which the feedback was shifted.
 	(http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html)
 	*/
-	this.op1 = new Operator(frequency * ops[0].freqRatio * Math.pow(ONE_CENT, ops[0].detune), this.opEnvFromParams(ops[0]), ops[0]);
-	this.op2 = new Operator(frequency * ops[1].freqRatio * Math.pow(ONE_CENT, ops[1].detune), this.opEnvFromParams(ops[1]), ops[1]);
-	this.op3 = new Operator(frequency * ops[2].freqRatio * Math.pow(ONE_CENT, ops[2].detune), this.opEnvFromParams(ops[2]), ops[2]);
-	this.op4 = new Operator(frequency * ops[3].freqRatio * Math.pow(ONE_CENT, ops[3].detune), this.opEnvFromParams(ops[3]), ops[3]);
-	this.op5 = new Operator(frequency * ops[4].freqRatio * Math.pow(ONE_CENT, ops[4].detune), this.opEnvFromParams(ops[4]), ops[4]);
-	this.op6 = new Operator(frequency * ops[5].freqRatio * Math.pow(ONE_CENT, ops[5].detune), this.opEnvFromParams(ops[5]), ops[5]);
+	for (var i = 0; i < 6; i++) {
+		// Not sure about detune.
+		// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L789
+		// https://github.com/asb2m10/dexed/blob/1eda313316411c873f8388f971157664827d1ac9/Source/msfa/dx7note.cc#L55
+		// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
+		var freq = frequency * ops[i].freqRatio * Math.pow(OCTAVE_1024, ops[i].detune);
+		this['op' + (i + 1)] = new Operator(freq, this.opEnvFromParams(ops[i]), ops[i]);
+	}
 }
 
 FMVoice.prototype.frequencyFromNoteNumber = function(note) {
@@ -42,6 +44,16 @@ FMVoice.setFeedback = function(value) {
 
 FMVoice.setOutputLevel = function(operatorIndex, value) {
   PARAMS.operators[operatorIndex].outputLevel = this.mapOutputLevel(value);
+};
+
+FMVoice.updateFrequency = function(operatorIndex) {
+	var op = PARAMS.operators[operatorIndex];
+	if (op.oscMode == 0) {
+		var freqCoarse = op.freqCoarse || 0.5; // freqCoarse of 0 is used for ratio of 0.5
+		op.freqRatio = freqCoarse * (1 + op.freqFine / 100);
+	} else {
+		op.freqFixed = Math.pow(10, Math.max(4, op.freqCoarse)) * (1 + (op.freqFine / 99) * 8.772);
+	}
 };
 
 FMVoice.mapOutputLevel = function(input) {

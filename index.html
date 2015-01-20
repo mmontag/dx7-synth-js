@@ -51,19 +51,24 @@
 					</div>
 				</div>
 				<div class="param">
-					<div class="param-label">Freq. Ratio</div>
-					<div class="param-value">{{ operator.freqRatio | number : 1 }}</div>
-					<input type="range" step="0.5" min="0.5" max="12" to-number ng-model="operator.freqRatio">
+					<div class="param-label">Freq. Coarse</div>
+					<div class="param-value">{{ operator.freqCoarse | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="31" to-number ng-model="operator.freqCoarse" ng-change="presetCtrl.onUpdateFrequency(i)">
+				</div>
+				<div class="param">
+					<div class="param-label">Freq. Fine</div>
+					<div class="param-value">{{ operator.freqFine | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="99" to-number ng-model="operator.freqFine" ng-change="presetCtrl.onUpdateFrequency(i)">
+				</div>
+				<div class="param">
+					<div class="param-label">Detune</div>
+					<div class="param-value">{{ operator.detune | number : 0 }}</div>
+					<input type="range" step="1" min="-7" max="7" to-number ng-model="operator.detune"">
 				</div>
 				<div class="param">
 					<div class="param-label">Volume</div>
 					<div class="param-value">{{ operator.volume | number : 0 }}</div>
 					<input type="range" step="1" min="0" max="99" to-number ng-model="operator.volume" ng-change="presetCtrl.onVolumeChange(i, operator)">
-				</div>
-				<div class="param">
-					<div class="param-label">Detune</div>
-					<div class="param-value">{{ operator.detune | number : 0 }}</div>
-					<input type="range" step="1" min="-50" max="50" to-number ng-model="operator.detune">
 				</div>
 			</div>
 		</div>
