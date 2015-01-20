@@ -19,8 +19,15 @@
 		$http.get('roms/ROM1A.SYX')
 			.success(function(data) {
 				PRESETS = PRESETS.concat(SysexDX7.loadBank(data));
-				self.$storage = $localStorage.$default(PRESETS);
-				self.presets = angular.copy(self.$storage);
+				self.$storage = $localStorage;
+				self.presets = [];
+				for (var i = 0; i < PRESETS.length; i++) {
+					if (self.$storage[i]) {
+						self.presets[i] = angular.copy(self.$storage[i]);
+					} else {
+						self.presets[i] = angular.copy(PRESETS[i]);
+					}
+				}
 				self.selectedIndex = "0";
 				self.onChange();
 			});
