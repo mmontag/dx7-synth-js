@@ -79,7 +79,7 @@ FMVoice.prototype.opEnvFromParams = function(params) {
 };
 
 FMVoice.prototype.render = function() {
-	return this.velocity * this.algorithm(this);
+	return this.velocity * this.algorithm();
 };
 
 FMVoice.prototype.noteOff = function() {
