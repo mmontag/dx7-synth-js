@@ -35,23 +35,27 @@ var SysexDX7 = {
 
 			// TODO: breakpoints/scaling/sensitivity
 
-			operator.detune = Math.floor(oscData.charCodeAt(12) / 8) - 7; // range 0 to 14
+			operator.detune = Math.floor(oscData.charCodeAt(12) >> 3) - 7; // range 0 to 14
+			// 13    0   0 |    KVS    |  AMS  | KEY VEL SENS   0-7   AMP MOD SENS   0-3
+			operator.velocitySens = oscData.charCodeAt(13) >> 2;
+			operator.lfoAmpModSens = oscData.charCodeAt(13) & 3;
 			operator.volume = oscData.charCodeAt(14);
-			operator.oscMode = oscData.charCodeAt(15) % 2;
-			operator.freqCoarse = Math.floor(oscData.charCodeAt(15) / 2);
+			operator.oscMode = oscData.charCodeAt(15) & 1;
+			operator.freqCoarse = Math.floor(oscData.charCodeAt(15) >> 1);
 			operator.freqFine = oscData.charCodeAt(16);
 		}
 
 		return {
 			algorithm: voiceData.charCodeAt(110) + 1, // start at 1 for readability
-			feedback: voiceData.charCodeAt(111) % 8,
+			feedback: voiceData.charCodeAt(111) & 7,
 			operators: operators,
 			name: voiceData.substring(118, 128),
 			lfoSpeed: voiceData.charCodeAt(112),
 			lfoDelay: voiceData.charCodeAt(113),
 			lfoPitchModDepth: voiceData.charCodeAt(114),
 			lfoAmpModDepth: voiceData.charCodeAt(115),
-			lfoWaveform: Math.floor(voiceData.charCodeAt(116) / 2) % 8,
+			lfoWaveform: Math.floor(voiceData.charCodeAt(116) >> 1) & 7,
+			lfoSync: voiceData.charCodeAt(116) & 1,
 			pitchEnvelope: {
 				rates: [voiceData.charCodeAt(102), voiceData.charCodeAt(103), voiceData.charCodeAt(104), voiceData.charCodeAt(105)],
 				levels: [voiceData.charCodeAt(106), voiceData.charCodeAt(107), voiceData.charCodeAt(108), voiceData.charCodeAt(109)]

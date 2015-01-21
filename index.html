@@ -22,7 +22,9 @@
 	</div>
 	<div ng-controller="ParamsCtrl">
 		<div ng-controller="PresetCtrl as presetCtrl">
-			Preset: <select ng-model="presetCtrl.selectedIndex" ng-change="presetCtrl.onChange()" ng-options="i as preset.name for (i, preset) in presetCtrl.presets"></select>
+			Preset: <select ng-model="presetCtrl.selectedIndex"
+							ng-change="presetCtrl.onChange()"
+							ng-options="presetCtrl.presets.indexOf(preset) as preset.name for preset in presetCtrl.presets"></select>
 			<button ng-click="presetCtrl.save()">Save</button>
 			<button ng-click="presetCtrl.reset()">Reset</button>
 			<div class="param">
@@ -32,8 +34,45 @@
 			</div>
 			<div class="param">
 				<div class="param-label">Feedback</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 2 }}</div>
+				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 0 }}</div>
 				<input type="range" step="1" min="0" max="7" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].feedback" ng-change="presetCtrl.onFeedbackChange()">
+			</div>
+			<div class="param-group">
+				<div class="group-name">LFO</div>
+				<div class="param">
+					<div class="param-label">Waveform</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoWaveform | number : 0 }}</div>
+					<select ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoWaveform"
+							ng-change="presetCtrl.onLFOChange()"
+							ng-options="presetCtrl.lfoWaveformOptions.indexOf(wave) as wave for wave in presetCtrl.lfoWaveformOptions"></select>
+				</div>
+				<div class="param">
+					<div class="param-label">Speed</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoSpeed | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="99" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoSpeed" ng-change="presetCtrl.onLFOChange()">
+				</div>
+				<div class="param">
+					<div class="param-label">Delay</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoDelay | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="99" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoDelay" ng-change="presetCtrl.onLFOChange()">
+				</div>
+				<div class="param">
+					<div class="param-label">Amp. Modulation</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoAmpModDepth | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="99" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoAmpModDepth" ng-change="presetCtrl.onLFOChange()">
+				</div>
+				<div class="param">
+					<div class="param-label">Pitch Modulation</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoPitchModDepth | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="99" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoPitchModDepth " ng-change="presetCtrl.onLFOChange()">
+				</div>
+				<div class="param">
+					<div class="param-label">Sync</div>
+					<label for="lfoSync">
+						<input id="lfoSync" type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="operator.lfoSync" ng-change="presetCtrl.onLFOChange(i)">
+						Sync
+					</label>
+				</div>
 			</div>
 			<div class="param-group" ng-repeat="(i, operator) in presetCtrl.presets[presetCtrl.selectedIndex].operators">
 				<div class="group-name">OP {{ $index + 1 }}</div>
@@ -69,6 +108,16 @@
 					<div class="param-label">Volume</div>
 					<div class="param-value">{{ operator.volume | number : 0 }}</div>
 					<input type="range" step="1" min="0" max="99" to-number ng-model="operator.volume" ng-change="presetCtrl.onVolumeChange(i, operator)">
+				</div>
+				<div class="param">
+					<div class="param-label">Velocity Sens.</div>
+					<div class="param-value">{{ operator.velocitySens | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="7" to-number ng-model="operator.velocitySens">
+				</div>
+				<div class="param">
+					<div class="param-label">LFO Sens.</div>
+					<div class="param-value">{{ operator.lfoAmpModSens | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="3" to-number ng-model="operator.lfoAmpModSens">
 				</div>
 				<div class="param">
 					<div class="param-label">Osc. Mode</div>

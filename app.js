@@ -15,6 +15,7 @@
 	app.controller('ParamsCtrl', function ($scope) {});
 
 	app.controller('PresetCtrl', ['$localStorage', '$http', function ($localStorage, $http) {
+		this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
 		var self = this;
 		$http.get('roms/ROM1A.SYX')
 			.success(function(data) {
@@ -28,7 +29,7 @@
 						self.presets[i] = angular.copy(PRESETS[i]);
 					}
 				}
-				self.selectedIndex = "0";
+				self.selectedIndex = 2;
 				self.onChange();
 			});
 
@@ -72,6 +73,8 @@
 			FMVoice.setFeedback(PARAMS.feedback);
 			console.log("fbRatio changed", PARAMS.fbRatio);
 		};
+
+		this.onLFOChange = function() {};
 
 	}]);
 })();
