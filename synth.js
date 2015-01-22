@@ -45,10 +45,12 @@ Synth.prototype.render = function() {
 	for (var i = 0, length = this.voices.length; i < length; i++) {
 		var voice = this.voices[i];
 		if (voice) {
-			val += voice.render() * perVoiceLevel;
 			if (voice.isFinished()) {
 				// Clear the note after release
 				this.voices.splice(i, 1);
+				i--; // undo increment
+			} else {
+				val += voice.render() * perVoiceLevel;
 			}
 		}
 	}
