@@ -122,7 +122,7 @@ FMVoice.prototype.render = function() {
 
 FMVoice.prototype.noteOff = function() {
 	this.down = false;
-	for (var i = 0; i < 5; i++) {
+	for (var i = 0; i < 6; i++) {
 		this.operators[i].noteOff();
 	}
 };
