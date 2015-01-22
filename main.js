@@ -1,13 +1,11 @@
 var SAMPLE_RATE = 44100;
 var PERIOD = Math.PI * 2;
-var MAX_SIDEBANDS = 50; // should be even. Total bands will be max sidebands + 1
-var ANTI_ALIAS = true;
 
 var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
-var proc = ctx.createScriptProcessor(1024, 1, 1);
+var proc = ctx.createScriptProcessor(1024, 0, 1);
 proc.connect(ctx.destination);
 
 proc.onaudioprocess = function(e) {
@@ -18,7 +16,7 @@ proc.onaudioprocess = function(e) {
 			chOut[sample] = synth.render();
 		}
 	}
-}
+};
 
 // Setup frequency domain graph
 var frequencybox = new SpectrumBox(2048, 2048, "fftbox", ctx);
@@ -44,28 +42,6 @@ $('#analysis').on('click', function(){
 		wavebox.disable();
 	}
 });
-
-/**
- * Plot the discrete Bessel sidebands to see if they match the FFT output.
- * TODO: Fix this
- * https://code.google.com/p/webkit-mirror/source/browse/Source/WebCore/platform/audio/AudioUtilities.cpp?r=5b585ab6ad799c8ed35ec7c27cbf78a7d83494e4#36
- */
-function plotSidebands(bands) {
-	// Flatten sidebands
-	// for (sideband in sidebands) {
-	// 	sidebands[sideband] = Math.abs(sidebands[sideband]);
-	// }
-	var sidebandCanvas = document.getElementById('sidebands');
-	var sidebandCtx = sidebandCanvas.getContext('2d');
-	var xscale = sidebandCanvas.width / (SAMPLE_RATE/2);
-	var bands = sidebands(CARRIER, MOD, IDX);
-	sidebandCtx.fillStyle = "rgb(230,230,230)";
-	sidebandCtx.fillRect(0, 0, sidebandCanvas.width, sidebandCanvas.height);
-	sidebandCtx.fillStyle = "rgb(200,0,0)";
-	for (var band in bands) {
-		sidebandCtx.fillRect(band * xscale, sidebandCanvas.height, 1, -bands[band] * sidebandCanvas.height);
-	}
-}
 
 // TODO: use Qwerty keyboard code from WebMIDI demo
 var keyNotes = [];
