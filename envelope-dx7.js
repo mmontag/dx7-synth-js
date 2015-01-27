@@ -1,9 +1,11 @@
 // Based on http://wiki.music-synthesizer-for-android.googlecode.com/git/img/env.html
 var ENV_OFF = 4;
-var envmask = [[0, 1, 0, 1, 0, 1, 0, 1],
+var envmask = [
+	[0, 1, 0, 1, 0, 1, 0, 1],
 	[0, 1, 0, 1, 0, 1, 1, 1],
 	[0, 1, 1, 1, 0, 1, 1, 1],
-	[0, 1, 1, 1, 1, 1, 1, 1]];
+	[0, 1, 1, 1, 1, 1, 1, 1]
+];
 
 var outputlevel = [0, 5, 9, 13, 17, 20, 23, 25, 27, 29, 31, 33, 35, 37, 39,
 	41, 42, 43, 45, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,

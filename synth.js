@@ -8,16 +8,9 @@ function Synth(voiceClass) {
 
 Synth.prototype.noteOn = function(note, velocity) {
 		var voice = new this.voiceClass(note, velocity);
-		this.cursor++;
 		if (this.voices.length >= POLYPHONY) {
+			// TODO: fade out removed voices
 			this.voices.shift(); // remove first
-//		} else {
-//			var now = new Date().getTime();
-//			this.voices.sort(function(a, b) {
-//				var ageA = now - a.time;
-//				var ageB = now - b.time;
-//				return a.velocity - b.velocity;
-//			});
 		}
 		this.voices.push(voice);
 };
