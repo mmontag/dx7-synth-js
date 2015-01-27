@@ -87,6 +87,12 @@ FMVoice.updateFrequency = function(operatorIndex) {
 	}
 };
 
+FMVoice.setPan = function(operatorIndex, value) {
+	var op = PARAMS.operators[operatorIndex];
+	op.ampL = Math.cos(Math.PI / 2 * (value + 50) / 100);
+	op.ampR = Math.sin(Math.PI / 2 * (value + 50) / 100);
+};
+
 FMVoice.mapOutputLevel = function(input) {
 	var idx = Math.min(99, Math.max(0, Math.floor(input)));
 	return OUTPUT_LEVEL_TABLE[idx];
@@ -96,7 +102,9 @@ FMVoice.prototype.render = function() {
 	var algorithmIdx = PARAMS.algorithm - 1;
 	var modulationMatrix = ALGORITHMS[algorithmIdx].modulationMatrix;
 	var outputMix = ALGORITHMS[algorithmIdx].outputMix;
-	var output = 0;
+	var outputScaling = this.velocity / outputMix.length;
+	var outputL = 0;
+	var outputR = 0;
 	for (var i = 5; i >= 0; i--) {
 		var mod = 0;
 		for (var j = 0, length = modulationMatrix[i].length; j < length; j++) {
@@ -114,10 +122,12 @@ FMVoice.prototype.render = function() {
 		this.operators[i].render(mod);
 	}
 	for (var k = 0, length = outputMix.length; k < length; k++) {
-		var carrier = outputMix[k];
-		output += this.operators[carrier].val * PARAMS.operators[carrier].outputLevel;
+		var carrier = this.operators[outputMix[k]];
+		var carrierParams = PARAMS.operators[outputMix[k]];
+		outputL += carrier.val * carrierParams.outputLevel * carrierParams.ampL;
+		outputR += carrier.val * carrierParams.outputLevel * carrierParams.ampR;
 	}
-	return this.velocity * (output / outputMix.length);
+	return [ outputL * outputScaling, outputR * outputScaling ];
 };
 
 FMVoice.prototype.noteOff = function() {

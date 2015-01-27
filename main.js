@@ -5,16 +5,17 @@ var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
-var proc = ctx.createScriptProcessor(1024, 0, 1);
+var proc = ctx.createScriptProcessor(1024, 0, 2);
 proc.connect(ctx.destination);
 
 proc.onaudioprocess = function(e) {
-	var output = e.outputBuffer;
-	for (var channel = 0; channel < output.numberOfChannels; channel++) {
-		var chOut = output.getChannelData(channel);
-		for (var sample = 0, length = output.length; sample < length; sample++) {
-			chOut[sample] = synth.render();
-		}
+	var buffer = e.outputBuffer;
+	var outputL = buffer.getChannelData(0);
+	var outputR = buffer.getChannelData(1);
+	for (var i = 0, length = buffer.length; i < length; i++) {
+		var output = synth.render();
+		outputL[i] = output[0];
+		outputR[i] = output[1];
 	}
 };
 

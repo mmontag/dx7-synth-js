@@ -28,6 +28,10 @@
 					} else {
 						self.presets[i] = angular.copy(PRESETS[i]);
 					}
+					// Defaults for non-standard parameters
+					for (var j = 0; j < 6; j++) {
+						self.presets[i].operators[j].pan = self.presets[i].operators[j].pan || 0;
+					}
 				}
 				self.selectedIndex = 2;
 				self.onChange();
@@ -42,6 +46,7 @@
 				var op = PARAMS.operators[i];
 				this.onVolumeChange(i, op);
 				this.onUpdateFrequency(i);
+				this.onPanChange(i, op.pan);
 			}
 			this.onFeedbackChange();
 		};
@@ -75,6 +80,15 @@
 		};
 
 		this.onLFOChange = function() {};
+
+		this.onPanChange = function(operatorIndex, value) {
+			FMVoice.setPan(operatorIndex, value);
+			console.log("pan changed", this.getOp(operatorIndex).outputLevelL, this.getOp(operatorIndex).outputLevelR);
+		};
+
+		this.getOp = function(operatorIndex) {
+			return this.presets[this.selectedIndex].operators[operatorIndex];
+		};
 
 	}]);
 })();

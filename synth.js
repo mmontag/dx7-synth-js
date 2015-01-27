@@ -1,4 +1,5 @@
-var POLYPHONY = 16;
+var POLYPHONY = 12;
+var PER_VOICE_LEVEL = 0.125; // nominal per-voice level borrowed from Hexter
 
 function Synth(voiceClass) {
 	this.voices = [];
@@ -39,8 +40,9 @@ Synth.prototype.panic = function() {
 };
 
 Synth.prototype.render = function() {
-	var val = 0;
-	var perVoiceLevel = 0.125; // nominal per-voice level borrowed from Hexter
+	var output;
+	var outputL = 0;
+	var outputR = 0;
 
 	for (var i = 0, length = this.voices.length; i < length; i++) {
 		var voice = this.voices[i];
@@ -50,9 +52,11 @@ Synth.prototype.render = function() {
 				this.voices.splice(i, 1);
 				i--; // undo increment
 			} else {
-				val += voice.render() * perVoiceLevel;
+				output = voice.render();
+				outputL += output[0];
+				outputR += output[1];
 			}
 		}
 	}
-	return val;
+	return [outputL * PER_VOICE_LEVEL, outputR * PER_VOICE_LEVEL];
 };

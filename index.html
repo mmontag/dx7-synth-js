@@ -120,6 +120,11 @@
 					<input type="range" step="1" min="0" max="3" to-number ng-model="operator.lfoAmpModSens">
 				</div>
 				<div class="param">
+					<div class="param-label">Pan</div>
+					<div class="param-value">{{ operator.pan | number : 0 }}</div>
+					<input type="range" step="1" min="-50" max="50" to-number ng-init="0" ng-model="operator.pan" ng-change="presetCtrl.onPanChange(i, operator.pan)">
+				</div>
+				<div class="param">
 					<div class="param-label">Osc. Mode</div>
 					<label for="oscMode{{ $index }}">
 						<input id="oscMode{{ $index }}" type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="operator.oscMode" ng-change="presetCtrl.onUpdateFrequency(i)">
