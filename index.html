@@ -4,23 +4,19 @@
 	<link rel="stylesheet" type="text/css" href="synth.css">
 </head>
 <body>
-	<p>
-		MIDI Device: <select id="midiIn"></select>
-		<input type="checkbox" id="analysis"><label for="analysis">Analysis</label>
-		<button class="demo-button" data-idx="0">Demo 1</button>
-		<button class="demo-button" data-idx="1">Demo 2</button>
-	</p>
-	<div class="canvasbox">
-		<span class="canvas-title">Magnitude Spectrum</span>
-		<canvas id="fftbox" width=1024 height=100></canvas>
-<!--
-		<span class="canvas-title">Bessel Spectrum</span>
-		<canvas id="sidebands" width=1024 height=100></canvas>
--->
-		<span class="canvas-title">Waveform</span>
-		<canvas id="wavebox" width=1024 height=50></canvas>
-	</div>
-	<div ng-controller="ParamsCtrl">
+	<div ng-controller="MidiCtrl as midiCtrl">
+		<p>
+			MIDI Device: <select id="midiIn"></select>
+			<input type="checkbox" id="analysis"><label for="analysis">Analysis</label>
+			<button class="demo-button" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
+			<button class="demo-button" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
+		</p>
+		<div class="canvasbox">
+			<span class="canvas-title">Magnitude Spectrum</span>
+			<canvas id="fftbox" width=1024 height=100></canvas>
+			<span class="canvas-title">Waveform</span>
+			<canvas id="wavebox" width=1024 height=50></canvas>
+		</div>
 		<div ng-controller="PresetCtrl as presetCtrl">
 			Preset: <select ng-model="presetCtrl.selectedIndex"
 							ng-change="presetCtrl.onChange()"
@@ -139,9 +135,7 @@
 	<script src="jquery-1.11.1.min.js"></script>
 	<script src="mml-emitter.min.js"></script>
 	<script src="ngStorage.min.js"></script>
-	<script src="app.js"></script>
 	<script src="sysex-dx7.js"></script>
-	<script src="bessel.js"></script>
 	<script src="spectrumBox.js"></script>
 	<script src="envelope-dx7.js"></script>
 	<script src="operator.js"></script>
@@ -149,5 +143,6 @@
 	<script src="synth.js"></script>
 	<script src="midi.js"></script>
 	<script src="main.js"></script>
+	<script src="app.js"></script>
 </body>
 </html>
