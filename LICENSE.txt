@@ -26,10 +26,6 @@ SOFTWARE.
 spectrumBox.js by Mohit Cheppudira used with modifications.
 https://github.com/0xfe/experiments/blob/master/www/wavebox/js/spectrum.js 
 
-bessel.js by SheetJS used under MIT license.
-Copyright (C) 2013 SheetJS 
-https://github.com/SheetJS/bessel
-
 midi.js by Chris Wilson used with modifications under MIT license.
 Copyright (c) 2014 Chris Wilson
 https://github.com/cwilso/midi-synth
