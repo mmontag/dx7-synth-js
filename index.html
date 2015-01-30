@@ -7,11 +7,12 @@
 	<div ng-controller="MidiCtrl as midiCtrl">
 		<p>
 			MIDI Device: <select id="midiIn"></select>
-			<input type="checkbox" id="analysis"><label for="analysis">Analysis</label>
+			<input type="checkbox" id="analysis" ng-model="midiCtrl.showAnalysis" ng-change="midiCtrl.onAnalysisChange()">
+			<label for="analysis">Analysis</label>
 			<button class="demo-button" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
 			<button class="demo-button" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
 		</p>
-		<div class="canvasbox">
+		<div class="canvasbox" ng-show="midiCtrl.showAnalysis">
 			<span class="canvas-title">Magnitude Spectrum</span>
 			<canvas id="fftbox" width=1024 height=100></canvas>
 			<span class="canvas-title">Waveform</span>
@@ -142,7 +143,6 @@
 	<script src="fmvoice.js"></script>
 	<script src="synth.js"></script>
 	<script src="midi.js"></script>
-	<script src="main.js"></script>
 	<script src="app.js"></script>
 </body>
 </html>

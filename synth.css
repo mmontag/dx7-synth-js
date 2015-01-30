@@ -1,6 +1,5 @@
 body { font-family: Helvetica; margin: 20px; }
 .canvas-title { position: absolute; font-weight: 500; font-size: 12px; padding: 3px; }
-.canvasbox { display: none; }
 canvas { display: block; }
 
 input[type='range'] {
