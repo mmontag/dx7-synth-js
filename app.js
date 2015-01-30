@@ -2,7 +2,7 @@ var PARAMS = PARAMS || {};
 var SAMPLE_RATE = 44100;
 var PERIOD = Math.PI * 2;
 
-(function(SpectrumBox, MIDI, SysexDX7, FMVoice) {
+(function(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice) {
 	var app = angular.module('synthApp', ['ngStorage']);
 	var synth = new Synth(FMVoice);
 	var midi = new MIDI(synth);
@@ -246,4 +246,4 @@ var PERIOD = Math.PI * 2;
 			return this.presets[this.selectedIndex].operators[operatorIndex];
 		};
 	}]);
-})(SpectrumBox, MIDI, SysexDX7, FMVoice);
+})(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice);
