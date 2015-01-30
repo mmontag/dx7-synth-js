@@ -1,4 +1,4 @@
-var FMVoice = (function(Operator, EnvelopeDX7) {
+var VoiceDX7 = (function(Operator, EnvelopeDX7) {
 	var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
 	var OUTPUT_LEVEL_TABLE = [
 		0.000000, 0.000337, 0.000476, 0.000674, 0.000952, 0.001235, 0.001602, 0.001905, 0.002265, 0.002694,

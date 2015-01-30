@@ -1,4 +1,4 @@
-Additive FM Synth is provided under MIT License.
+DX7 Synth is provided under MIT License.
 Copyright (C) 2014 Matt Montag
 
 The MIT License (MIT)

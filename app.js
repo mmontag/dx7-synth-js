@@ -246,4 +246,4 @@ var PERIOD = Math.PI * 2;
 			return this.presets[this.selectedIndex].operators[operatorIndex];
 		};
 	}]);
-})(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice);
+})(SpectrumBox, MMLEmitter, MIDI, SysexDX7, VoiceDX7);
