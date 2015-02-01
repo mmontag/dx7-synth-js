@@ -1,6 +1,6 @@
 var Synth = (function() {
 	var POLYPHONY = 12;
-	var PER_VOICE_LEVEL = 0.125; // nominal per-voice level borrowed from Hexter
+	var PER_VOICE_LEVEL = 0.125 / 6; // nominal per-voice level borrowed from Hexter
 
 	function Synth(voiceClass) {
 		this.voices = [];
