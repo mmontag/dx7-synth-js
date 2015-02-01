@@ -150,12 +150,20 @@ var PERIOD = Math.PI * 2;
 
 		this.onKeyDown = function(ev) {
 			var note = qwertyNotes[ev.keyCode];
+			if (ev.altKey || ev.metaKey) return false;
 			if (ev.keyCode == 32) {
-				synth.panic(); return false;
+				synth.panic();
+				ev.stopPropagation();
+				ev.preventDefault();
+				return false;
 			}
-			if (ev.repeat) return false;
-			if (note)
-				synth.noteOn(note, 0.75);
+			if (note) {
+				if (!ev.repeat) {
+					synth.noteOn(note, 0.8);
+				}
+				ev.stopPropagation();
+				ev.preventDefault();
+			}
 			return false;
 		};
 
