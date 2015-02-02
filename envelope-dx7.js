@@ -53,11 +53,10 @@ var EnvelopeDX7 = (function() {
 			var lev;
 			if (this.rising) {
 				lev = attackstep(this.level, this.i, this.qr);
-				// console.log(lev);
 				if (lev >= this.targetlevel) {
 					lev = this.targetlevel;
 					this.advance(this.state + 1);
-					// console.log("rise complete, advanced to state", this.state);
+					// console.log("rise complete, advanced to state:", this.state, "level:", Math.pow(20, ((this.level - 3824) * 0.0235/20)));
 				}
 				this.level = lev;
 			} else {
@@ -65,7 +64,7 @@ var EnvelopeDX7 = (function() {
 				if (lev <= this.targetlevel) {
 					lev = this.targetlevel;
 					this.advance(this.state + 1);
-					// console.log("fall complete, advanced to state", this.state);
+					// console.log("fall complete, advanced to state", this.state, "level:", Math.pow(20, ((this.level - 3824) * 0.0235/20)));
 				}
 				this.level = lev;
 			}

@@ -11,7 +11,7 @@
   @param canvas_id - Canvas element ID.
   @param audio_context - An AudioContext instance.
 */
-SpectrumBox = function(num_points, num_bins, canvas_id, audio_context, type) {
+var SpectrumBox = function SpectrumBox(num_points, num_bins, canvas_id, audio_context, type) {
   this.init(num_points, num_bins, canvas_id, audio_context, type);
 }
 
@@ -26,7 +26,7 @@ SpectrumBox.prototype.init = function(
   this.num_bins = num_bins;
   this.num_points = num_points;
   this.canvas_id = canvas_id;
-  this.update_rate_ms = 16.66667;
+  this.update_rate_ms = 33.333;
   this.smoothing = 0.25;
   this.type = type || SpectrumBox.Types.FREQUENCY;
 
@@ -35,8 +35,8 @@ SpectrumBox.prototype.init = function(
 
   // Determine the boundaries of the canvas.
   this.canvas = document.getElementById(canvas_id);
-  this.width = this.canvas.width;
-  this.height = this.canvas.height;
+  this.width = this.canvas.width = num_bins / 2;
+  this.height = this.canvas.height = 100;
   if (this.type == SpectrumBox.Types.FREQUENCY) {
     this.bar_spacing = 0;
   } else {
@@ -142,7 +142,7 @@ SpectrumBox.prototype.update = function() {
     if (this.type == SpectrumBox.Types.FREQUENCY) {
       //var val = (data[i] - this.fft.minDecibels) * (this.fft.maxDecibels - this.fft.minDecibels)
       var db = data[i]/256 * (this.fft.maxDecibels - this.fft.minDecibels) + this.fft.minDecibels; 
-      var mag = Math.pow(10, 0.05*db) * 35; // why 40? i have no idea
+      var mag = Math.pow(10, 0.05*db) * 70; // used to be 40
       // var mag = data[i]/256;
       this.ctx.fillRect(
         i * bar_width, this.height,
