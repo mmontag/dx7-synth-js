@@ -56,6 +56,67 @@ var PERIOD = Math.PI * 2;
 		};
 	});
 
+	app.directive('dx7ToggleButton', function() {
+		return {
+			restrict: 'E',
+			replace: true,
+			transclude: true,
+			require: 'ngModel',
+			scope: {'ngModel': '='},
+			template: '<button type="button" class="dx7-toggle ng-class:{\'dx7-toggle-on\':ngModel}" data-toggle="button" ng-click="ngModel = !ngModel" ng-transclude></button>'
+		};
+	});
+
+	app.directive('knob', function() {
+		function link(scope, element, attrs) {
+			var rotationRange = 300; // ±degrees
+			var pixelRange = 300; // pixels between max and min
+			var startY, startModel, down = false;
+			var fgEl = element.find('div');
+			var max = element.attr('max');
+			var min = element.attr('min');
+			console.log(fgEl);
+
+			element.on('mousedown', function(e) {
+				startY = e.clientY;
+				startModel = scope.ngModel || 0;
+				down = true;
+				e.preventDefault();
+				e.stopPropagation();
+				window.addEventListener('mousemove', onMove);
+				window.addEventListener('mouseup', onUp);
+			});
+
+			function onMove(e) {
+				if (down) {
+					var dy = (startY - e.clientY) * (max - min) / pixelRange;
+					// TODO: use 'step' attribute
+					scope.ngModel = Math.round(Math.max(min, Math.min(max, dy + startModel)));
+					scope.$apply();
+				}
+			}
+
+			function onUp(e) {
+				down = false;
+				window.removeEventListener('mousemove', onMove);
+				window.removeEventListener('mouseup', onUp);
+			}
+
+			scope.getDegrees = function() {
+				return (this.ngModel - min) / (max - min) * rotationRange - (rotationRange / 2) ;
+			}
+		}
+
+		return {
+			restrict: 'E',
+			replace: true,
+			require: 'ngModel',
+			scope: {'ngModel': '='},
+			template: '<div class="knob"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div>',
+			link: link
+		};
+	});
+
 	app.controller('MidiCtrl', function($scope) {
 		var mml = null;
 		var mmlDemos = [ "t92 l8 o4 $" +
@@ -181,6 +242,12 @@ var PERIOD = Math.PI * 2;
 		window.addEventListener('keyup', this.onKeyUp, false);
 	});
 
+	app.controller('OperatorCtrl', function($scope) {
+		$scope.$watchGroup(['operator.freqCoarse', 'operator.freqFine', 'operator.detune'], function() {
+			FMVoice.updateFrequency($scope.i);
+		});
+	});
+
 	app.controller('PresetCtrl', ['$localStorage', '$http', function ($localStorage, $http) {
 		this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
 		var self = this;
@@ -212,7 +279,7 @@ var PERIOD = Math.PI * 2;
 			for (var i = 0; i < PARAMS.operators.length; i++) {
 				var op = PARAMS.operators[i];
 				this.onVolumeChange(i, op);
-				this.onUpdateFrequency(i);
+				FMVoice.updateFrequency(i);
 				this.onPanChange(i, op.pan);
 			}
 			this.onFeedbackChange();
@@ -230,10 +297,6 @@ var PERIOD = Math.PI * 2;
 				this.presets[this.selectedIndex] = angular.copy(self.basePresets[this.selectedIndex]);
 				this.onChange();
 			}
-		};
-
-		this.onUpdateFrequency = function(operatorIndex) {
-			FMVoice.updateFrequency(operatorIndex);
 		};
 
 		this.onVolumeChange = function(operatorIndex, operator) {

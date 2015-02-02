@@ -1,6 +1,33 @@
-body { font-family: Helvetica; margin: 20px; }
+@font-face {
+    font-family:"5x8 LCD HD44780U A02 Regular";
+    src: url("fonts/5x8_lcd_hd44780u_a02.eot") format("eot"),url("fonts/5x8_lcd_hd44780u_a02.woff") format("woff"),url("fonts/5x8_lcd_hd44780u_a02.ttf") format("truetype"),url("fonts/5x8_lcd_hd44780u_a02.svg#5x8-LCD-HD44780U-A02") format("svg");
+    font-weight:normal;
+    font-style:normal;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 20px;
+    background-color: #313036;
+    color: #ffffff;
+}
+
 .canvas-title { position: absolute; font-weight: 500; font-size: 12px; padding: 3px; }
 canvas { display: block; }
+select.lcd {
+    font-family: '5x8 LCD HD44780U A02 Regular', serif;
+    font-size: 16.27px;
+    border: 1px solid #cfe14a;
+    padding: 1px 4px 3px;
+    border-radius: 0;
+    background-color: #cfe14a;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: inset 0 2px 0 1px rgba(0,0,0,0.1); //, inset 0 0 6px rgba(192,255,128,1);
+    outline: 0;
+    width: 160px;
+    color: rgba(0,0,0,0.8);
+}
 
 input[type='range'] {
     -webkit-appearance: none;
@@ -16,7 +43,7 @@ input[type='range'] {
     display: inline-block;
     vertical-align: middle;
     outline: 0;
-}  
+}
   
 input[type='range']::-webkit-slider-thumb {
     width: 24px;  
@@ -31,7 +58,7 @@ input[type='range']::-webkit-slider-thumb {
 
 .param-group {
   float: left;
-  background: #ddd;
+  background: #232529;
   xmargin-right: 10px;
   padding: 10px;
 }
@@ -56,4 +83,98 @@ input[type='range']::-webkit-slider-thumb {
   margin-bottom: 5px;
   font-weight: bold;
   font-size: 90%;
+}
+
+#color-definitions {
+  dkblack: #232529;
+  black: #313036;
+  dkred: #2f171a;
+  red: #fa0606;
+  brown: #937945;
+  purple: #826896;
+  pink: #e74b4b;
+  green: #cfe14a;
+  dkgreen: #c0cf35;
+  teal: #00af83;
+  gray: #cccccc;
+  white: #ffffff;
+}
+
+.dx7-button {
+    border: 0;
+    appearance: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 10.5px;
+    padding: 0 5px;
+    text-align: left;
+    line-height: 20px;
+    width: 60px;
+    height: 18px;
+    background-color: gray;
+    color: #ffffff;
+    font-family: Helvetica, Arial, sans-serif;
+    outline: 0;
+}
+
+.purple {
+    background-color: #826896;
+}
+.purple:active {
+    background-color: #4b3d57;
+}
+
+.pink {
+    background-color: #e74b4b;
+}
+.pink:active {
+    background-color: #b41818;
+}
+
+.teal {
+    background-color: #00af83;
+}
+.teal:active {
+    background-color: #007a5a;
+}
+
+.dx7-toggle {
+    width: 34px;
+    height: 28px;
+    vertical-align: middle;
+    background-color: #4a4950;
+    background-image: url('images/dx7-toggle-off.svg');
+    border: 2px solid #232529;
+}
+
+.dx7-toggle:focus {
+    outline: 1px solid #4a4950;
+}
+
+.dx7-toggle:active {
+    background-color: #232529;
+    background-image: url('images/dx7-toggle-off-active.svg');
+}
+
+.dx7-toggle-on {
+    background-image: url('images/dx7-toggle-on.svg');
+}
+
+.dx7-toggle-on:active {
+    background-image: url('images/dx7-toggle-on-active.svg');
+}
+
+.knob {
+    height: 30px;
+    width: 30px;
+    background-image: url('images/knob-background.svg');
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.knob-foreground {
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    background-image: url('images/knob-foreground.svg');
 }

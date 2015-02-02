@@ -9,32 +9,35 @@
 			MIDI Device: <select id="midiIn"></select>
 			<input type="checkbox" id="analysis" ng-model="midiCtrl.showAnalysis" ng-change="midiCtrl.onAnalysisChange()">
 			<label for="analysis">Analysis</label>
-			<button class="demo-button" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
-			<button class="demo-button" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
+			<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
+			<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
+			<dx7-toggle-button ng-model="midiCtrl.bar"></dx7-toggle-button>
+			<knob ng-model="midiCtrl.foo"></knob>
 		</p>
 		<div class="canvasbox" ng-show="midiCtrl.showAnalysis">
 			<span class="canvas-title">Magnitude Spectrum</span>
-			<canvas id="fftbox" width=1024 height=100></canvas>
+			<canvas id="fftbox"></canvas>
 			<span class="canvas-title">Waveform</span>
-			<canvas id="wavebox" width=1024 height=50></canvas>
+			<canvas id="wavebox"></canvas>
 		</div>
 		<div ng-controller="PresetCtrl as presetCtrl">
-			Preset: <select ng-model="presetCtrl.selectedIndex"
-							ng-change="presetCtrl.onChange()"
-							ng-options="presetCtrl.presets.indexOf(preset) as preset.name for preset in presetCtrl.presets"></select>
-			<button ng-click="presetCtrl.save()">Save</button>
-			<button ng-click="presetCtrl.reset()">Reset</button>
-			<div class="param">
-				<div class="param-label">Algorithm</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].algorithm | number }}</div>
-				<input type="range" step="1" min="1" max="32" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].algorithm">
-			</div>
-			<div class="param">
-				<div class="param-label">Feedback</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 0 }}</div>
-				<input type="range" step="1" min="0" max="7" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].feedback" ng-change="presetCtrl.onFeedbackChange()">
-			</div>
 			<div class="param-group">
+				Preset: <select ng-model="presetCtrl.selectedIndex"
+								ng-change="presetCtrl.onChange($event)"
+								ng-options="presetCtrl.presets.indexOf(preset) as preset.name for preset in presetCtrl.presets"
+								class="lcd"></select>
+				<button ng-click="presetCtrl.save()">Save</button>
+				<button ng-click="presetCtrl.reset()">Reset</button>
+				<div class="param">
+					<div class="param-label">Algorithm</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].algorithm | number }}</div>
+					<input type="range" step="1" min="1" max="32">
+				</div>
+				<div class="param">
+					<div class="param-label">Feedback</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 0 }}</div>
+					<input type="range" step="1" min="0" max="7" to-number ng-model="presetCtrl.presets[presetCtrl.selectedIndex].feedback" ng-change="presetCtrl.onFeedbackChange()">
+				</div>
 				<div class="group-name">LFO</div>
 				<div class="param">
 					<div class="param-label">Waveform</div>
@@ -71,7 +74,7 @@
 					</label>
 				</div>
 			</div>
-			<div class="param-group" ng-repeat="(i, operator) in presetCtrl.presets[presetCtrl.selectedIndex].operators">
+			<div class="param-group" ng-repeat="(i, operator) in presetCtrl.presets[presetCtrl.selectedIndex].operators" ng-controller="OperatorCtrl">
 				<div class="group-name">OP {{ $index + 1 }}</div>
 
 				<div ng-repeat="i in [0,1,2,3]">
@@ -89,17 +92,17 @@
 				<div class="param">
 					<div class="param-label">Freq. Coarse</div>
 					<div class="param-value">{{ operator.freqCoarse | number : 0 }}</div>
-					<input type="range" step="1" min="0" max="31" to-number ng-model="operator.freqCoarse" ng-change="presetCtrl.onUpdateFrequency(i)">
+					<knob step="1" min="0" max="31" to-number ng-model="operator.freqCoarse"></knob>
 				</div>
 				<div class="param">
 					<div class="param-label">Freq. Fine</div>
 					<div class="param-value">{{ operator.freqFine | number : 0 }}</div>
-					<input type="range" step="1" min="0" max="99" to-number ng-model="operator.freqFine" ng-change="presetCtrl.onUpdateFrequency(i)">
+					<knob step="1" min="0" max="99" to-number ng-model="operator.freqFine"></knob>
 				</div>
 				<div class="param">
 					<div class="param-label">Detune</div>
 					<div class="param-value">{{ operator.detune | number : 0 }}</div>
-					<input type="range" step="1" min="-7" max="7" to-number ng-model="operator.detune"">
+					<knob step="1" min="-7" max="7" to-number ng-model="operator.detune"></knob>
 				</div>
 				<div class="param">
 					<div class="param-label">Volume</div>
