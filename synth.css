@@ -5,28 +5,64 @@
     font-style:normal;
 }
 
+@font-face {
+    font-family: "Digital-7 MonoItalic";
+    src: url("fonts/digital-7__mono_italic_.eot?") format("eot"), url("fonts/digital-7__mono_italic_.woff") format("woff"), url("fonts/digital-7__mono_italic_.ttf") format("truetype"), url("fonts/digital-7__mono_italic_.svg#Digital-7MonoItalic") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     font-family: Helvetica, Arial, sans-serif;
     margin: 20px;
-    background-color: #313036;
+    background-color: #4a4950;
     color: #ffffff;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.canvas-title { position: absolute; font-weight: 500; font-size: 12px; padding: 3px; }
-canvas { display: block; }
+.display {
+    position: absolute;
+    width: 406px;
+    height: 56px;
+    top: 39px;
+    left: 254px;
+    background-color: #cfe14a;
+    box-shadow: inset 0 3px 0 3px #c0cf35;
+    background-image: url(images/lcd-background.svg);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+
+.analysis {
+    position: absolute;
+    background-color: #c0cf35;
+    bottom: 8px;
+    right: 9px;
+    top: 13px;
+    width: 168px;
+}
+
 select.lcd {
     font-family: '5x8 LCD HD44780U A02 Regular', serif;
     font-size: 16.27px;
-    border: 1px solid #cfe14a;
-    padding: 1px 4px 3px;
+    line-height: 16px;
+    border: 0;
+    padding: 0;
     border-radius: 0;
-    background-color: #cfe14a;
+    background-color: transparent;
     appearance: none;
     -webkit-appearance: none;
-    box-shadow: inset 0 2px 0 1px rgba(0,0,0,0.1); //, inset 0 0 6px rgba(192,255,128,1);
     outline: 0;
     width: 160px;
     color: rgba(0,0,0,0.8);
+    position: absolute;
+    bottom: 8px;
+    left: 5px;
 }
 
 input[type='range'] {
@@ -53,27 +89,18 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .algo-diagram {
-  width: 800px;
+    width: 800px;
 }
 
 .param-group {
-  float: left;
-  background: #232529;
-  xmargin-right: 10px;
-  padding: 10px;
-}
-
-.param-label {
-  display: inline-block;
-  width: 80px;
-  font-size: 75%;
-  margin-right: 10px;
-  text-transform: uppercase;
-  vertical-align: middle;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 0;
 }
 
 .param-value {
-  display: inline-block;
+  display: none;
   width: 40px;
   font-size: 75%;
   vertical-align: middle;
@@ -139,9 +166,10 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .dx7-toggle {
+    display: block;
     width: 34px;
     height: 28px;
-    vertical-align: middle;
+    margin: 0 auto;
     background-color: #4a4950;
     background-image: url('images/dx7-toggle-off.svg');
     border: 2px solid #232529;
@@ -164,12 +192,117 @@ input[type='range']::-webkit-slider-thumb {
     background-image: url('images/dx7-toggle-on-active.svg');
 }
 
+.dx7-container {
+    background-color: #313036;
+    border: 1px solid #232326;
+    position: relative;
+    width: 1060px;
+}
+
+.dx7-top-panel {
+    display: block;
+    height: 120px;
+    background-color: #232326;
+}
+
+.dx7-headings {
+    font-size: 10px;
+    font-weight: bold;
+    position: relative;
+    display: block;
+    height: 12px;
+    margin: 16px 0 8px;
+    text-transform: uppercase;
+}
+
+/* TODO: position absolute headings inside first row groups */
+.heading-operator { position: absolute; left: 30px; }
+.heading-frequency { position: absolute; left: 260px; }
+.heading-egrate { position: absolute; left: 500px; }
+.heading-eglevel { position: absolute; left: 626px; }
+.heading-keyboardscaling { position: absolute; left: 761px; }
+
+.dx7-logo {
+    position: absolute;
+    top: 40px;
+    left: 30px;
+    width: 153px;
+    height: 47px;
+    background-image: url(images/dx7-logo.png);
+    background-size: cover;
+}
+
+.dx7-operators {
+    display: block;
+    top: 160px;
+}
+
+.dx7-buttons-row-1 {
+
+}
+
+.dx7-buttons-row-2 {
+
+}
+
+.operator {
+    display: block; /* fix for spaces between inline children */
+    padding: 15px 24px;
+    height: 50px;
+    font-size: 0;
+}
+
+.operator:nth-child(odd) {
+    background-color: #36353b;
+}
+
+.param {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 50px;
+    vertical-align: top;
+}
+
+.param.narrow {
+    width: 29px;
+}
+
+.frequency-display {
+    display: inline-block;
+    width: 60px;
+    height: 43px;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 4px;
+    background-image: url(images/frequency-display.svg);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    font-family: 'Digital-7 MonoItalic';
+    letter-spacing: 1px;
+    font-size: 20px;
+    color: #fa0606;
+}
+
+.param-label {
+    position: absolute;
+    top: 39px;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    font-size: 8px;
+    font-weight: bold;
+    line-height: 9px;
+    text-transform: uppercase;
+    padding: 0 3px;
+    box-sizing: border-box;
+}
+
 .knob {
+    margin: 0 auto;
     height: 30px;
     width: 30px;
     background-image: url('images/knob-background.svg');
-    display: inline-block;
-    vertical-align: middle;
 }
 
 .knob-foreground {
@@ -177,4 +310,26 @@ input[type='range']::-webkit-slider-thumb {
     width: 30px;
     position: absolute;
     background-image: url('images/knob-foreground.svg');
+}
+
+.slider {
+    height: 50px;
+    width: 24px;
+    background-image: url('images/dx7-slider-rail-dashed.svg');
+    background-size: 24px;
+    background-position: 0 0;
+    overflow: hidden;
+}
+
+.param:last-child .slider {
+    width: 18px;
+}
+
+.slider-foreground {
+    height: 13px;
+    width: 18px;
+    background-image: url('images/dx7-slider-foreground.svg');
+    background-position: 0 0;
+    position: relative;
+    top: 0px;
 }

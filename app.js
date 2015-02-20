@@ -56,7 +56,7 @@ var PERIOD = Math.PI * 2;
 		};
 	});
 
-	app.directive('dx7ToggleButton', function() {
+	app.directive('toggleButton', function() {
 		return {
 			restrict: 'E',
 			replace: true,
@@ -70,13 +70,11 @@ var PERIOD = Math.PI * 2;
 	app.directive('knob', function() {
 		function link(scope, element, attrs) {
 			var rotationRange = 300; // ±degrees
-			var pixelRange = 300; // pixels between max and min
+			var pixelRange = 200; // pixels between max and min
 			var startY, startModel, down = false;
 			var fgEl = element.find('div');
 			var max = element.attr('max');
 			var min = element.attr('min');
-			console.log(fgEl);
-
 			element.on('mousedown', function(e) {
 				startY = e.clientY;
 				startModel = scope.ngModel || 0;
@@ -113,6 +111,55 @@ var PERIOD = Math.PI * 2;
 			require: 'ngModel',
 			scope: {'ngModel': '='},
 			template: '<div class="knob"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div>',
+			link: link
+		};
+	});
+
+	app.directive('slider', function() {
+		function link(scope, element, attrs) {
+			var sliderHandleHeight = 8;
+			var sliderRailHeight = 50;
+			var positionRange = sliderRailHeight - sliderHandleHeight;
+			var pixelRange = 50;
+			var startY, startModel, down = false;
+			var fgEl = element.find('div');
+			var max = element.attr('max');
+			var min = element.attr('min');
+			element.on('mousedown', function(e) {
+				startY = e.clientY;
+				startModel = scope.ngModel || 0;
+				down = true;
+				e.preventDefault();
+				e.stopPropagation();
+				window.addEventListener('mousemove', onMove);
+				window.addEventListener('mouseup', onUp);
+			});
+
+			function onMove(e) {
+				if (down) {
+					var dy = (startY - e.clientY) * (max - min) / pixelRange;
+					scope.ngModel = Math.round(Math.max(min, Math.min(max, dy + startModel)));
+					scope.$apply();
+				}
+			}
+
+			function onUp(e) {
+				down = false;
+				window.removeEventListener('mousemove', onMove);
+				window.removeEventListener('mouseup', onUp);
+			}
+
+			scope.getTop = function() {
+				return positionRange - ((this.ngModel - min) / (max - min) * positionRange);
+			}
+		}
+
+		return {
+			restrict: 'E',
+			replace: true,
+			require: 'ngModel',
+			scope: {'ngModel': '='},
+			template: '<div class="slider"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div>',
 			link: link
 		};
 	});
@@ -202,8 +249,12 @@ var PERIOD = Math.PI * 2;
 			}
 		};
 
+		this.onModeClick = function() {
+			console.log("hey ho");
+		};
+
 		this.onAnalysisChange = function() {
-			if (this.showAnalysis) {
+			if (this.analysisMode) {
 				frequencybox.enable();
 				wavebox.enable();
 			} else {
@@ -243,12 +294,19 @@ var PERIOD = Math.PI * 2;
 	});
 
 	app.controller('OperatorCtrl', function($scope) {
-		$scope.$watchGroup(['operator.freqCoarse', 'operator.freqFine', 'operator.detune'], function() {
+		$scope.$watchGroup(['operator.oscMode', 'operator.freqCoarse', 'operator.freqFine', 'operator.detune'], function() {
 			FMVoice.updateFrequency($scope.i);
+		});
+		$scope.$watch('operator.volume', function() {
+			FMVoice.setOutputLevel($scope.i, $scope.operator.volume);
+			console.log("outputLevel changed", $scope.operator.outputLevel);
+		});
+		$scope.$watch('operator.pan', function() {
+			FMVoice.setPan($scope.i, $scope.operator.pan);
 		});
 	});
 
-	app.controller('PresetCtrl', ['$localStorage', '$http', function ($localStorage, $http) {
+	app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($scope, $localStorage, $http) {
 		this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
 		var self = this;
 		$http.get('roms/ROM1A.SYX')
@@ -274,15 +332,16 @@ var PERIOD = Math.PI * 2;
 		this.onChange = function() {
 			console.log("changed preset!", this.selectedIndex);
 			PARAMS = this.presets[this.selectedIndex];
+			this.params = PARAMS;
 			// TODO: separate UI parameters from internal synth parameters
 			// TODO: better initialization of computed parameters
 			for (var i = 0; i < PARAMS.operators.length; i++) {
 				var op = PARAMS.operators[i];
-				this.onVolumeChange(i, op);
+				FMVoice.setOutputLevel(i, op.volume);
 				FMVoice.updateFrequency(i);
-				this.onPanChange(i, op.pan);
+				FMVoice.setPan(i, op.pan);
 			}
-			this.onFeedbackChange();
+			FMVoice.setFeedback(PARAMS.feedback);
 		};
 
 		this.save = function() {
@@ -299,22 +358,15 @@ var PERIOD = Math.PI * 2;
 			}
 		};
 
-		this.onVolumeChange = function(operatorIndex, operator) {
-			FMVoice.setOutputLevel(operatorIndex, operator.volume);
-			console.log("outputLevel changed", operator.outputLevel);
-		};
-
-		this.onFeedbackChange = function() {
+		$scope.$watch('feedback', function() {
 			FMVoice.setFeedback(PARAMS.feedback);
 			console.log("fbRatio changed", PARAMS.fbRatio);
-		};
+		});
 
-		this.onLFOChange = function() {};
-
-		this.onPanChange = function(operatorIndex, value) {
-			FMVoice.setPan(operatorIndex, value);
-			console.log("pan changed", this.getOp(operatorIndex).outputLevelL, this.getOp(operatorIndex).outputLevelR);
-		};
+		$scope.$watchGroup(['lfoSpeed', 'lfoDelay', 'lfoAmpModDepth', 'lfoPitchModDepth', 'lfoWaveform'], function() {
+			// TODO: update LFO stuff
+			// FMVoice.updateLFO();
+		});
 
 		this.getOp = function(operatorIndex) {
 			return this.presets[this.selectedIndex].operators[operatorIndex];
