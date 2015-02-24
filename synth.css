@@ -205,6 +205,13 @@ input[type='range']::-webkit-slider-thumb {
     background-color: #232326;
 }
 
+.dx7-bottom-panel {
+    padding: 15px 24px;
+    display: block;
+    height: 120px;
+    background-color: #232326;
+}
+
 .dx7-headings {
     font-size: 10px;
     font-weight: bold;
@@ -262,6 +269,15 @@ input[type='range']::-webkit-slider-thumb {
     width: 44px;
     height: 50px;
     vertical-align: top;
+    text-align: center;
+}
+
+.param.wide {
+    width: 66px;
+}
+
+.param.extra-wide {
+    width: 134px;
 }
 
 .param.narrow {
@@ -288,7 +304,6 @@ input[type='range']::-webkit-slider-thumb {
     position: absolute;
     top: 39px;
     text-align: center;
-    display: inline-block;
     width: 100%;
     font-size: 8px;
     font-weight: bold;

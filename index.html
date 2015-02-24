@@ -10,6 +10,9 @@
 			<button class="dx7-button purple" ng-click="midiCtrl.onModeClick()">Mode</button>
 			<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
 			<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
+			<button class="dx7-button pink" ng-click="presetCtrl.save()">Save</button>
+			<button class="dx7-button pink" ng-click="presetCtrl.reset()">Reset</button>
+
 		</p>
 		<div class="dx7-container" ng-controller="PresetCtrl as presetCtrl">
 			<div class="dx7-top-panel">
@@ -125,59 +128,59 @@
 							<knob step="1" min="0" max="99" to-number ng-model="operator.keyDepthR"></knob>
 						</div>
 					</div>
-
 				</div>
 			</div>
+			<div class="dx7-bottom-panel">
+				<div class="param wide">
+					<div class="param-label">Algorithm</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].algorithm | number }}</div>
+					<knob step="1" min="1" max="32" to-number ng-model="presetCtrl.params.algorithm"></knob>
+				</div>
+				<div class="param wide">
+					<div class="param-label">Feedback</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 0 }}</div>
+					<knob step="1" min="0" max="7" to-number ng-model="presetCtrl.params.feedback"></knob>
+				</div>
+				<!--
+				<div class="group-name">LFO</div>
+				-->
+				<div class="param extra-wide">
+					<div class="param-label">Waveform</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoWaveform | number : 0 }}</div>
+					<select ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoWaveform"
+							ng-change="presetCtrl.onLFOChange()"
+							ng-options="presetCtrl.lfoWaveformOptions.indexOf(wave) as wave for wave in presetCtrl.lfoWaveformOptions"></select>
+				</div>
+				<div class="param">
+					<div class="param-label">Speed</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoSpeed | number : 0 }}</div>
+					<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoSpeed"></knob>
+				</div>
+				<div class="param">
+					<div class="param-label">Delay</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoDelay | number : 0 }}</div>
+					<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoDelay"></knob>
+				</div>
+				<div class="param">
+					<div class="param-label">Amp Mod</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoAmpModDepth | number : 0 }}</div>
+					<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoAmpModDepth"></knob>
+				</div>
+				<div class="param">
+					<div class="param-label">Pitch Mod</div>
+					<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoPitchModDepth | number : 0 }}</div>
+					<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoPitchModDepth"></knob>
+				</div>
+				<div class="param">
+					<div class="param-label">Sync</div>
+					<label for="lfoSync">
+						<toggle-button ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.lfoSync"></toggle-button>
+					</label>
+				</div>
 			<!-- TODO: fix this stuff
-			<button ng-click="presetCtrl.save()">Save</button>
-			<button ng-click="presetCtrl.reset()">Reset</button>
-			<div class="param">
-				<div class="param-label">Algorithm</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].algorithm | number }}</div>
-				<knob step="1" min="1" max="32" to-number ng-model="presetCtrl.params.algorithm"></knob>
-			</div>
-			<div class="param">
-				<div class="param-label">Feedback</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].feedback | number : 0 }}</div>
-				<knob step="1" min="0" max="7" to-number ng-model="presetCtrl.params.feedback"></knob>
-			</div>
-			<div class="group-name">LFO</div>
-			<div class="param">
-				<div class="param-label">Waveform</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoWaveform | number : 0 }}</div>
-				<select ng-model="presetCtrl.presets[presetCtrl.selectedIndex].lfoWaveform"
-						ng-change="presetCtrl.onLFOChange()"
-						ng-options="presetCtrl.lfoWaveformOptions.indexOf(wave) as wave for wave in presetCtrl.lfoWaveformOptions"></select>
-			</div>
-			<div class="param">
-				<div class="param-label">Speed</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoSpeed | number : 0 }}</div>
-				<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoSpeed"></knob>
-			</div>
-			<div class="param">
-				<div class="param-label">Delay</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoDelay | number : 0 }}</div>
-				<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoDelay"></knob>
-			</div>
-			<div class="param">
-				<div class="param-label">Amp. Modulation</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoAmpModDepth | number : 0 }}</div>
-				<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoAmpModDepth"></knob>
-			</div>
-			<div class="param">
-				<div class="param-label">Pitch Modulation</div>
-				<div class="param-value">{{ presetCtrl.presets[presetCtrl.selectedIndex].lfoPitchModDepth | number : 0 }}</div>
-				<knob step="1" min="0" max="99" to-number ng-model="presetCtrl.params.lfoPitchModDepth"></knob>
-			</div>
-			<div class="param">
-				<div class="param-label">Sync</div>
-				<label for="lfoSync">
-					<input id="lfoSync" type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.lfoSync">
-					Sync
-				</label>
-			</div>
 			<img src="algorithms.png" class="algo-diagram">
 			-->
+			</div>
 		</div>
 	</div>
 	<script src="angular.min.js"></script>
