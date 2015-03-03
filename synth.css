@@ -88,8 +88,12 @@ input[type='range']::-webkit-slider-thumb {
     xx-webkit-transform: rotate(-90deg);
 }
 
-.algo-diagram {
-    width: 800px;
+.algorithm-diagram {
+    position: absolute;
+    background: url(images/algorithm-01.svg);
+    width: 80px;
+    height: 520px;
+    left: 20px;
 }
 
 .param-group {
@@ -97,6 +101,10 @@ input[type='range']::-webkit-slider-thumb {
     display: inline-block;
     vertical-align: top;
     font-size: 0;
+}
+
+.param-group:last-child {
+    margin: 0;
 }
 
 .param-value {
@@ -196,7 +204,7 @@ input[type='range']::-webkit-slider-thumb {
     background-color: #313036;
     border: 1px solid #232326;
     position: relative;
-    width: 1060px;
+    width: 1120px;
 }
 
 .dx7-top-panel {
@@ -206,7 +214,7 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .dx7-bottom-panel {
-    padding: 15px 24px;
+    padding: 15px 15px 15px 110px;
     display: block;
     height: 120px;
     background-color: #232326;
@@ -223,11 +231,12 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 /* TODO: position absolute headings inside first row groups */
-.heading-operator { position: absolute; left: 30px; }
-.heading-frequency { position: absolute; left: 260px; }
-.heading-egrate { position: absolute; left: 500px; }
-.heading-eglevel { position: absolute; left: 626px; }
-.heading-keyboardscaling { position: absolute; left: 761px; }
+.heading-algorithm { position: absolute; left: 30px; }
+.heading-operator { position: absolute; left: 110px; }
+.heading-frequency { position: absolute; left: 330px; }
+.heading-egrate { position: absolute; left: 570px; }
+.heading-eglevel { position: absolute; left: 696px; }
+.heading-keyboardscaling { position: absolute; left: 831px; }
 
 .dx7-logo {
     position: absolute;
@@ -254,7 +263,7 @@ input[type='range']::-webkit-slider-thumb {
 
 .operator {
     display: block; /* fix for spaces between inline children */
-    padding: 15px 24px;
+    padding: 15px 15px 15px 110px;
     height: 50px;
     font-size: 0;
 }

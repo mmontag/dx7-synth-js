@@ -29,6 +29,7 @@
 				</div>
 			</div>
 			<div class="dx7-headings">
+				<div class="heading-algorithm">Algorithm</div>
 				<div class="heading-operator">Operator</div>
 				<div class="heading-frequency">Frequency</div>
 				<div class="heading-egrate">EG Rate</div>
@@ -36,6 +37,7 @@
 				<div class="heading-keyboardscaling">Keyboard Scaling <span style="opacity: 0.2">Not implemented</span></div>
 			</div>
 			<div class="dx7-operators">
+				<div class="algorithm-diagram" style="background-image: url(images/algorithm-{{ ('0' + presetCtrl.params.algorithm).slice(-2) }}.svg)"></div>
 				<div class="operator" ng-repeat="(i, operator) in presetCtrl.presets[presetCtrl.selectedIndex].operators" ng-controller="OperatorCtrl">
 					<div class="param-group">
 						<div class="param">
