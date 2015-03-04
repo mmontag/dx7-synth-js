@@ -184,7 +184,11 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .dx7-toggle:focus {
-    outline: 1px solid #4a4950;
+    outline: 2px solid rgba(255,255,255,0.15);
+}
+
+.dx7-toggle:active {
+    outline: 2px solid rgba(255,255,255,0.2);
 }
 
 .dx7-toggle:active {
@@ -327,6 +331,16 @@ input[type='range']::-webkit-slider-thumb {
     height: 30px;
     width: 30px;
     background-image: url('images/knob-background.svg');
+    border-radius: 50px;
+    outline: 0;
+}
+
+.knob:focus {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
+}
+
+.knob:active {
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
 }
 
 .knob-foreground {
@@ -344,6 +358,15 @@ input[type='range']::-webkit-slider-thumb {
     background-position: 0 0;
     overflow: hidden;
 }
+
+.slider:focus {
+    outline: 2px solid rgba(255,255,255,0.15);
+}
+
+.slider:active {
+    outline: 2px solid rgba(255,255,255,0.2);
+}
+
 
 .param:last-child .slider {
     width: 18px;

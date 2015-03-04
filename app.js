@@ -83,6 +83,21 @@ var PERIOD = Math.PI * 2;
 				e.stopPropagation();
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', onUp);
+				element[0].focus();
+			});
+
+			element.on('keydown', function(e) {
+				var code = e.keyCode;
+				if (code >= 37 && code <= 40) {
+					e.preventDefault();
+					e.stopPropagation();
+					if (code == 38 || code == 39) {
+						scope.ngModel = Math.min(scope.ngModel + 1, max);
+					} else {
+						scope.ngModel = Math.max(scope.ngModel - 1, min);
+					}
+					scope.$apply();
+				}
 			});
 
 			function onMove(e) {
@@ -110,7 +125,7 @@ var PERIOD = Math.PI * 2;
 			replace: true,
 			require: 'ngModel',
 			scope: {'ngModel': '='},
-			template: '<div class="knob"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div>',
+			template: '<div class="knob" tabindex="0"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div>',
 			link: link
 		};
 	});
@@ -133,6 +148,21 @@ var PERIOD = Math.PI * 2;
 				e.stopPropagation();
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', onUp);
+				element[0].focus();
+			});
+
+			element.on('keydown', function(e) {
+				var code = e.keyCode;
+				if (code >= 37 && code <= 40) {
+					e.preventDefault();
+					e.stopPropagation();
+					if (code == 38 || code == 39) {
+						scope.ngModel = Math.min(scope.ngModel + 1, max);
+					} else {
+						scope.ngModel = Math.max(scope.ngModel - 1, min);
+					}
+					scope.$apply();
+				}
 			});
 
 			function onMove(e) {
@@ -159,7 +189,7 @@ var PERIOD = Math.PI * 2;
 			replace: true,
 			require: 'ngModel',
 			scope: {'ngModel': '='},
-			template: '<div class="slider"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div>',
+			template: '<div class="slider" tabindex="0"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div>',
 			link: link
 		};
 	});
