@@ -56,6 +56,12 @@ var PERIOD = Math.PI * 2;
 		};
 	});
 
+	app.filter('reverse', function() {
+		return function(items) {
+			return items.slice().reverse();
+		};
+	});
+
 	app.directive('toggleButton', function() {
 		return {
 			restrict: 'E',
@@ -325,14 +331,14 @@ var PERIOD = Math.PI * 2;
 
 	app.controller('OperatorCtrl', function($scope) {
 		$scope.$watchGroup(['operator.oscMode', 'operator.freqCoarse', 'operator.freqFine', 'operator.detune'], function() {
-			FMVoice.updateFrequency($scope.i);
+			FMVoice.updateFrequency($scope.operator.idx);
 		});
 		$scope.$watch('operator.volume', function() {
-			FMVoice.setOutputLevel($scope.i, $scope.operator.volume);
+			FMVoice.setOutputLevel($scope.operator.idx, $scope.operator.volume);
 			console.log("outputLevel changed", $scope.operator.outputLevel);
 		});
 		$scope.$watch('operator.pan', function() {
-			FMVoice.setPan($scope.i, $scope.operator.pan);
+			FMVoice.setPan($scope.operator.idx, $scope.operator.pan);
 		});
 	});
 
@@ -353,6 +359,7 @@ var PERIOD = Math.PI * 2;
 					// Defaults for non-standard parameters
 					for (var j = 0; j < 6; j++) {
 						self.presets[i].operators[j].pan = self.presets[i].operators[j].pan || 0;
+						self.presets[i].operators[j].idx = j;
 					}
 				}
 				self.selectedIndex = 2;
@@ -367,9 +374,9 @@ var PERIOD = Math.PI * 2;
 			// TODO: better initialization of computed parameters
 			for (var i = 0; i < PARAMS.operators.length; i++) {
 				var op = PARAMS.operators[i];
-				FMVoice.setOutputLevel(i, op.volume);
-				FMVoice.updateFrequency(i);
-				FMVoice.setPan(i, op.pan);
+				FMVoice.setOutputLevel(op.idx, op.volume);
+				FMVoice.updateFrequency(op.idx);
+				FMVoice.setPan(op.idx, op.pan);
 			}
 			FMVoice.setFeedback(PARAMS.feedback);
 		};

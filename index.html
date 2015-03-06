@@ -38,7 +38,7 @@
 			</div>
 			<div class="dx7-operators">
 				<div class="algorithm-diagram" style="background-image: url(images/algorithm-{{ ('0' + presetCtrl.params.algorithm).slice(-2) }}.svg)"></div>
-				<div class="operator" ng-repeat="(i, operator) in presetCtrl.presets[presetCtrl.selectedIndex].operators" ng-controller="OperatorCtrl">
+				<div class="operator" ng-repeat="operator in presetCtrl.presets[presetCtrl.selectedIndex].operators | reverse" ng-controller="OperatorCtrl">
 					<div class="param-group">
 						<div class="param">
 							<div class="param-label">On/Off</div>
