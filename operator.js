@@ -9,8 +9,7 @@ function Operator(frequency, envelope, lfo) {
 
 Operator.prototype.render = function(mod) {
 	this.val = Math.sin(this.phase + mod) * this.envelope.render();
-	this.phase += this.phaseStep;
-	this.phaseStep += this.lfo.render() * 0.0000001 * PARAMS.lfoPitchModDepth;
+	this.phase += this.phaseStep * this.lfo.render();
 	if (this.phase >= PERIOD) {
 		this.phase -= PERIOD;
 	}
