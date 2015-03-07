@@ -1,5 +1,6 @@
 var PARAMS = PARAMS || {};
 var SAMPLE_RATE = 44100;
+var LFO_RATE = 441;
 var PERIOD = Math.PI * 2;
 
 (function(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice) {
@@ -395,14 +396,19 @@ var PERIOD = Math.PI * 2;
 			}
 		};
 
-		$scope.$watch('feedback', function() {
+		$scope.$watch('presetCtrl.params.feedback', function() {
 			FMVoice.setFeedback(PARAMS.feedback);
 			console.log("fbRatio changed", PARAMS.fbRatio);
 		});
 
-		$scope.$watchGroup(['lfoSpeed', 'lfoDelay', 'lfoAmpModDepth', 'lfoPitchModDepth', 'lfoWaveform'], function() {
+		$scope.$watchGroup([
+			'presetCtrl.params.lfoSpeed',
+			'presetCtrl.params.lfoDelay',
+			'presetCtrl.params.lfoAmpModDepth',
+			'presetCtrl.params.lfoPitchModDepth',
+			'presetCtrl.params.lfoWaveform'], function() {
 			// TODO: update LFO stuff
-			// FMVoice.updateLFO();
+			FMVoice.updateLFO();
 		});
 
 		this.getOp = function(operatorIndex) {

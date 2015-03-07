@@ -1,4 +1,4 @@
-var VoiceDX7 = (function(Operator, EnvelopeDX7) {
+var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 	var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
 	var OUTPUT_LEVEL_TABLE = [
 		0.000000, 0.000337, 0.000476, 0.000674, 0.000952, 0.001235, 0.001602, 0.001905, 0.002265, 0.002694,
@@ -111,7 +111,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7) {
 			// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
 			var params = PARAMS.operators[i];
 			var freq = params.oscMode ? params.freqFixed : frequency * params.freqRatio * Math.pow(OCTAVE_1024, params.detune);
-			this.operators[i] = new Operator(freq, new EnvelopeDX7(params.levels, params.rates));
+			this.operators[i] = new Operator(freq, new EnvelopeDX7(params.levels, params.rates), new LfoDX7());
 		}
 	}
 
@@ -135,6 +135,11 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7) {
 		} else {
 			op.freqFixed = Math.pow(10, op.freqCoarse % 4) * (1 + (op.freqFine / 99) * 8.772);
 		}
+	};
+
+	FMVoice.updateLFO = function() {
+		console.log("Lfo updateFrequency / lfoSpeed:", PARAMS.lfoSpeed, "freq:", PITCH_MOD_TABLE[PARAMS.lfoSpeed]);
+		LfoDX7.updateFrequency(PITCH_MOD_TABLE[PARAMS.lfoSpeed]);
 	};
 
 	FMVoice.setPan = function(operatorIndex, value) {
@@ -196,4 +201,4 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7) {
 	};
 
 	return FMVoice;
-})(Operator, EnvelopeDX7);
+})(Operator, EnvelopeDX7, LfoDX7);
