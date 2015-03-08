@@ -54,6 +54,7 @@ var SysexDX7 = {
 			lfoDelay: voiceData.charCodeAt(113),
 			lfoPitchModDepth: voiceData.charCodeAt(114),
 			lfoAmpModDepth: voiceData.charCodeAt(115),
+			lfoPitchModSens: voiceData.charCodeAt(116) >> 4,
 			lfoWaveform: Math.floor(voiceData.charCodeAt(116) >> 1) & 7,
 			lfoSync: voiceData.charCodeAt(116) & 1,
 			pitchEnvelope: {

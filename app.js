@@ -406,6 +406,7 @@ var PERIOD = Math.PI * 2;
 			'presetCtrl.params.lfoDelay',
 			'presetCtrl.params.lfoAmpModDepth',
 			'presetCtrl.params.lfoPitchModDepth',
+			'presetCtrl.params.lfoPitchModSens',
 			'presetCtrl.params.lfoWaveform'], function() {
 			// TODO: update LFO stuff
 			FMVoice.updateLFO();
