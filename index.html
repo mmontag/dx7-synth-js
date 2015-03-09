@@ -5,15 +5,6 @@
 </head>
 <body>
 	<div ng-controller="MidiCtrl as midiCtrl">
-		<p>
-			MIDI Device: <select id="midiIn"></select>
-			<button class="dx7-button purple" ng-click="midiCtrl.onModeClick()">Mode</button>
-			<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
-			<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
-			<button class="dx7-button pink" ng-click="presetCtrl.save()">Save</button>
-			<button class="dx7-button pink" ng-click="presetCtrl.reset()">Reset</button>
-
-		</p>
 		<div class="dx7-container" ng-controller="PresetCtrl as presetCtrl">
 			<div class="dx7-top-panel">
 				<div class="dx7-logo"></div>
@@ -26,6 +17,16 @@
 									ng-change="presetCtrl.onChange($event)"
 									ng-options="presetCtrl.presets.indexOf(preset) as preset.name for preset in presetCtrl.presets"
 									class="lcd"></select>
+				</div>
+				<div class="dx7-buttons-row-1">
+					<button class="dx7-button purple" ng-click="midiCtrl.onModeClick()">Mode</button>
+					<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(0)">Demo 1</button>
+					<button class="dx7-button teal" ng-click="midiCtrl.onDemoClick(1)">Demo 2</button>
+					<button class="dx7-button pink" ng-click="presetCtrl.save()">Save</button>
+					<button class="dx7-button pink" ng-click="presetCtrl.reset()">Reset</button>
+				</div>
+				<div class="dx7-buttons-row-2">
+					MIDI Device: <select id="midiIn"></select>
 				</div>
 			</div>
 			<div class="dx7-headings">
