@@ -1,6 +1,7 @@
 var PARAMS = PARAMS || {};
 var SAMPLE_RATE = 44100;
 var LFO_RATE = 441;
+var LFO_SAMPLE_PERIOD = Math.floor(SAMPLE_RATE / LFO_RATE);
 var PERIOD = Math.PI * 2;
 var PERIOD_HALF = Math.PI;
 var PERIOD_RECIP = 1 / PERIOD;

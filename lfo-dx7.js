@@ -1,6 +1,7 @@
 var LfoDX7 = (function() {
 
 	// Constants
+	// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L1002
 	var LFO_FREQUENCY_TABLE = [
 		0.062506,  0.124815,  0.311474,  0.435381,  0.619784,
 		0.744396,  0.930495,  1.116390,  1.284220,  1.496880,
@@ -29,27 +30,19 @@ var LfoDX7 = (function() {
 		47.174400, 47.174400, 47.174400, 47.174400, 47.174400,
 		47.174400, 47.174400, 47.174400
 	];
-	var AMP_MOD_TABLE = [
-		0.0, 0.784829, 0.819230, 0.855139, 0.892622, 0.931748,
-		0.972589, 1.015221, 1.059721, 1.106171, 1.154658, 1.205270,
-		1.258100, 1.313246, 1.370809, 1.430896, 1.493616, 1.559085,
-		1.627424, 1.698759, 1.773220, 1.850945, 1.932077, 2.016765,
-		2.105166, 2.197441, 2.293761, 2.394303, 2.499252, 2.608801,
-		2.723152, 2.842515, 2.967111, 3.097167, 3.232925, 3.374633,
-		3.522552, 3.676956, 3.838127, 4.006362, 4.181972, 4.365280,
-		4.556622, 4.756352, 4.964836, 5.182458, 5.409620, 5.646738,
-		5.894251, 6.152612, 6.422298, 6.703805, 6.997652, 7.304378,
-		7.624549, 7.958754, 8.307609, 8.671754, 9.051861, 9.448629,
-		9.862789, 10.295103, 10.746365, 11.217408, 11.709099,
-		12.222341, 12.758080, 13.317302, 13.901036, 14.510357,
-		15.146387, 15.810295, 16.503304, 17.226690, 17.981783,
-		18.769975, 19.592715, 20.451518, 21.347965, 22.283705,
-		23.260462, 24.280032, 25.344294, 26.455204, 27.614809,
-		28.825243, 30.088734, 31.407606, 32.784289, 34.221315,
-		35.721330, 37.287095, 38.921492, 40.627529, 42.408347,
-		44.267222, 46.207578, 48.232984, 50.347169, 52.75
+	var LFO_AMP_MOD_TABLE = [
+		0.00000, 0.00793, 0.00828, 0.00864, 0.00902, 0.00941, 0.00982, 0.01025, 0.01070, 0.01117,
+		0.01166, 0.01217, 0.01271, 0.01327, 0.01385, 0.01445, 0.01509, 0.01575, 0.01644, 0.01716,
+		0.01791, 0.01870, 0.01952, 0.02037, 0.02126, 0.02220, 0.02317, 0.02418, 0.02524, 0.02635,
+		0.02751, 0.02871, 0.02997, 0.03128, 0.03266, 0.03409, 0.03558, 0.03714, 0.03877, 0.04047,
+		0.04224, 0.04409, 0.04603, 0.04804, 0.05015, 0.05235, 0.05464, 0.05704, 0.05954, 0.06215,
+		0.06487, 0.06772, 0.07068, 0.07378, 0.07702, 0.08039, 0.08392, 0.08759, 0.09143, 0.09544,
+		0.09962, 0.10399, 0.10855, 0.11331, 0.11827, 0.12346, 0.12887, 0.13452, 0.14041, 0.14657,
+		0.15299, 0.15970, 0.16670, 0.17401, 0.18163, 0.18960, 0.19791, 0.20658, 0.21564, 0.22509,
+		0.23495, 0.24525, 0.25600, 0.26722, 0.27894, 0.29116, 0.30393, 0.31725, 0.33115, 0.34567,
+		0.36082, 0.37664, 0.39315, 0.41038, 0.42837, 0.44714, 0.46674, 0.48720, 0.50856, 0.53283
 	];
-	var PITCH_MOD_TABLE = [
+	var LFO_PITCH_MOD_TABLE = [
 		0, 0.0264, 0.0534, 0.0889, 0.1612, 0.2769, 0.4967, 1
 	];
 	var LFO_MODE_TRIANGLE = 0,
@@ -61,20 +54,23 @@ var LfoDX7 = (function() {
 
 	// Private static variables
 	var phaseStep = 0;
-	var modDepth = 0;
+	var pitchModDepth = 0;
+	var ampModDepth = 0;
 	var sampleHoldRandom = 0;
 
-	// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L1002
 	function LfoDX7() {
 		this.phase = 0;
-		this.val = 0;
+		this.pitchVal = 0;
 		this.counter = 0;
+		this.ampVal = 1;
+		this.ampValTarget = 1;
+		this.ampIncrement = 0;
 		LfoDX7.updateFrequency();
 	}
 
 	LfoDX7.prototype.render = function() {
 		var amp;
-		if (this.counter % LFO_RATE == 0) {
+		if (this.counter % LFO_SAMPLE_PERIOD == 0) {
 			switch (PARAMS.lfoWaveform) {
 				case LFO_MODE_TRIANGLE:
 					if (this.phase < PERIOD_HALF)
@@ -99,7 +95,9 @@ var LfoDX7 = (function() {
 					break;
 			}
 
-			this.val = Math.pow(modDepth, amp);
+			this.pitchVal = Math.pow(pitchModDepth, amp);
+			this.ampValTarget = 1 - ampModDepth * (amp + 1) * 0.5;
+			this.ampIncrement = (this.ampValTarget - this.ampVal) / LFO_SAMPLE_PERIOD;
 			this.phase += phaseStep;
 			if (this.phase >= PERIOD) {
 				sampleHoldRandom = 1 - Math.random() * 2;
@@ -107,13 +105,19 @@ var LfoDX7 = (function() {
 			}
 		}
 		this.counter++;
-		return this.val;
+		return this.pitchVal;
+	};
+
+	LfoDX7.prototype.renderAmp = function() {
+		this.ampVal += this.ampIncrement;
+		return this.ampVal;
 	};
 
 	LfoDX7.updateFrequency = function() {
 		var frequency = LFO_FREQUENCY_TABLE[PARAMS.lfoSpeed];
 		phaseStep = PERIOD * frequency/LFO_RATE; // radians per sample
-		modDepth = 1 + PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.lfoPitchModDepth / 99);
+		pitchModDepth = 1 + LFO_PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.lfoPitchModDepth / 99);
+		ampModDepth = LFO_AMP_MOD_TABLE[PARAMS.lfoAmpModDepth];
 		console.log("Lfo updateFrequency / lfoSpeed:", PARAMS.lfoSpeed, "freq:", frequency);
 	};
 
