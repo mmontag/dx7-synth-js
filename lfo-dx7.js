@@ -96,7 +96,7 @@ var LfoDX7 = (function() {
 			}
 
 			this.pitchVal = Math.pow(pitchModDepth, amp);
-			this.ampValTarget = 1 - ampModDepth * (amp + 1) * 0.5;
+			this.ampValTarget = 0.5 + ampModDepth * amp * 0.5;
 			this.ampIncrement = (this.ampValTarget - this.ampVal) / LFO_SAMPLE_PERIOD;
 			this.phase += phaseStep;
 			if (this.phase >= PERIOD) {
@@ -117,7 +117,8 @@ var LfoDX7 = (function() {
 		var frequency = LFO_FREQUENCY_TABLE[PARAMS.lfoSpeed];
 		phaseStep = PERIOD * frequency/LFO_RATE; // radians per sample
 		pitchModDepth = 1 + LFO_PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.lfoPitchModDepth / 99);
-		ampModDepth = LFO_AMP_MOD_TABLE[PARAMS.lfoAmpModDepth];
+		ampModDepth = PARAMS.lfoAmpModDepth * 0.01;
+		// ignoring amp mod table for now. it seems shallow LFO_AMP_MOD_TABLE[PARAMS.lfoAmpModDepth];
 		console.log("Lfo updateFrequency / lfoSpeed:", PARAMS.lfoSpeed, "freq:", frequency);
 	};
 
