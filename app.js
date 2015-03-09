@@ -2,6 +2,8 @@ var PARAMS = PARAMS || {};
 var SAMPLE_RATE = 44100;
 var LFO_RATE = 441;
 var PERIOD = Math.PI * 2;
+var PERIOD_HALF = Math.PI;
+var PERIOD_RECIP = 1 / PERIOD;
 
 (function(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice) {
 	var app = angular.module('synthApp', ['ngStorage']);

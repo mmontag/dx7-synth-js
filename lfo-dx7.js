@@ -52,16 +52,17 @@ var LfoDX7 = (function() {
 	var PITCH_MOD_TABLE = [
 		0, 0.0264, 0.0534, 0.0889, 0.1612, 0.2769, 0.4967, 1
 	];
-	var MODE_TRIANGLE = 0,
-		MODE_SAW_DOWN = 1,
-		MODE_SAW_UP = 2,
-		MODE_SQUARE = 3,
-		MODE_SINE = 4,
-		MODE_SAMPLE_HOLD = 5;
+	var LFO_MODE_TRIANGLE = 0,
+		LFO_MODE_SAW_DOWN = 1,
+		LFO_MODE_SAW_UP = 2,
+		LFO_MODE_SQUARE = 3,
+		LFO_MODE_SINE = 4,
+		LFO_MODE_SAMPLE_HOLD = 5;
 
 	// Private static variables
 	var phaseStep = 0;
 	var modDepth = 0;
+	var sampleHoldRandom = 0;
 
 	// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L1002
 	function LfoDX7() {
@@ -72,13 +73,38 @@ var LfoDX7 = (function() {
 	}
 
 	LfoDX7.prototype.render = function() {
+		var amp;
 		if (this.counter % LFO_RATE == 0) {
-			var amp = Math.sin(this.phase);
+			switch (PARAMS.lfoWaveform) {
+				case LFO_MODE_TRIANGLE:
+					if (this.phase < PERIOD_HALF)
+						amp = 4 * this.phase * PERIOD_RECIP - 1;
+					else
+						amp = 3 - 4 * this.phase * PERIOD_RECIP;
+					break;
+				case LFO_MODE_SAW_DOWN:
+					amp = 1 - 2 * this.phase * PERIOD_RECIP;
+					break;
+				case LFO_MODE_SAW_UP:
+					amp = 2 * this.phase * PERIOD_RECIP - 1;
+					break;
+				case LFO_MODE_SQUARE:
+					amp = (this.phase < PERIOD_HALF) ? -1 : 1;
+					break;
+				case LFO_MODE_SINE:
+					amp = Math.sin(this.phase);
+					break;
+				case LFO_MODE_SAMPLE_HOLD:
+					amp = sampleHoldRandom;
+					break;
+			}
+
+			this.val = Math.pow(modDepth, amp);
 			this.phase += phaseStep;
 			if (this.phase >= PERIOD) {
+				sampleHoldRandom = 1 - Math.random() * 2;
 				this.phase -= PERIOD;
 			}
-			this.val = Math.pow(modDepth, amp); // 1 + Math.pow( (this.val * PITCH_MOD_TABLE[PARAMS.lfoPitchModDepth]);
 		}
 		this.counter++;
 		return this.val;
