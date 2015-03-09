@@ -110,6 +110,16 @@ var PERIOD_RECIP = 1 / PERIOD;
 				}
 			});
 
+			element.on('wheel', function(e) {
+				e.preventDefault();
+				if (e.deltaY > 0) {
+					scope.ngModel = Math.max(scope.ngModel - 1, min);
+				} else {
+					scope.ngModel = Math.min(scope.ngModel + 1, max);
+				}
+				scope.$apply();
+			});
+
 			function onMove(e) {
 				if (down) {
 					var dy = (startY - e.clientY) * (max - min) / pixelRange;
@@ -173,6 +183,16 @@ var PERIOD_RECIP = 1 / PERIOD;
 					}
 					scope.$apply();
 				}
+			});
+
+			element.on('wheel', function(e) {
+				e.preventDefault();
+				if (e.deltaY > 0) {
+					scope.ngModel = Math.max(scope.ngModel - 1, min);
+				} else {
+					scope.ngModel = Math.min(scope.ngModel + 1, max);
+				}
+				scope.$apply();
 			});
 
 			function onMove(e) {
