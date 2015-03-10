@@ -43,6 +43,9 @@ var SysexDX7 = {
 			operator.oscMode = oscData.charCodeAt(15) & 1;
 			operator.freqCoarse = Math.floor(oscData.charCodeAt(15) >> 1);
 			operator.freqFine = oscData.charCodeAt(16);
+			// Extended/non-standard parameters
+			operator.pan = 0;
+			operator.idx = i;
 		}
 
 		return {

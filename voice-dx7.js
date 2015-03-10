@@ -1,3 +1,12 @@
+// DX7 Synth Globals
+var SAMPLE_RATE = 44100;
+var LFO_RATE = 441;
+var LFO_SAMPLE_PERIOD = Math.floor(SAMPLE_RATE / LFO_RATE);
+var PERIOD = Math.PI * 2;
+var PERIOD_HALF = Math.PI;
+var PERIOD_RECIP = 1 / PERIOD;
+var PARAMS = {};
+
 var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 	var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
 	var OUTPUT_LEVEL_TABLE = [
@@ -66,6 +75,10 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 
 	FMVoice.frequencyFromNoteNumber = function(note) {
 		return 440 * Math.pow(2,(note-69)/12);
+	};
+
+	FMVoice.setParams = function(params) {
+		PARAMS = params;
 	};
 
 	FMVoice.setFeedback = function(value) {

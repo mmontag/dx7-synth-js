@@ -1,17 +1,113 @@
-var PARAMS = PARAMS || {};
-var SAMPLE_RATE = 44100;
-var LFO_RATE = 441;
-var LFO_SAMPLE_PERIOD = Math.floor(SAMPLE_RATE / LFO_RATE);
-var PERIOD = Math.PI * 2;
-var PERIOD_HALF = Math.PI;
-var PERIOD_RECIP = 1 / PERIOD;
-
 (function(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice) {
 	var app = angular.module('synthApp', ['ngStorage']);
 	var synth = new Synth(FMVoice);
 	var midi = new MIDI(synth);
 	var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 	var scriptProcessor = audioContext.createScriptProcessor(1024, 0, 2);
+	var defaultPresets = [
+		{
+			"name": "Init",
+			"algorithm": 18,
+			"feedback": 7,
+			"lfoSpeed": 37,
+			"lfoDelay": 42,
+			"lfoPitchModDepth": 0,
+			"lfoAmpModDepth": 0,
+			"lfoPitchModSens": 4,
+			"lfoWaveform": 4,
+			"lfoSync": 0,
+			"pitchEnvelope": {
+				"rates": [0, 0, 0, 0],
+				"levels": [50, 50, 50, 50]
+			},
+			"operators": [
+				{
+					"idx": 0,
+					"rates": [96, 0, 12, 70],
+					"levels": [99, 95, 95, 0],
+					"detune": 1,
+					"velocitySens": 0,
+					"lfoAmpModSens": 0,
+					"volume": 99,
+					"oscMode": 0,
+					"freqCoarse": 2,
+					"freqFine": 0,
+					"pan": 0,
+					"outputLevel": 13.12273
+				},
+				{
+					"idx": 1,
+					"rates": [99, 95, 0, 0],
+					"levels": [99, 96, 89, 0],
+					"detune": -1,
+					"velocitySens": 0,
+					"lfoAmpModSens": 0,
+					"volume": 99,
+					"oscMode": 0,
+					"freqCoarse": 0,
+					"freqFine": 0,
+					"pan": 0,
+					"outputLevel": 13.12273
+				},
+				{
+					"idx": 2,
+					"rates": [99, 87, 0, 0],
+					"levels": [93, 90, 0, 0],
+					"detune": 0,
+					"velocitySens": 0,
+					"lfoAmpModSens": 0,
+					"volume": 82,
+					"oscMode": 0,
+					"freqCoarse": 1,
+					"freqFine": 0,
+					"pan": 0,
+					"outputLevel": 3.008399
+				},
+				{
+					"idx": 3,
+					"rates": [99, 92, 28, 60],
+					"levels": [99, 90, 0, 0],
+					"detune": 2,
+					"velocitySens": 0,
+					"lfoAmpModSens": 0,
+					"volume": 71,
+					"oscMode": 0,
+					"freqCoarse": 2,
+					"freqFine": 0,
+					"pan": 0,
+					"outputLevel": 1.159897
+				},
+				{
+					"idx": 4,
+					"rates": [99, 99, 97, 0],
+					"levels": [99, 65, 60, 0],
+					"detune": -2,
+					"velocitySens": 0,
+					"lfoAmpModSens": 0,
+					"volume": 43,
+					"oscMode": 0,
+					"freqCoarse": 3,
+					"freqFine": 0,
+					"pan": 0,
+					"outputLevel": 0.102521
+				},
+				{
+					"idx": 5,
+					"rates": [99, 70, 60, 0],
+					"levels": [99, 99, 97, 0],
+					"detune": 0,
+					"velocitySens": 0,
+					"lfoAmpModSens": 0,
+					"volume": 47,
+					"oscMode": 0,
+					"freqCoarse": 17,
+					"freqFine": 0,
+					"pan": 0,
+					"outputLevel": 0.144987
+				}
+			]
+		}
+	];
 
 	// TODO: is setTimeout needed here?
 	setTimeout(function() {
@@ -62,7 +158,7 @@ var PERIOD_RECIP = 1 / PERIOD;
 
 	app.filter('reverse', function() {
 		return function(items) {
-			return items.slice().reverse();
+			return items ? items.slice().reverse() : items;
 		};
 	});
 
@@ -359,7 +455,6 @@ var PERIOD_RECIP = 1 / PERIOD;
 		});
 		$scope.$watch('operator.volume', function() {
 			FMVoice.setOutputLevel($scope.operator.idx, $scope.operator.volume);
-			console.log("outputLevel changed", $scope.operator.outputLevel);
 		});
 		$scope.$watch('operator.pan', function() {
 			FMVoice.setPan($scope.operator.idx, $scope.operator.pan);
@@ -367,8 +462,13 @@ var PERIOD_RECIP = 1 / PERIOD;
 	});
 
 	app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($scope, $localStorage, $http) {
-		this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
 		var self = this;
+
+		this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
+		this.presets = defaultPresets;
+		this.params = this.presets[0]; // TODO: move params into a nested controller/scope?
+		this.selectedIndex = 0;
+
 		$http.get('roms/ROM1A.SYX')
 			.success(function(data) {
 				self.basePresets = SysexDX7.loadBank(data);
@@ -380,29 +480,23 @@ var PERIOD_RECIP = 1 / PERIOD;
 					} else {
 						self.presets[i] = angular.copy(self.basePresets[i]);
 					}
-					// Defaults for non-standard parameters
-					for (var j = 0; j < 6; j++) {
-						self.presets[i].operators[j].pan = self.presets[i].operators[j].pan || 0;
-						self.presets[i].operators[j].idx = j;
-					}
 				}
-				self.selectedIndex = 2;
 				self.onChange();
 			});
 
 		this.onChange = function() {
 			console.log("changed preset!", this.selectedIndex);
-			PARAMS = this.presets[this.selectedIndex];
-			this.params = PARAMS;
+			this.params = this.presets[this.selectedIndex];
+			FMVoice.setParams(this.params);
 			// TODO: separate UI parameters from internal synth parameters
 			// TODO: better initialization of computed parameters
-			for (var i = 0; i < PARAMS.operators.length; i++) {
-				var op = PARAMS.operators[i];
-				FMVoice.setOutputLevel(op.idx, op.volume);
-				FMVoice.updateFrequency(op.idx);
-				FMVoice.setPan(op.idx, op.pan);
+			for (var i = 0; i < this.params.operators.length; i++) {
+				var op = this.params.operators[i];
+				FMVoice.setOutputLevel(i, op.volume);
+				FMVoice.updateFrequency(i);
+				FMVoice.setPan(i, op.pan);
 			}
-			FMVoice.setFeedback(PARAMS.feedback);
+			FMVoice.setFeedback(this.params.feedback);
 		};
 
 		this.save = function() {
@@ -419,9 +513,10 @@ var PERIOD_RECIP = 1 / PERIOD;
 			}
 		};
 
-		$scope.$watch('presetCtrl.params.feedback', function() {
-			FMVoice.setFeedback(PARAMS.feedback);
-			console.log("fbRatio changed", PARAMS.fbRatio);
+		$scope.$watch('presetCtrl.params.feedback', function(newValue) {
+			if (newValue !== undefined) {
+				FMVoice.setFeedback(self.params.feedback);
+			}
 		});
 
 		$scope.$watchGroup([
@@ -430,13 +525,13 @@ var PERIOD_RECIP = 1 / PERIOD;
 			'presetCtrl.params.lfoAmpModDepth',
 			'presetCtrl.params.lfoPitchModDepth',
 			'presetCtrl.params.lfoPitchModSens',
-			'presetCtrl.params.lfoWaveform'], function() {
+			'presetCtrl.params.lfoWaveform'
+		], function() {
 			// TODO: update LFO stuff
 			FMVoice.updateLFO();
 		});
 
-		this.getOp = function(operatorIndex) {
-			return this.presets[this.selectedIndex].operators[operatorIndex];
-		};
+		self.onChange();
+
 	}]);
 })(SpectrumBox, MMLEmitter, MIDI, SysexDX7, VoiceDX7);

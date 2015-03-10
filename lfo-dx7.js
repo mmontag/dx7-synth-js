@@ -119,7 +119,6 @@ var LfoDX7 = (function() {
 		pitchModDepth = 1 + LFO_PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.lfoPitchModDepth / 99);
 		ampModDepth = PARAMS.lfoAmpModDepth * 0.01;
 		// ignoring amp mod table for now. it seems shallow LFO_AMP_MOD_TABLE[PARAMS.lfoAmpModDepth];
-		console.log("Lfo updateFrequency / lfoSpeed:", PARAMS.lfoSpeed, "freq:", frequency);
 	};
 
 	return LfoDX7;
