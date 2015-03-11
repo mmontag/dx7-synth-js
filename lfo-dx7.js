@@ -1,5 +1,6 @@
 var LfoDX7 = (function() {
 
+	// TODO: Implement LFO Delay
 	// Constants
 	// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L1002
 	var LFO_FREQUENCY_TABLE = [
@@ -58,7 +59,8 @@ var LfoDX7 = (function() {
 	var ampModDepth = 0;
 	var sampleHoldRandom = 0;
 
-	function LfoDX7() {
+	function LfoDX7(opIdx) {
+		this.operatorIndex = opIdx;
 		this.phase = 0;
 		this.pitchVal = 0;
 		this.counter = 0;
@@ -96,7 +98,7 @@ var LfoDX7 = (function() {
 			}
 
 			this.pitchVal = Math.pow(pitchModDepth, amp);
-			this.ampValTarget = 0.5 + ampModDepth * amp * 0.5;
+			this.ampValTarget = 0.5 + ampModDepth * amp * 0.16667 * PARAMS.operators[this.operatorIndex].lfoAmpModSens;
 			this.ampIncrement = (this.ampValTarget - this.ampVal) / LFO_SAMPLE_PERIOD;
 			this.phase += phaseStep;
 			if (this.phase >= PERIOD) {
