@@ -122,26 +122,30 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 		var outputL = 0;
 		var outputR = 0;
 		for (var i = 5; i >= 0; i--) {
-			var mod = 0;
-			for (var j = 0, length = modulationMatrix[i].length; j < length; j++) {
-				var modulator = modulationMatrix[i][j];
-				if (modulator === i) {
-					// TODO: implement 2-sample feedback averaging (anti-hunting filter)
-					// http://d.pr/i/1kuZ7/3h7jQN7w
-					// https://code.google.com/p/music-synthesizer-for-android/wiki/Dx7Hardware
-					// http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html
-					mod += this.operators[modulator].val * PARAMS.fbRatio;
-				} else {
-					mod += this.operators[modulator].val * PARAMS.operators[modulator].outputLevel;
+			if (PARAMS.operators[i].enabled) {
+				var mod = 0;
+				for (var j = 0, length = modulationMatrix[i].length; j < length; j++) {
+					var modulator = modulationMatrix[i][j];
+					if (modulator === i) {
+						// TODO: implement 2-sample feedback averaging (anti-hunting filter)
+						// http://d.pr/i/1kuZ7/3h7jQN7w
+						// https://code.google.com/p/music-synthesizer-for-android/wiki/Dx7Hardware
+						// http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html
+						mod += this.operators[modulator].val * PARAMS.fbRatio;
+					} else {
+						mod += this.operators[modulator].val * PARAMS.operators[modulator].outputLevel;
+					}
 				}
+				this.operators[i].render(mod);
 			}
-			this.operators[i].render(mod);
 		}
 		for (var k = 0, length = outputMix.length; k < length; k++) {
-			var carrier = this.operators[outputMix[k]];
-			var carrierParams = PARAMS.operators[outputMix[k]];
-			outputL += carrier.val * carrierParams.outputLevel * carrierParams.ampL;
-			outputR += carrier.val * carrierParams.outputLevel * carrierParams.ampR;
+			if (PARAMS.operators[outputMix[k]].enabled) {
+				var carrier = this.operators[outputMix[k]];
+				var carrierParams = PARAMS.operators[outputMix[k]];
+				outputL += carrier.val * carrierParams.outputLevel * carrierParams.ampL;
+				outputR += carrier.val * carrierParams.outputLevel * carrierParams.ampR;
+			}
 		}
 		return [ outputL * outputScaling, outputR * outputScaling ];
 	};

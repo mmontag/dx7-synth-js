@@ -46,6 +46,7 @@ var SysexDX7 = {
 			// Extended/non-standard parameters
 			operator.pan = 0;
 			operator.idx = i;
+			operator.enabled = true;
 		}
 
 		return {
