@@ -12,7 +12,7 @@ var MIDI = function(synth) {
       synth.noteOff( noteNumber );
     } else if (cmd == 9) {
       // note on
-      synth.noteOn( noteNumber, velocity/127.0);
+      synth.noteOn( noteNumber, velocity/99.0); // changed 127 to 99 to incorporate "overdrive"
     } else if (cmd == 11) {
       synth.controller( noteNumber, velocity/127.0);
     } else if (cmd == 14) {

@@ -69,7 +69,11 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 			// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
 			var params = PARAMS.operators[i];
 			var freq = params.oscMode ? params.freqFixed : frequency * params.freqRatio * Math.pow(OCTAVE_1024, params.detune);
-			this.operators[i] = new Operator(freq, new EnvelopeDX7(params.levels, params.rates), new LfoDX7(i));
+			var op = new Operator(freq, new EnvelopeDX7(params.levels, params.rates), new LfoDX7(i));
+			op.outputLevel = (1 + (this.velocity - 1) * (params.velocitySens / 7)) * params.outputLevel;
+			if (i == 0)
+				console.log("velocity: %s, velocitySens: %s, outputLevel: %s, noteLevel: %s", this.velocity, params.velocitySens, params.outputLevel, op.outputLevel);
+			this.operators[i] = op;
 		}
 	}
 
@@ -118,7 +122,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 		var algorithmIdx = PARAMS.algorithm - 1;
 		var modulationMatrix = ALGORITHMS[algorithmIdx].modulationMatrix;
 		var outputMix = ALGORITHMS[algorithmIdx].outputMix;
-		var outputScaling = this.velocity / outputMix.length;
+		var outputScaling = 1; //this.velocity / outputMix.length;
 		var outputL = 0;
 		var outputR = 0;
 		for (var i = 5; i >= 0; i--) {
@@ -126,14 +130,15 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 				var mod = 0;
 				for (var j = 0, length = modulationMatrix[i].length; j < length; j++) {
 					var modulator = modulationMatrix[i][j];
+					var modOp = this.operators[modulator];
 					if (modulator === i) {
 						// TODO: implement 2-sample feedback averaging (anti-hunting filter)
 						// http://d.pr/i/1kuZ7/3h7jQN7w
 						// https://code.google.com/p/music-synthesizer-for-android/wiki/Dx7Hardware
 						// http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html
-						mod += this.operators[modulator].val * PARAMS.fbRatio;
+						mod += modOp.val * PARAMS.fbRatio;
 					} else {
-						mod += this.operators[modulator].val * PARAMS.operators[modulator].outputLevel;
+						mod += modOp.val * modOp.outputLevel;
 					}
 				}
 				this.operators[i].render(mod);
@@ -143,8 +148,9 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 			if (PARAMS.operators[outputMix[k]].enabled) {
 				var carrier = this.operators[outputMix[k]];
 				var carrierParams = PARAMS.operators[outputMix[k]];
-				outputL += carrier.val * carrierParams.outputLevel * carrierParams.ampL;
-				outputR += carrier.val * carrierParams.outputLevel * carrierParams.ampR;
+				var carrierLevel = carrier.val * carrier.outputLevel;
+				outputL += carrierLevel * carrierParams.ampL;
+				outputR += carrierLevel * carrierParams.ampR;
 			}
 		}
 		return [ outputL * outputScaling, outputR * outputScaling ];

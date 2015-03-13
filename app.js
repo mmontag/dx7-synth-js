@@ -421,7 +421,7 @@
 
 		this.onKeyDown = function(ev) {
 			var note = qwertyNotes[ev.keyCode];
-			if (ev.altKey || ev.metaKey) return false;
+			if (ev.metaKey) return false;
 			if (ev.keyCode == 32) {
 				synth.panic();
 				ev.stopPropagation();
@@ -430,7 +430,7 @@
 			}
 			if (note) {
 				if (!ev.repeat) {
-					synth.noteOn(note, 0.8);
+					synth.noteOn(note, 0.8 + (ev.ctrlKey ? 0.47 : 0));
 				}
 				ev.stopPropagation();
 				ev.preventDefault();
