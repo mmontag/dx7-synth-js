@@ -70,9 +70,8 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 			var params = PARAMS.operators[i];
 			var freq = params.oscMode ? params.freqFixed : frequency * params.freqRatio * Math.pow(OCTAVE_1024, params.detune);
 			var op = new Operator(freq, new EnvelopeDX7(params.levels, params.rates), new LfoDX7(i));
+			// TODO: DX7 accurate velocity sensitivity map
 			op.outputLevel = (1 + (this.velocity - 1) * (params.velocitySens / 7)) * params.outputLevel;
-			if (i == 0)
-				console.log("velocity: %s, velocitySens: %s, outputLevel: %s, noteLevel: %s", this.velocity, params.velocitySens, params.outputLevel, op.outputLevel);
 			this.operators[i] = op;
 		}
 	}
@@ -122,7 +121,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 		var algorithmIdx = PARAMS.algorithm - 1;
 		var modulationMatrix = ALGORITHMS[algorithmIdx].modulationMatrix;
 		var outputMix = ALGORITHMS[algorithmIdx].outputMix;
-		var outputScaling = 1; //this.velocity / outputMix.length;
+		var outputScaling = 1 / outputMix.length;
 		var outputL = 0;
 		var outputR = 0;
 		for (var i = 5; i >= 0; i--) {

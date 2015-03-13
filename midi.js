@@ -20,8 +20,9 @@ var MIDI = function(synth) {
       synth.pitchWheel( ((velocity * 128.0 + noteNumber)-8192)/8192.0 );
     } else if ( cmd == 10 ) {  // poly aftertouch
       synth.polyPressure(noteNumber,velocity/127)
-    } else
-    console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
+    }
+		// TODO: Implement channel aftertouch
+		// else console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
   }
 
   var selectMIDI = null;
