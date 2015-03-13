@@ -1,4 +1,3 @@
-// TODO: Implement Operator velocity sensitivity
 // http://www.chipple.net/dx7/fig09-4.gif
 function Operator(frequency, envelope, lfo) {
 	this.phase = 0;

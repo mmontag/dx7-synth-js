@@ -67,6 +67,9 @@ var LfoDX7 = (function() {
 		this.ampVal = 1;
 		this.ampValTarget = 1;
 		this.ampIncrement = 0;
+		this.delayVal = 0;
+		this.delayValTarget = 1;
+		this.delayValIncrement = 0;
 		LfoDX7.updateFrequency();
 	}
 
@@ -96,6 +99,25 @@ var LfoDX7 = (function() {
 					amp = sampleHoldRandom;
 					break;
 			}
+
+//			instance->lfo_delay_value[0] = INT_TO_FP(0);
+//			/* -FIX- Jamie's early approximation, replace when he has more data */
+//			instance->lfo_delay_duration[0] =
+//				lrintf(instance->sample_rate *
+//					(0.00175338f * pow((float)voice->lfo_delay, 3.10454f) + 169.344f - 168.0f) /
+//			1000.0f);
+//			instance->lfo_delay_increment[0] = INT_TO_FP(0);
+//			instance->lfo_delay_value[1] = INT_TO_FP(0);
+//			/* -FIX- Jamie's early approximation, replace when he has more data */
+//			instance->lfo_delay_duration[1] =
+//				lrintf(instance->sample_rate *
+//					(0.321877f * pow((float)voice->lfo_delay, 2.01163) + 494.201f - 168.0f) /
+//			1000.0f);                                                 /* time from note-on until full on */
+//			instance->lfo_delay_duration[1] -= instance->lfo_delay_duration[0];  /* now time from end-of-delay until full */
+//			instance->lfo_delay_increment[1] = INT_TO_FP(1) / (dx7_sample_t)instance->lfo_delay_duration[1];
+//			instance->lfo_delay_value[2] = INT_TO_FP(1);
+//			instance->lfo_delay_duration[2] = 0;
+//			instance->lfo_delay_increment[2] = INT_TO_FP(0);
 
 			this.pitchVal = Math.pow(pitchModDepth, amp);
 			this.ampValTarget = 0.5 + ampModDepth * amp * 0.16667 * PARAMS.operators[this.operatorIndex].lfoAmpModSens;
