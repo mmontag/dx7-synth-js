@@ -34,11 +34,15 @@ var SysexDX7 = {
 			operator.levels = [oscData.charCodeAt(4), oscData.charCodeAt(5), oscData.charCodeAt(6), oscData.charCodeAt(7)];
 
 			// TODO: breakpoints/scaling/sensitivity
-
+			operator.keyScaleBreakpoint = oscData.charCodeAt(8);
+			operator.keyScaleDepthL = oscData.charCodeAt(9);
+			operator.keyScaleDepthR = oscData.charCodeAt(10);
+			operator.keyScaleCurveL = oscData.charCodeAt(11) & 3;
+			operator.keyScaleCurveR = oscData.charCodeAt(11) >> 2;
+			operator.keyScaleRate = oscData.charCodeAt(12) & 7;
 			operator.detune = Math.floor(oscData.charCodeAt(12) >> 3) - 7; // range 0 to 14
-			// 13    0   0 |    KVS    |  AMS  | KEY VEL SENS   0-7   AMP MOD SENS   0-3
-			operator.velocitySens = oscData.charCodeAt(13) >> 2;
 			operator.lfoAmpModSens = oscData.charCodeAt(13) & 3;
+			operator.velocitySens = oscData.charCodeAt(13) >> 2;
 			operator.volume = oscData.charCodeAt(14);
 			operator.oscMode = oscData.charCodeAt(15) & 1;
 			operator.freqCoarse = Math.floor(oscData.charCodeAt(15) >> 1);
