@@ -29,18 +29,12 @@
 					MIDI Device: <select id="midiIn"></select>
 				</div>
 			</div>
-			<div class="dx7-headings">
-				<div class="heading-algorithm">Algorithm</div>
-				<div class="heading-operator">Operator</div>
-				<div class="heading-frequency">Frequency</div>
-				<div class="heading-egrate">EG Rate</div>
-				<div class="heading-eglevel">EG Level</div>
-				<div class="heading-keyboardscaling">Keyboard Scaling <span style="opacity: 0.2">Not implemented</span></div>
-			</div>
 			<div class="dx7-operators">
 				<div class="algorithm-diagram" style="background-image: url(images/algorithm-{{ ('0' + presetCtrl.params.algorithm).slice(-2) }}.svg)"></div>
 				<div class="operator" ng-repeat="operator in presetCtrl.presets[presetCtrl.selectedIndex].operators | reverse" ng-controller="OperatorCtrl">
 					<div class="param-group">
+						<div ng-show="$first" class="param-group-heading heading-algorithm">Algorithm</div>
+						<div ng-show="$first" class="param-group-heading">Operator</div>
 						<div class="param">
 							<div class="param-label">On/Off</div>
 							<toggle-button ng-model="operator.enabled"></toggle-button>
@@ -67,6 +61,7 @@
 						</div>
 					</div>
 					<div class="param-group">
+						<div ng-show="$first" class="param-group-heading">Frequency</div>
 						<div class="param">
 							<div class="param-label">Fixed</div>
 							<toggle-button ng-model="operator.oscMode"></toggle-button>
@@ -95,17 +90,20 @@
 							<knob step="1" min="-7" max="7" to-number ng-model="operator.detune"></knob>
 						</div>
 					</div>
-					<div class="param-group">
+					<div class="param-group param-group-sliders">
+						<div ng-show="$first" class="param-group-heading">EG Rate</div>
 						<div class="param narrow" ng-repeat="i in [0,1,2,3]">
 							<slider step="1" min="0" max="99" to-number ng-model="operator.rates[i]"></slider>
 						</div>
 					</div>
-					<div class="param-group">
+					<div class="param-group param-group-sliders">
+						<div ng-show="$first" class="param-group-heading">EG Level</div>
 						<div class="param narrow" ng-repeat="i in [0,1,2,3]">
 							<slider step="1" min="0" max="99" to-number ng-model="operator.levels[i]"></slider>
 						</div>
 					</div>
 					<div class="param-group">
+						<div ng-show="$first" class="param-group-heading">Keyboard Scaling <span style="opacity: 0.2">Not implemented</span></div>
 						<div class="param">
 							<div class="param-label">Rate</div>
 							<knob step="1" min="0" max="99" to-number ng-model="operator.keyScaleRate"></knob>

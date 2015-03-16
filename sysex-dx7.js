@@ -32,8 +32,6 @@ var SysexDX7 = {
 
 			operator.rates = [oscData.charCodeAt(0), oscData.charCodeAt(1), oscData.charCodeAt(2), oscData.charCodeAt(3)];
 			operator.levels = [oscData.charCodeAt(4), oscData.charCodeAt(5), oscData.charCodeAt(6), oscData.charCodeAt(7)];
-
-			// TODO: breakpoints/scaling/sensitivity
 			operator.keyScaleBreakpoint = oscData.charCodeAt(8);
 			operator.keyScaleDepthL = oscData.charCodeAt(9);
 			operator.keyScaleDepthR = oscData.charCodeAt(10);

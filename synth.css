@@ -101,6 +101,7 @@ input[type='range']::-webkit-slider-thumb {
     display: inline-block;
     vertical-align: top;
     font-size: 0;
+    position: relative;
 }
 
 .param-group:last-child {
@@ -209,7 +210,7 @@ input[type='range']::-webkit-slider-thumb {
     background-color: #313036;
     border: 1px solid #232326;
     position: relative;
-    width: 1120px;
+    width: 1140px;
 }
 
 .dx7-top-panel {
@@ -226,23 +227,16 @@ input[type='range']::-webkit-slider-thumb {
     background-color: #232326;
 }
 
-.dx7-headings {
+.param-group-heading {
     font-size: 10px;
     font-weight: bold;
-    position: relative;
-    display: block;
-    height: 12px;
-    margin: 16px 0 8px;
+    position: absolute;
+    top: -35px;
+    left: 5px;
     text-transform: uppercase;
 }
 
-/* TODO: position absolute headings inside first row groups */
-.heading-algorithm { position: absolute; left: 30px; }
-.heading-operator { position: absolute; left: 110px; }
-.heading-frequency { position: absolute; left: 330px; }
-.heading-egrate { position: absolute; left: 570px; }
-.heading-eglevel { position: absolute; left: 696px; }
-.heading-keyboardscaling { position: absolute; left: 831px; }
+.heading-algorithm { left: -80px; }
 
 .dx7-logo {
     position: absolute;
@@ -257,6 +251,7 @@ input[type='range']::-webkit-slider-thumb {
 .dx7-operators {
     display: block;
     top: 160px;
+    padding-top: 35px;
 }
 
 .dx7-buttons-row-1 {
@@ -290,6 +285,10 @@ input[type='range']::-webkit-slider-thumb {
     height: 50px;
     vertical-align: top;
     text-align: center;
+}
+
+.param-group-sliders {
+    padding-left: 5px;
 }
 
 .param.wide {
