@@ -181,6 +181,7 @@
 			var fgEl = element.find('div');
 			var max = element.attr('max');
 			var min = element.attr('min');
+			var increment = (max - min) < 99 ? 1 : 2;
 			element.on('mousedown', function(e) {
 				startY = e.clientY;
 				startModel = scope.ngModel || 0;
@@ -208,10 +209,11 @@
 
 			element.on('wheel', function(e) {
 				e.preventDefault();
+				element[0].focus();
 				if (e.deltaY > 0) {
-					scope.ngModel = Math.max(scope.ngModel - 1, min);
+					scope.ngModel = Math.max(scope.ngModel - increment, min);
 				} else {
-					scope.ngModel = Math.min(scope.ngModel + 1, max);
+					scope.ngModel = Math.min(scope.ngModel + increment, max);
 				}
 				scope.$apply();
 			});
@@ -253,9 +255,9 @@
 			var positionRange = sliderRailHeight - sliderHandleHeight;
 			var pixelRange = 50;
 			var startY, startModel, down = false;
-			var fgEl = element.find('div');
 			var max = element.attr('max');
 			var min = element.attr('min');
+			var increment = (max - min) < 99 ? 1 : 2;
 			element.on('mousedown', function(e) {
 				startY = e.clientY;
 				startModel = scope.ngModel || 0;
@@ -264,7 +266,7 @@
 				e.stopPropagation();
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', onUp);
-				element[0].focus();
+				element[0].querySelector('.slider').focus();
 			});
 
 			element.on('keydown', function(e) {
@@ -283,10 +285,11 @@
 
 			element.on('wheel', function(e) {
 				e.preventDefault();
+				element[0].querySelector('.slider').focus();
 				if (e.deltaY > 0) {
-					scope.ngModel = Math.max(scope.ngModel - 1, min);
+					scope.ngModel = Math.max(scope.ngModel - increment, min);
 				} else {
-					scope.ngModel = Math.min(scope.ngModel + 1, max);
+					scope.ngModel = Math.min(scope.ngModel + increment, max);
 				}
 				scope.$apply();
 			});
@@ -315,7 +318,7 @@
 			replace: true,
 			require: 'ngModel',
 			scope: {'ngModel': '='},
-			template: '<div><div  class="slider" tabindex="0"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div><div class="slider-meter"></div></div>',
+			template: '<div><div class="slider" tabindex="0"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div><div class="slider-meter"></div></div>',
 			link: link
 		};
 	});
