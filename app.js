@@ -315,7 +315,7 @@
 			replace: true,
 			require: 'ngModel',
 			scope: {'ngModel': '='},
-			template: '<div class="slider" tabindex="0"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div>',
+			template: '<div><div  class="slider" tabindex="0"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div><div class="slider-meter"></div></div>',
 			link: link
 		};
 	});

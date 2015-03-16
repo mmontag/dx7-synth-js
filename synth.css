@@ -358,11 +358,11 @@ input[type='range']::-webkit-slider-thumb {
 
 .slider {
     height: 50px;
-    width: 24px;
-    background-image: url('images/dx7-slider-rail-dashed.svg');
-    background-size: 24px;
+    width: 18px;
+    background-image: url('images/dx7-slider-rail.svg');
     background-position: 0 0;
     overflow: hidden;
+    position: relative;
 }
 
 .slider:focus {
@@ -372,7 +372,6 @@ input[type='range']::-webkit-slider-thumb {
 .slider:active {
     outline: 2px solid rgba(255,255,255,0.2);
 }
-
 
 .param:last-child .slider {
     width: 18px;
@@ -385,4 +384,14 @@ input[type='range']::-webkit-slider-thumb {
     background-position: 0 0;
     position: relative;
     top: 0px;
+}
+
+.slider-meter {
+    height: 50px;
+    width: 10px;
+    background-image: url('images/dx7-slider-meter.svg');
+    background-position: 0 0;
+    position: absolute;
+    top: 0;
+    left: 18px;
 }
