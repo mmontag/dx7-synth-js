@@ -103,7 +103,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 	};
 
 	FMVoice.updateLFO = function() {
-		LfoDX7.updateFrequency();
+		LfoDX7.update();
 	};
 
 	FMVoice.setPan = function(operatorIndex, value) {

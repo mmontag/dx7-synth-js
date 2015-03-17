@@ -1,6 +1,5 @@
 var LfoDX7 = (function() {
 
-	// TODO: Implement LFO Delay
 	// Constants
 	// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L1002
 	var LFO_FREQUENCY_TABLE = [
@@ -53,11 +52,18 @@ var LfoDX7 = (function() {
 		LFO_MODE_SINE = 4,
 		LFO_MODE_SAMPLE_HOLD = 5;
 
+	var LFO_DELAY_ONSET = 0,
+		LFO_DELAY_RAMP = 1,
+		LFO_DELAY_COMPLETE = 2;
+
 	// Private static variables
 	var phaseStep = 0;
 	var pitchModDepth = 0;
 	var ampModDepth = 0;
 	var sampleHoldRandom = 0;
+	var delayTimes = [0, 0, 0];
+	var delayIncrements = [0, 0, 0];
+	var delayVals = [0, 0, 1];
 
 	function LfoDX7(opIdx) {
 		this.operatorIndex = opIdx;
@@ -68,9 +74,8 @@ var LfoDX7 = (function() {
 		this.ampValTarget = 1;
 		this.ampIncrement = 0;
 		this.delayVal = 0;
-		this.delayValTarget = 1;
-		this.delayValIncrement = 0;
-		LfoDX7.updateFrequency();
+		this.delayState = LFO_DELAY_ONSET;
+		LfoDX7.update();
 	}
 
 	LfoDX7.prototype.render = function() {
@@ -100,25 +105,21 @@ var LfoDX7 = (function() {
 					break;
 			}
 
-//			instance->lfo_delay_value[0] = INT_TO_FP(0);
-//			/* -FIX- Jamie's early approximation, replace when he has more data */
-//			instance->lfo_delay_duration[0] =
-//				lrintf(instance->sample_rate *
-//					(0.00175338f * pow((float)voice->lfo_delay, 3.10454f) + 169.344f - 168.0f) /
-//			1000.0f);
-//			instance->lfo_delay_increment[0] = INT_TO_FP(0);
-//			instance->lfo_delay_value[1] = INT_TO_FP(0);
-//			/* -FIX- Jamie's early approximation, replace when he has more data */
-//			instance->lfo_delay_duration[1] =
-//				lrintf(instance->sample_rate *
-//					(0.321877f * pow((float)voice->lfo_delay, 2.01163) + 494.201f - 168.0f) /
-//			1000.0f);                                                 /* time from note-on until full on */
-//			instance->lfo_delay_duration[1] -= instance->lfo_delay_duration[0];  /* now time from end-of-delay until full */
-//			instance->lfo_delay_increment[1] = INT_TO_FP(1) / (dx7_sample_t)instance->lfo_delay_duration[1];
-//			instance->lfo_delay_value[2] = INT_TO_FP(1);
-//			instance->lfo_delay_duration[2] = 0;
-//			instance->lfo_delay_increment[2] = INT_TO_FP(0);
+			switch (this.delayState) {
+				case LFO_DELAY_ONSET:
+				case LFO_DELAY_RAMP:
+					this.delayVal += delayIncrements[this.delayState];
+					if (this.counter / LFO_SAMPLE_PERIOD > delayTimes[this.delayState]) {
+						this.delayState++;
+						this.delayVal = delayVals[this.delayState];
+					}
+					break;
+				case LFO_DELAY_COMPLETE:
+					break;
+			}
 
+			// if (this.counter % 10000 == 0) console.log("lfo delay value", this.delayVal);
+			amp *= this.delayVal;
 			this.pitchVal = Math.pow(pitchModDepth, amp);
 			this.ampValTarget = 0.5 + ampModDepth * amp * 0.16667 * PARAMS.operators[this.operatorIndex].lfoAmpModSens;
 			this.ampIncrement = (this.ampValTarget - this.ampVal) / LFO_SAMPLE_PERIOD;
@@ -137,12 +138,15 @@ var LfoDX7 = (function() {
 		return this.ampVal;
 	};
 
-	LfoDX7.updateFrequency = function() {
+	LfoDX7.update = function() {
 		var frequency = LFO_FREQUENCY_TABLE[PARAMS.lfoSpeed];
 		phaseStep = PERIOD * frequency/LFO_RATE; // radians per sample
 		pitchModDepth = 1 + LFO_PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.lfoPitchModDepth / 99);
 		ampModDepth = PARAMS.lfoAmpModDepth * 0.01;
 		// ignoring amp mod table for now. it seems shallow LFO_AMP_MOD_TABLE[PARAMS.lfoAmpModDepth];
+		delayTimes[LFO_DELAY_ONSET] = (LFO_RATE * 0.001753 * Math.pow(PARAMS.lfoDelay, 3.10454) + 169.344 - 168) / 1000;
+		delayTimes[LFO_DELAY_RAMP] = (LFO_RATE * 0.321877 * Math.pow(PARAMS.lfoDelay, 2.01163) + 494.201 - 168) / 1000;
+		delayIncrements[LFO_DELAY_RAMP] = 1 / (delayTimes[LFO_DELAY_RAMP] - delayTimes[LFO_DELAY_ONSET]);
 	};
 
 	return LfoDX7;
