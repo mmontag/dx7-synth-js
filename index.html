@@ -183,6 +183,18 @@
 						<toggle-button ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.lfoSync"></toggle-button>
 					</label>
 				</div>
+				<div class="param-group param-group-sliders">
+					<div class="param-group-heading below">Pitch EG Rate</div>
+					<div class="param narrow" ng-repeat="i in [0,1,2,3]">
+						<slider step="1" min="0" max="99" to-number ng-model="presetCtrl.params.pitchEnvelope.rates[i]"></slider>
+					</div>
+				</div>
+				<div class="param-group param-group-sliders">
+					<div class="param-group-heading below">Pitch EG Level</div>
+					<div class="param narrow" ng-repeat="i in [0,1,2,3]">
+						<slider step="1" min="0" max="99" to-number ng-model="presetCtrl.params.pitchEnvelope.levels[i]"></slider>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

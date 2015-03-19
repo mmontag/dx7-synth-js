@@ -236,6 +236,10 @@ input[type='range']::-webkit-slider-thumb {
     text-transform: uppercase;
 }
 
+.param-group-heading.below {
+    top: 65px;
+}
+
 .heading-algorithm { left: -80px; }
 
 .dx7-logo {
