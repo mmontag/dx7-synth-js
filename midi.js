@@ -78,7 +78,7 @@ var MIDI = function(synth) {
           (str.indexOf("midi") != -1)
         );
 
-        selectMIDI.appendChild(new Option(input.name,input.id,preferred,preferred));
+        selectMIDI.appendChild(new Option(input.name||input.manufacturer,input.id,preferred,preferred));
         if (preferred) {
           midiIn = input;
           midiIn.onmidimessage = midiMessageReceived;
