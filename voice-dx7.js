@@ -69,7 +69,11 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 			// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
 			var params = PARAMS.operators[i];
 			var freq = params.oscMode ? params.freqFixed : frequency * params.freqRatio * Math.pow(OCTAVE_1024, params.detune);
-			var op = new Operator(freq, new EnvelopeDX7(params.levels, params.rates), new LfoDX7(i));
+			var op = new Operator(freq,
+				new EnvelopeDX7(params.levels, params.rates),
+				new LfoDX7(i)
+				//new EnvelopeDX7(PARAMS.pitchEnvelope.levels, PARAMS.pitchEnvelope.rates, true)
+			);
 			// TODO: DX7 accurate velocity sensitivity map
 			op.outputLevel = (1 + (this.velocity - 1) * (params.velocitySens / 7)) * params.outputLevel;
 			this.operators[i] = op;
