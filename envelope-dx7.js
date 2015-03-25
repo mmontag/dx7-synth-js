@@ -15,6 +15,12 @@ var EnvelopeDX7 = (function() {
 		100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
 		115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127];
 
+	var outputLUT = [];
+	for (var i = 0; i < 4096; i++) {
+		var dB = (i - 3824) * 0.0235;
+		outputLUT[i] = Math.pow(20, (dB/20));
+	}
+
 //	function envenable(i, qr) {
 //		var shift = (qr / 4) - 11;
 //		if (shift < 0) {
@@ -55,8 +61,7 @@ var EnvelopeDX7 = (function() {
 			var lev, shift, slope;
 			lev = this.level;
 			if (this.rising) {
-				var attackIncrement = this.decayIncrement * (2 + (this.targetlevel - lev) / 256);
-				lev += attackIncrement;
+				lev += this.decayIncrement * (2 + (this.targetlevel - lev) / 256);
 				if (lev >= this.targetlevel) {
 					lev = this.targetlevel;
 					this.advance(this.state + 1);
@@ -84,10 +89,9 @@ var EnvelopeDX7 = (function() {
 			this.level = lev;
 		}
 		this.i++;
-		// return this.level;
+
 		// Convert DX7 level -> dB -> amplitude
-		var dB = (this.level - 3824) * 0.0235;
-		return Math.pow(20, (dB/20));
+		return outputLUT[Math.floor(this.level)];
 //		var amp = Math.pow(20, (dB/20));
 //		if (this.pitchMode) {
 //			return Math.pow(pitchModDepth, amp);
