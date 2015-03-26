@@ -6,22 +6,12 @@ var SpectrumBox = function(
     width, height, foreground, background,
     canvas_id, audio_context, type) {
   this.canvas = document.getElementById(canvas_id);
-	this.width = this.canvas.width = width;
-	this.height = this.canvas.height = height;
+  this.width = this.canvas.width = width;
+  this.height = this.canvas.height = height;
   this.num_points = Math.pow(2, Math.ceil(Math.log(width) / Math.LN2)) * 2;
   this.update_rate_ms = 33.333;
   this.smoothing = 0.25;
   this.type = type || SpectrumBox.Types.FREQUENCY;
-
-  // Number of points we actually want to display. If zero, display all points.
-  this.valid_points = 0;
-
-  // Determine the boundaries of the canvas.
-  if (this.type == SpectrumBox.Types.FREQUENCY) {
-    this.bar_spacing = 0;
-  } else {
-    this.bar_spacing = 1;
-  }
 
   this.ctx = this.canvas.getContext('2d');
   this.actx = audio_context;
@@ -37,13 +27,16 @@ var SpectrumBox = function(
   this.blackPixel.data[2] = foreground[2];
   this.blackPixel.data[3] = 255;
 
-	this.foreground = "rgb(" + foreground.join(",") + ")";
-	this.background = "rgb(" + background.join(",") + ")";
+  this.foreground = "rgb(" + foreground.join(",") + ")";
+  var blend = [];
+  for (var i = 0; i < foreground.length; i++) { blend[i] = Math.floor(foreground[i] * .7 + background[i] * .3); }
+  this.foregroundLight = "rgb(" + blend.join(",") + ")";
+  this.background = "rgb(" + background.join(",") + ")";
 };
 
 SpectrumBox.Types = {
-	FREQUENCY: 1,
-	TIME: 2
+  FREQUENCY: 1,
+  TIME: 2
 };
 
 /* Returns the AudioNode of the FFT. You can route signals into this. */
@@ -55,12 +48,6 @@ SpectrumBox.prototype.getAudioNode = function() {
    of the display. */
 SpectrumBox.prototype.getCanvasContext = function() {
   return this.ctx;
-};
-
-/* Set the number of points to work with. */
-SpectrumBox.prototype.setValidPoints = function(points) {
-  this.valid_points = points;
-  return this;
 };
 
 /* Set the domain type for the graph (TIME / FREQUENCY. */
@@ -76,7 +63,7 @@ SpectrumBox.prototype.enable = function() {
     this.intervalId = window.setInterval(
         function() { that.update(); }, this.update_rate_ms);
   }
-	this.canvas.style.visibility = "visible";
+  this.canvas.style.visibility = "visible";
   return this;
 };
 
@@ -85,8 +72,8 @@ SpectrumBox.prototype.disable = function() {
   if (this.intervalId) {
     window.clearInterval(this.intervalId);
     this.intervalId = undefined;
-	}
-	this.canvas.style.visibility = "hidden";
+  }
+  this.canvas.style.visibility = "hidden";
   return this;
 };
 
@@ -99,12 +86,11 @@ SpectrumBox.prototype.update = function() {
     this.fft.getByteFrequencyData(data);
   } else {
     this.fft.smoothingTimeConstant = 0;
-    this.fft.getByteFrequencyData(data);
     this.fft.getByteTimeDomainData(data);
   }
 
   var length = data.length;
-  // if (this.valid_points > 0) length = this.valid_points;
+  var bar_width = 1;
 
   // Clear canvas then redraw graph.
   this.ctx.fillStyle = this.background;
@@ -115,6 +101,7 @@ SpectrumBox.prototype.update = function() {
   // Break the samples up into bins
 //  var bin_size = Math.floor(length / this.num_bins);
   for (var i=0; i < length; ++i) {
+    this.ctx.fillStyle = (i % 2) ? this.foreground : this.foregroundLight;
     // var sum = 0;
     // for (var j=0; j < bin_size; ++j) {
     //   sum += data[(i * bin_size) + j];
@@ -126,17 +113,15 @@ SpectrumBox.prototype.update = function() {
     // Draw the bars on the canvas
     // var bar_width = this.width / this.num_bins;
     // var scaled_average = (average / 256) * this.height;
-
-    var bar_width = 1;
-
     if (this.type == SpectrumBox.Types.FREQUENCY) {
       //var val = (data[i] - this.fft.minDecibels) * (this.fft.maxDecibels - this.fft.minDecibels)
-      var db = data[i]/256 * (this.fft.maxDecibels - this.fft.minDecibels) + this.fft.minDecibels; 
-      var mag = Math.pow(10, 0.05*db) * 70; // used to be 40
+//      var db = data[i]/256 * (this.fft.maxDecibels - this.fft.minDecibels) + this.fft.minDecibels;
+      // var mag = Math.pow(10, 0.05*db) * 70; // used to be 40
       // var mag = data[i]/256;
       this.ctx.fillRect(
-        i * bar_width, this.height,
-        bar_width - this.bar_spacing, -mag * this.height);
+        i, this.height,
+        bar_width, -(data[i] >> 3) //db * this.height
+      );
     } else {
       this.ctx.putImageData(this.blackPixel, i, this.height/2 - (data[i]-128)/256 * (this.height - 1));
     }
