@@ -1,13 +1,6 @@
 var EnvelopeDX7 = (function() {
 	// Based on http://wiki.music-synthesizer-for-android.googlecode.com/git/img/env.html
-	// TODO: Optimize envelope for speed, remove bitmask dithering
 	var ENV_OFF = 4;
-//	var envmask = [
-//		[0, 1, 0, 1, 0, 1, 0, 1],
-//		[0, 1, 0, 1, 0, 1, 1, 1],
-//		[0, 1, 1, 1, 0, 1, 1, 1],
-//		[0, 1, 1, 1, 1, 1, 1, 1]
-//	];
 	var outputlevel = [0, 5, 9, 13, 17, 20, 23, 25, 27, 29, 31, 33, 35, 37, 39,
 		41, 42, 43, 45, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
 		62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
@@ -20,31 +13,6 @@ var EnvelopeDX7 = (function() {
 		var dB = (i - 3824) * 0.0235;
 		outputLUT[i] = Math.pow(20, (dB/20));
 	}
-
-//	function envenable(i, qr) {
-//		var shift = (qr / 4) - 11;
-//		if (shift < 0) {
-//			var sm = (1 << -shift) - 1;
-//			if ((i & sm) != sm) return false;
-//			i >>= -shift;
-//		}
-//		return envmask[qr & 3][i & 7] != 0;
-//	}
-//
-//	function attackstep(lev, i, qr) {
-//		var shift = (qr >> 2) - 11;
-//		if (!envenable(i, qr)) return lev;
-//		var slope = 17 - (lev >> 8);
-//		lev += slope << Math.max(shift, 0);
-//		return lev;
-//	}
-//
-//	function decaystep(lev, i, qr) {
-//		var shift = (qr >> 2) - 11;
-//		if (!envenable(i, qr)) return lev;
-//		lev -= 1 << Math.max(shift, 0);
-//		return lev;
-//	}
 
 	function EnvelopeDX7(levels, rates) {
 		this.levels = levels;
@@ -66,24 +34,11 @@ var EnvelopeDX7 = (function() {
 					lev = this.targetlevel;
 					this.advance(this.state + 1);
 				}
-//				if (envenable(this.i, this.qr)) {
-//						// Attack Step
-//					shift = (this.qr / 4) - 11;
-//					slope = 17 - (lev / 256);
-//					lev += slope << Math.max(shift, 0);
-//					if (lev >= this.targetlevel) {
-//						lev = this.targetlevel;
-//						this.advance(this.state + 1);
-//						// console.log("rise complete, advanced to state:", this.state, "level:", Math.pow(20, ((this.level - 3824) * 0.0235/20)));
-//					}
-//				}
 			} else {
-				// Decay Step
 				lev -= this.decayIncrement;
 				if (lev <= this.targetlevel) {
 					lev = this.targetlevel;
 					this.advance(this.state + 1);
-					// console.log("fall complete, advanced to state", this.state, "level:", Math.pow(20, ((this.level - 3824) * 0.0235/20)));
 				}
 			}
 			this.level = lev;
@@ -92,7 +47,6 @@ var EnvelopeDX7 = (function() {
 
 		// Convert DX7 level -> dB -> amplitude
 		return outputLUT[Math.floor(this.level)];
-//		var amp = Math.pow(20, (dB/20));
 //		if (this.pitchMode) {
 //			return Math.pow(pitchModDepth, amp);
 //		}
