@@ -108,6 +108,9 @@
 			]
 		}
 	];
+	var VIZ_MODE_NONE = 0,
+		VIZ_MODE_WAVE = 1,
+		VIZ_MODE_FFT = 2;
 
 	// TODO: is setTimeout needed here?
 	setTimeout(function() {
@@ -124,17 +127,14 @@
 		};
 	}, 100);
 
+	var vizForeground = [47,52,9];
+	var vizBackground = [206,224,72];
 	// Setup frequency domain graph
-	var frequencybox = new SpectrumBox(1024, 1024, "fftbox", audioContext);
-	frequencybox.foreground = "rgb(50, 50, 50)";
-	frequencybox.background = "rgb(240, 240, 240)";
+	var frequencybox = new SpectrumBox(256, 35, vizForeground, vizBackground, "fftbox", audioContext);
 	scriptProcessor.connect(frequencybox.getAudioNode());
-
 	// Setup time domain graph
-	var wavebox = new SpectrumBox(1024, 1024, "wavebox", audioContext);
+	var wavebox = new SpectrumBox(256, 35, vizForeground, vizBackground, "wavebox", audioContext);
 	wavebox.setType(SpectrumBox.Types.TIME);
-	wavebox.foreground = "rgb(50, 50, 50)";
-	wavebox.background = "rgb(220, 220, 220)";
 	scriptProcessor.connect(wavebox.getAudioNode());
 
 
@@ -325,6 +325,7 @@
 
 	app.controller('MidiCtrl', function($scope) {
 		var mml = null;
+		this.vizMode = 0;
 		var mmlDemos = [ "t92 l8 o4 $" +
 			"[>cg<cea]2.        [>cg<ceg]4" +
 			"[>>a<a<c+fa+]2.    [>>a <a <c+ e a]4" +
@@ -408,17 +409,21 @@
 			}
 		};
 
-		this.onModeClick = function() {
-			console.log("hey ho");
-		};
-
-		this.onAnalysisChange = function() {
-			if (this.analysisMode) {
-				frequencybox.enable();
-				wavebox.enable();
-			} else {
-				frequencybox.disable();
-				wavebox.disable();
+		this.onVizClick = function() {
+			this.vizMode = (this.vizMode + 1) % 3;
+			switch (this.vizMode) {
+				case VIZ_MODE_NONE:
+					wavebox.disable();
+					frequencybox.disable();
+					break;
+				case VIZ_MODE_FFT:
+					frequencybox.enable();
+					wavebox.disable();
+					break;
+				case VIZ_MODE_WAVE:
+					frequencybox.disable();
+					wavebox.enable();
+					break;
 			}
 		};
 

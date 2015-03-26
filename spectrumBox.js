@@ -1,31 +1,14 @@
-/*
-   SpectrumBox - A JavaScript spectral analyzer.
-   Mohit Cheppudira - 0xfe.blogspot.com
-*/
-
 /**
   @constructor
   Create an n-point FFT based spectral analyzer.
-  @param num_points - Number of points for transform.
-  @param num_bins - Number of bins to show on canvas.
-  @param canvas_id - Canvas element ID.
-  @param audio_context - An AudioContext instance.
 */
-var SpectrumBox = function SpectrumBox(num_points, num_bins, canvas_id, audio_context, type) {
-  this.init(num_points, num_bins, canvas_id, audio_context, type);
-}
-
-SpectrumBox.Types = {
-  FREQUENCY: 1,
-  TIME: 2
-}
-
-SpectrumBox.prototype.init = function(
-    num_points, num_bins,
+var SpectrumBox = function(
+    width, height, foreground, background,
     canvas_id, audio_context, type) {
-  this.num_bins = num_bins;
-  this.num_points = num_points;
-  this.canvas_id = canvas_id;
+  this.canvas = document.getElementById(canvas_id);
+	this.width = this.canvas.width = width;
+	this.height = this.canvas.height = height;
+  this.num_points = Math.pow(2, Math.ceil(Math.log(width) / Math.LN2)) * 2;
   this.update_rate_ms = 33.333;
   this.smoothing = 0.25;
   this.type = type || SpectrumBox.Types.FREQUENCY;
@@ -34,9 +17,6 @@ SpectrumBox.prototype.init = function(
   this.valid_points = 0;
 
   // Determine the boundaries of the canvas.
-  this.canvas = document.getElementById(canvas_id);
-  this.width = this.canvas.width = num_bins / 2;
-  this.height = this.canvas.height = 100;
   if (this.type == SpectrumBox.Types.FREQUENCY) {
     this.bar_spacing = 0;
   } else {
@@ -52,34 +32,42 @@ SpectrumBox.prototype.init = function(
   this.data = new Uint8Array(this.fft.frequencyBinCount);
 
   this.blackPixel = this.ctx.createImageData(1,1);
-  this.blackPixel.data[0] = 0;
-  this.blackPixel.data[1] = 0;
-  this.blackPixel.data[2] = 0;
+  this.blackPixel.data[0] = foreground[0];
+  this.blackPixel.data[1] = foreground[1];
+  this.blackPixel.data[2] = foreground[2];
   this.blackPixel.data[3] = 255;
-}
+
+	this.foreground = "rgb(" + foreground.join(",") + ")";
+	this.background = "rgb(" + background.join(",") + ")";
+};
+
+SpectrumBox.Types = {
+	FREQUENCY: 1,
+	TIME: 2
+};
 
 /* Returns the AudioNode of the FFT. You can route signals into this. */
 SpectrumBox.prototype.getAudioNode = function() {
   return this.fft;
-}
+};
 
 /* Returns the canvas' 2D context. Use this to configure the look
    of the display. */
 SpectrumBox.prototype.getCanvasContext = function() {
   return this.ctx;
-}
+};
 
 /* Set the number of points to work with. */
 SpectrumBox.prototype.setValidPoints = function(points) {
   this.valid_points = points;
   return this;
-}
+};
 
 /* Set the domain type for the graph (TIME / FREQUENCY. */
 SpectrumBox.prototype.setType = function(type) {
   this.type = type;
   return this;
-}
+};
 
 /* Enable the analyzer. Starts drawing stuff on the canvas. */
 SpectrumBox.prototype.enable = function() {
@@ -88,17 +76,19 @@ SpectrumBox.prototype.enable = function() {
     this.intervalId = window.setInterval(
         function() { that.update(); }, this.update_rate_ms);
   }
+	this.canvas.style.visibility = "visible";
   return this;
-}
+};
 
 /* Disable the analyzer. Stops drawing stuff on the canvas. */
 SpectrumBox.prototype.disable = function() {
   if (this.intervalId) {
     window.clearInterval(this.intervalId);
     this.intervalId = undefined;
-  }
+	}
+	this.canvas.style.visibility = "hidden";
   return this;
-}
+};
 
 /* Updates the canvas display. */
 SpectrumBox.prototype.update = function() {
@@ -151,4 +141,4 @@ SpectrumBox.prototype.update = function() {
       this.ctx.putImageData(this.blackPixel, i, this.height/2 - (data[i]-128)/256 * (this.height - 1));
     }
   }
-}
+};
