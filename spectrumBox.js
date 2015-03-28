@@ -13,6 +13,8 @@ var SpectrumBox = function(
   this.smoothing = 0.25;
   this.type = type || SpectrumBox.Types.FREQUENCY;
 
+	this.enabled = false;
+
   this.ctx = this.canvas.getContext('2d');
   this.actx = audio_context;
 
@@ -32,6 +34,7 @@ var SpectrumBox = function(
   for (var i = 0; i < foreground.length; i++) { blend[i] = Math.floor(foreground[i] * .7 + background[i] * .3); }
   this.foregroundLight = "rgb(" + blend.join(",") + ")";
   this.background = "rgb(" + background.join(",") + ")";
+	this.update = this.update.bind(this);
 };
 
 SpectrumBox.Types = {
@@ -58,72 +61,83 @@ SpectrumBox.prototype.setType = function(type) {
 
 /* Enable the analyzer. Starts drawing stuff on the canvas. */
 SpectrumBox.prototype.enable = function() {
-  var that = this;
-  if (!this.intervalId) {
-    this.intervalId = window.setInterval(
-        function() { that.update(); }, this.update_rate_ms);
-  }
+//  var that = this;
+//  if (!this.intervalId) {
+//    this.intervalId = window.setInterval(
+//        function() { that.update(); }, this.update_rate_ms);
+//  }
+	this.enabled = true;
   this.canvas.style.visibility = "visible";
+	window.requestAnimationFrame(this.update);
   return this;
 };
 
 /* Disable the analyzer. Stops drawing stuff on the canvas. */
 SpectrumBox.prototype.disable = function() {
-  if (this.intervalId) {
-    window.clearInterval(this.intervalId);
-    this.intervalId = undefined;
-  }
+//  if (this.intervalId) {
+//    window.clearInterval(this.intervalId);
+//    this.intervalId = undefined;
+//  }
+	this.enabled = false;
   this.canvas.style.visibility = "hidden";
   return this;
 };
 
 /* Updates the canvas display. */
 SpectrumBox.prototype.update = function() {
+	if (this.enabled) {
+		window.requestAnimationFrame(this.update);
+	}
   // Get the frequency samples
-  data = this.data;
-  if (this.type == SpectrumBox.Types.FREQUENCY) {
+  var data = this.data;
+//  if (this.type == SpectrumBox.Types.FREQUENCY) {
     this.fft.smoothingTimeConstant = this.smoothing;
     this.fft.getByteFrequencyData(data);
-  } else {
-    this.fft.smoothingTimeConstant = 0;
-    this.fft.getByteTimeDomainData(data);
-  }
+//  } else {
+//    this.fft.smoothingTimeConstant = 0;
+//    this.fft.getByteTimeDomainData(data);
+//  }
 
   var length = data.length;
-  var bar_width = 1;
 
   // Clear canvas then redraw graph.
   this.ctx.fillStyle = this.background;
   this.ctx.fillRect(0, 0, this.width, this.height);
-  this.ctx.fillStyle = this.foreground;
-  // this.ctx.clearRect(0, 0, this.width, this.height);
+//  this.ctx.clearRect(0, 0, this.width, this.height);
 
   // Break the samples up into bins
 //  var bin_size = Math.floor(length / this.num_bins);
-  for (var i=0; i < length; ++i) {
-    this.ctx.fillStyle = (i % 2) ? this.foreground : this.foregroundLight;
-    // var sum = 0;
-    // for (var j=0; j < bin_size; ++j) {
-    //   sum += data[(i * bin_size) + j];
-    // }
-
-    // Calculate the average frequency of the samples in the bin
-    // var average = sum / bin_size;
-
-    // Draw the bars on the canvas
-    // var bar_width = this.width / this.num_bins;
-    // var scaled_average = (average / 256) * this.height;
-    if (this.type == SpectrumBox.Types.FREQUENCY) {
-      //var val = (data[i] - this.fft.minDecibels) * (this.fft.maxDecibels - this.fft.minDecibels)
-//      var db = data[i]/256 * (this.fft.maxDecibels - this.fft.minDecibels) + this.fft.minDecibels;
-      // var mag = Math.pow(10, 0.05*db) * 70; // used to be 40
-      // var mag = data[i]/256;
-      this.ctx.fillRect(
-        i, this.height,
-        bar_width, -(data[i] >> 3) //db * this.height
-      );
-    } else {
-      this.ctx.putImageData(this.blackPixel, i, this.height/2 - (data[i]-128)/256 * (this.height - 1));
-    }
-  }
+//	this.ctx.strokeStyle = (i % 2) ? this.foreground : this.foregroundLight;
+//	this.ctx.beginPath();
+//  for (var i=0; i < length; ++i) {
+//		if (data[i] === 0) continue;
+//
+//		this.ctx.moveTo(i, 0);
+//		this.ctx.lineTo(i, data[i] >> 3);
+//
+//    // var sum = 0;
+//    // for (var j=0; j < bin_size; ++j) {
+//    //   sum += data[(i * bin_size) + j];
+//    // }
+//
+//    // Calculate the average frequency of the samples in the bin
+//    // var average = sum / bin_size;
+//
+//    // Draw the bars on the canvas
+//    // var bar_width = this.width / this.num_bins;
+//    // var scaled_average = (average / 256) * this.height;
+////    if (this.type == SpectrumBox.Types.FREQUENCY) {
+////      //var val = (data[i] - this.fft.minDecibels) * (this.fft.maxDecibels - this.fft.minDecibels)
+//////      var db = data[i]/256 * (this.fft.maxDecibels - this.fft.minDecibels) + this.fft.minDecibels;
+////      // var mag = Math.pow(10, 0.05*db) * 70; // used to be 40
+////      // var mag = data[i]/256;
+////      this.ctx.fillRect(
+////        i, this.height,
+////        bar_width, -(data[i] >> 3) //db * this.height
+////      );
+////    } else {
+////      this.ctx.putImageData(this.blackPixel, i, this.height/2 - (data[i]-128)/256 * (this.height - 1));
+////    }
+//  }
+//	this.ctx.stroke();
 };
