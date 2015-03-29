@@ -1,4 +1,4 @@
-(function(SpectrumBox, MMLEmitter, MIDI, SysexDX7, FMVoice) {
+(function(Visualizer, MMLEmitter, MIDI, SysexDX7, FMVoice) {
 	var app = angular.module('synthApp', ['ngStorage']);
 	var synth = new Synth(FMVoice);
 	var midi = new MIDI(synth);
@@ -127,15 +127,17 @@
 		};
 	}, 100);
 
-	var vizForeground = [47,52,9];
-	var vizBackground = [206,224,72];
-	// Setup frequency domain graph
-	var frequencybox = new SpectrumBox(256, 35, vizForeground, vizBackground, "fftbox", audioContext);
-	scriptProcessor.connect(frequencybox.getAudioNode());
+//	var vizForeground = [47,52,9];
+//	var vizBackground = [206,224,72];
+//	// Setup frequency domain graph
+//	var frequencybox = new SpectrumBox(256, 35, vizForeground, vizBackground, "fftbox", audioContext);
+//	scriptProcessor.connect(frequencybox.getAudioNode());
 	// Setup time domain graph
-	var wavebox = new SpectrumBox(256, 35, vizForeground, vizBackground, "wavebox", audioContext);
-	wavebox.setType(SpectrumBox.Types.TIME);
-	scriptProcessor.connect(wavebox.getAudioNode());
+//	var wavebox = new SpectrumBox(256, 35, vizForeground, vizBackground, "wavebox", audioContext);
+//	wavebox.setType(SpectrumBox.Types.TIME);
+//	scriptProcessor.connect(wavebox.getAudioNode());
+	var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext);
+	scriptProcessor.connect(visualizer.getAudioNode());
 
 
 	// Polyphony counter
@@ -410,19 +412,19 @@
 		};
 
 		this.onVizClick = function() {
-			this.vizMode = (this.vizMode + 1) % 3;
+			this.vizMode = (this.vizMode + 1) % 2;
 			switch (this.vizMode) {
 				case VIZ_MODE_NONE:
-					wavebox.disable();
-					frequencybox.disable();
+					visualizer.disable();
+//					frequencybox.disable();
 					break;
 				case VIZ_MODE_FFT:
-					frequencybox.enable();
-					wavebox.disable();
+					visualizer.enable();
+//					wavebox.disable();
 					break;
 				case VIZ_MODE_WAVE:
-					frequencybox.disable();
-					wavebox.enable();
+//					frequencybox.disable();
+					visualizer.enable();
 					break;
 			}
 		};
@@ -542,4 +544,4 @@
 		self.onChange();
 
 	}]);
-})(SpectrumBox, MMLEmitter, MIDI, SysexDX7, VoiceDX7);
+})(Visualizer, MMLEmitter, MIDI, SysexDX7, VoiceDX7);

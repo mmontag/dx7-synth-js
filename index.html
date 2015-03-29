@@ -9,10 +9,7 @@
 			<div class="dx7-top-panel">
 				<div class="dx7-logo"></div>
 				<div class="display">
-					<div class="analysis">
-						<canvas id="fftbox"></canvas>
-						<canvas id="wavebox"></canvas>
-					</div>
+					<div id="analysis" class="analysis"></div>
 					<select ng-model="presetCtrl.selectedIndex"
 									ng-change="presetCtrl.onChange($event)"
 									ng-options="presetCtrl.presets.indexOf(preset) as preset.name for preset in presetCtrl.presets"
@@ -203,7 +200,7 @@
 	<script src="ngStorage.min.js"></script>
 	<script src="sysex-dx7.js"></script>
 	<script src="pixi.js"></script>
-	<script src="spectrumBox.js"></script>
+	<script src="visualizer.js"></script>
 	<script src="lfo-dx7.js"></script>
 	<script src="envelope-dx7.js"></script>
 	<script src="operator.js"></script>
