@@ -26,7 +26,7 @@ var EnvelopeDX7 = (function() {
 
 	EnvelopeDX7.prototype.render = function() {
 		if (this.state < 3 || (this.state < 4 && !this.down)) {
-			var lev, shift, slope;
+			var lev;
 			lev = this.level;
 			if (this.rising) {
 				lev += this.decayIncrement * (2 + (this.targetlevel - lev) / 256);
@@ -60,7 +60,7 @@ var EnvelopeDX7 = (function() {
 			this.rising = (this.targetlevel - this.level) > 0;
 			var rate_scaling = 0;
 			this.qr = Math.min(63, rate_scaling + ((this.rates[this.state] * 41) >> 6)); // 5 -> 3; 49 -> 31; 99 -> 63
-			this.decayIncrement = Math.pow(2, this.qr/4) / 4096;
+			this.decayIncrement = Math.pow(2, this.qr/4) / 2048;
 //      console.log("decayIncrement (", this.state, "): ", this.decayIncrement);
 		}
 //		console.log("advance state="+this.state+", qr="+this.qr+", target="+this.targetlevel+", rising="+this.rising);
