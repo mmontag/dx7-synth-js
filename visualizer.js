@@ -46,6 +46,8 @@ Visualizer.prototype.render = function() {
 	var graphics = this.graphics;
 	var height = this.height - 1;
 	this.analyzer.getByteFrequencyData(data);
+	// TODO: waveform mode
+	// this.analyzer.getByteTimeDomainData(data);
 
 	// draw the analyzer data
 	graphics.clear();
