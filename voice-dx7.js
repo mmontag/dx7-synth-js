@@ -143,7 +143,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 							// http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html
 							mod += modOp.val * PARAMS.fbRatio;
 						} else {
-							mod += modOp.val * 13.122; //modOp.outputLevel;
+							mod += modOp.val * modOp.outputLevel;
 						}
 					}
 				}
