@@ -118,10 +118,14 @@ var LfoDX7 = (function() {
 					break;
 			}
 
-			// if (this.counter % 10000 == 0) console.log("lfo delay value", this.delayVal);
+			// if (this.counter % 10000 == 0 && this.operatorIndex === 0) console.log("lfo amp value", this.ampVal);
 			amp *= this.delayVal;
 			this.pitchVal = Math.pow(pitchModDepth, amp);
-			this.ampValTarget = 0.5 + ampModDepth * amp * 0.16667 * PARAMS.operators[this.operatorIndex].lfoAmpModSens;
+			// TODO: Simplify ampValTarget calculation.
+			// ampValTarget range = 0 to 1. lfoAmpModSens range = -3 to 3. ampModDepth range =  0 to 1. amp range = -1 to 1.
+			var ampSensDepth = Math.abs(PARAMS.operators[this.operatorIndex].lfoAmpModSens) * 0.333333;
+			var phase = (PARAMS.operators[this.operatorIndex].lfoAmpModSens > 0) ? 1 : -1;
+			this.ampValTarget = 1 - (ampModDepth * ampSensDepth * (amp * phase + 1) * 0.5);
 			this.ampIncrement = (this.ampValTarget - this.ampVal) / LFO_SAMPLE_PERIOD;
 			this.phase += phaseStep;
 			if (this.phase >= PERIOD) {
