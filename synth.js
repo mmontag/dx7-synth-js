@@ -2,9 +2,35 @@ var Synth = (function() {
 	var POLYPHONY = 12;
 	var PER_VOICE_LEVEL = 0.125 / 6; // nominal per-voice level borrowed from Hexter
 
+	var MIDI_CC_MODULATION = 1,
+		MIDI_CC_AFTERTOUCH = 13,
+		MIDI_CC_SUSTAIN_PEDAL = 64;
+
 	function Synth(voiceClass) {
 		this.voices = [];
 		this.voiceClass = voiceClass;
+		this.sustainPedalDown = false;
+	}
+
+	Synth.prototype.controller = function(controlNumber, value) {
+		// see http://www.midi.org/techspecs/midimessages.php#3
+		switch (controlNumber) {
+			case MIDI_CC_SUSTAIN_PEDAL:
+				this.sustainPedal(value > 0.5);
+				break;
+		}
+	}
+
+	Synth.prototype.sustainPedal = function(down) {
+		if (down) {
+			this.sustainPedalDown = true;
+		} else {
+			this.sustainPedalDown = false;
+			for (var i = 0, l = this.voices.length; i < l; i++) {
+				if (this.voices[i] && this.voices[i].down === false)
+					this.voices[i].noteOff();
+			}
+		}
 	}
 
 	Synth.prototype.noteOn = function(note, velocity) {
@@ -17,9 +43,11 @@ var Synth = (function() {
 	};
 
 	Synth.prototype.noteOff = function(note) {
-		for (var i = 0; i < this.voices.length; i++) {
-			if (this.voices[i] && this.voices[i].note == note && this.voices[i].down == true) {
-				this.voices[i].noteOff();
+		for (var i = 0, voice; i < this.voices.length, voice = this.voices[i]; i++) {
+			if (voice && voice.note === note && voice.down === true) {
+				voice.down = false;
+				if (this.sustainPedalDown === false)
+					voice.noteOff();
 				break;
 			}
 		}
