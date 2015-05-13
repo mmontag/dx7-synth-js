@@ -478,6 +478,7 @@
 		this.presets = defaultPresets;
 		this.params = this.presets[0]; // TODO: move params into a nested controller/scope?
 		this.selectedIndex = 0;
+		this.paramDisplayText = "--";
 
 		$http.get('roms/ROM1A.SYX')
 			.success(function(data) {
@@ -522,6 +523,37 @@
 				this.onChange();
 			}
 		};
+
+		function traverseParams(paramNode, prefix, paramStrings) {
+			for (var p in paramNode) {
+				if (paramNode.hasOwnProperty(p)) {
+					var name = prefix ? prefix + (parseInt(p) == p|0 ? "[" + p + "]" : "." + p) : p;
+					if (!angular.isObject(paramNode[p]))
+						paramStrings.push(name);
+					else {
+						traverseParams(paramNode[p], name, paramStrings);
+					}
+				}
+			}
+		}
+		var paramStrings = [];
+		traverseParams(defaultPresets[0], null, paramStrings);
+		console.log("paramStrings:", paramStrings);
+		for(var i = 0; i < paramStrings.length; i++) {
+			$scope.$watch('presetCtrl.params.' + paramStrings[i], function(newValue) {
+				updateParamDisplayText(newValue);
+			});
+		}
+
+		var paramDisplayTimer = 0;
+		function updateParamDisplayText(newValue) {
+			clearTimeout(paramDisplayTimer);
+			self.paramDisplayText = newValue;
+			paramDisplayTimer = setTimeout(function() {
+				self.paramDisplayText = "";
+			}, 400);
+
+		}
 
 		$scope.$watch('presetCtrl.params.feedback', function(newValue) {
 			if (newValue !== undefined) {

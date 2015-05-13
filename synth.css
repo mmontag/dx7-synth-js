@@ -53,6 +53,16 @@ body {
     image-rendering: pixelated;
 }
 
+.lcd-text {
+    font-family: '5x8 LCD HD44780U A02 Regular', serif;
+    font-size: 16.27px;
+    line-height: 16px;
+    color: rgba(0,0,0,0.8);
+    position: absolute;
+    top: 8px;
+    left: 5px;
+}
+
 select.lcd {
     font-family: '5x8 LCD HD44780U A02 Regular', serif;
     font-size: 16.27px;
