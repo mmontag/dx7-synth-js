@@ -118,7 +118,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 
 	FMVoice.mapOutputLevel = function(input) {
 		var idx = Math.min(99, Math.max(0, Math.floor(input)));
-		return OUTPUT_LEVEL_TABLE[idx];
+		return OUTPUT_LEVEL_TABLE[idx] * 1.27;
 	};
 
 	FMVoice.prototype.render = function() {
