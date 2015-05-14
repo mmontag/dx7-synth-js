@@ -1,12 +1,22 @@
 // http://www.chipple.net/dx7/fig09-4.gif
-function Operator(frequency, envelope, lfo, pitchEnvelope) {
+var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
+
+function Operator(params, baseFrequency, envelope, lfo, pitchEnvelope) {
 	this.phase = 0;
 	this.val = 0;
-	this.phaseStep = PERIOD * frequency/SAMPLE_RATE; // radians per sample
+	this.params = params;
 	this.envelope = envelope;
 //	this.pitchEnvelope = pitchEnvelope;
 	this.lfo = lfo;
+	this.updateFrequency(baseFrequency);
 }
+
+Operator.prototype.updateFrequency = function(baseFrequency) {
+	var frequency = this.params.oscMode ?
+		this.params.freqFixed :
+		baseFrequency * this.params.freqRatio * Math.pow(OCTAVE_1024, this.params.detune);
+	this.phaseStep = PERIOD * frequency / SAMPLE_RATE; // radians per sample
+};
 
 Operator.prototype.render = function(mod) {
 	this.val = Math.sin(this.phase + mod) * this.envelope.render() * this.lfo.renderAmp();

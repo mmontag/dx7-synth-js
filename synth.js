@@ -1,6 +1,7 @@
 var Synth = (function() {
 	var POLYPHONY = 12;
 	var PER_VOICE_LEVEL = 0.125 / 6; // nominal per-voice level borrowed from Hexter
+	var PITCH_BEND_RANGE = 2; // semitones (in each direction)
 
 	var MIDI_CC_MODULATION = 1,
 		MIDI_CC_AFTERTOUCH = 13,
@@ -10,6 +11,7 @@ var Synth = (function() {
 		this.voices = [];
 		this.voiceClass = voiceClass;
 		this.sustainPedalDown = false;
+		this.bend = 0;
 	}
 
 	Synth.prototype.controller = function(controlNumber, value) {
@@ -33,8 +35,16 @@ var Synth = (function() {
 		}
 	}
 
+	Synth.prototype.pitchBend = function(value) {
+		this.bend = value * PITCH_BEND_RANGE;
+		for (var i = 0, l = this.voices.length; i < l; i++) {
+			if (this.voices[i])
+				this.voices[i].pitchBend(this.bend);
+		}
+	};
+
 	Synth.prototype.noteOn = function(note, velocity) {
-			var voice = new this.voiceClass(note, velocity);
+			var voice = new this.voiceClass(note, velocity, this.bend);
 			if (this.voices.length >= POLYPHONY) {
 				// TODO: fade out removed voices
 				this.voices.shift(); // remove first

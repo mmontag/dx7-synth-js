@@ -8,7 +8,6 @@ var PERIOD_RECIP = 1 / PERIOD;
 var PARAMS = {};
 
 var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
-	var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
 	var OUTPUT_LEVEL_TABLE = [
 		0.000000, 0.000337, 0.000476, 0.000674, 0.000952, 0.001235, 0.001602, 0.001905, 0.002265, 0.002694,
 		0.003204, 0.003810, 0.004531, 0.005388, 0.006408, 0.007620, 0.008310, 0.009062, 0.010776, 0.011752,
@@ -56,10 +55,10 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 		{ outputMix: [0,1,2,3,4,5], modulationMatrix: [[], [], [], [], [], [5]] }         //32
 	];
 
-	function FMVoice(note, velocity) {
-		var frequency = FMVoice.frequencyFromNoteNumber(note);
+	function FMVoice(note, velocity, bend) {
 		this.down = true;
 		this.note = parseInt(note, 10);
+		this.frequency = FMVoice.frequencyFromNoteNumber(this.note);
 		this.velocity = parseFloat(velocity);
 		this.operators = new Array(6);
 		for (var i = 0; i < 6; i++) {
@@ -68,8 +67,8 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 			// https://github.com/asb2m10/dexed/blob/1eda313316411c873f8388f971157664827d1ac9/Source/msfa/dx7note.cc#L55
 			// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
 			var params = PARAMS.operators[i];
-			var freq = params.oscMode ? params.freqFixed : frequency * params.freqRatio * Math.pow(OCTAVE_1024, params.detune);
-			var op = new Operator(freq,
+			var op = new Operator(params,
+				this.frequency,
 				new EnvelopeDX7(params.levels, params.rates),
 				new LfoDX7(i)
 				//new EnvelopeDX7(PARAMS.pitchEnvelope.levels, PARAMS.pitchEnvelope.rates, true)
@@ -78,6 +77,7 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 			op.outputLevel = (1 + (this.velocity - 1) * (params.velocitySens / 7)) * params.outputLevel;
 			this.operators[i] = op;
 		}
+		this.pitchBend(bend);
 	}
 
 	FMVoice.frequencyFromNoteNumber = function(note) {
@@ -166,6 +166,13 @@ var VoiceDX7 = (function(Operator, EnvelopeDX7, LfoDX7) {
 		this.down = false;
 		for (var i = 0; i < 6; i++) {
 			this.operators[i].noteOff();
+		}
+	};
+
+	FMVoice.prototype.pitchBend = function(semitones) {
+		var frequency = FMVoice.frequencyFromNoteNumber(this.note + semitones);
+		for (var i = 0; i < 6; i++) {
+			this.operators[i].updateFrequency(frequency);
 		}
 	};
 

@@ -8,16 +8,13 @@ var MIDI = function(synth) {
     if (channel == 9)
       return;
     if ( cmd==8 || ((cmd==9)&&(velocity==0)) ) { // with MIDI, note on with velocity zero is the same as note off
-      // note off
       synth.noteOff( noteNumber );
     } else if (cmd == 9) {
-      // note on
       synth.noteOn( noteNumber, velocity/99.0); // changed 127 to 99 to incorporate "overdrive"
     } else if (cmd == 11) {
       synth.controller( noteNumber, velocity/127.0);
     } else if (cmd == 14) {
-      // pitch wheel
-      synth.pitchWheel( ((velocity * 128.0 + noteNumber)-8192)/8192.0 );
+      synth.pitchBend( ((velocity * 128.0 + noteNumber)-8192)/8192.0 );
     } else if ( cmd == 10 ) {  // poly aftertouch
       synth.polyPressure(noteNumber,velocity/127)
     }
