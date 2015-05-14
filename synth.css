@@ -27,7 +27,7 @@ body {
 
 .display {
     position: absolute;
-    width: 406px;
+    width: 436px;
     height: 56px;
     top: 39px;
     left: 254px;
@@ -270,14 +270,14 @@ input[type='range']::-webkit-slider-thumb {
 .dx7-buttons-row-1 {
     position: absolute;
     top: 39px;
-    left: 680px;
+    left: 710px;
     font-size: 0;
 }
 
 .dx7-buttons-row-2 {
     position: absolute;
     bottom: 20px;
-    left: 680px;
+    left: 710px;
 }
 
 .operator {
