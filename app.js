@@ -111,6 +111,9 @@
 	var VIZ_MODE_NONE = 0,
 		VIZ_MODE_WAVE = 1,
 		VIZ_MODE_FFT = 2;
+	var PARAM_START_MANIPULATION = 'param-start-manipulation',
+		PARAM_STOP_MANIPULATION = 'param-stop-manipulation',
+		PARAM_CHANGE = 'param-change';
 
 	// TODO: is setTimeout needed here?
 	setTimeout(function() {
@@ -193,6 +196,7 @@
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', onUp);
 				element[0].focus();
+				scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
 			});
 
 			element.on('keydown', function(e) {
@@ -205,7 +209,7 @@
 					} else {
 						scope.ngModel = Math.max(scope.ngModel - 1, min);
 					}
-					scope.$apply();
+					apply();
 				}
 			});
 
@@ -217,7 +221,7 @@
 				} else {
 					scope.ngModel = Math.min(scope.ngModel + increment, max);
 				}
-				scope.$apply();
+				apply();
 			});
 
 			function onMove(e) {
@@ -225,7 +229,7 @@
 					var dy = (startY - e.clientY) * (max - min) / pixelRange;
 					// TODO: use 'step' attribute
 					scope.ngModel = Math.round(Math.max(min, Math.min(max, dy + startModel)));
-					scope.$apply();
+					apply();
 				}
 			}
 
@@ -233,6 +237,12 @@
 				down = false;
 				window.removeEventListener('mousemove', onMove);
 				window.removeEventListener('mouseup', onUp);
+				scope.$emit(PARAM_STOP_MANIPULATION, scope.ngModel);
+			}
+
+			function apply() {
+				scope.$apply();
+				scope.$emit(PARAM_CHANGE, scope.ngModel);
 			}
 
 			scope.getDegrees = function() {
@@ -480,6 +490,34 @@
 		this.selectedIndex = 0;
 		this.paramDisplayText = "--";
 
+		var paramManipulating = false;
+		var paramDisplayTimer = null;
+
+		$scope.$on(PARAM_START_MANIPULATION, function(e, value) {
+			paramManipulating = true;
+			flashParam(value);
+		});
+
+		$scope.$on(PARAM_STOP_MANIPULATION, function(e, value) {
+			paramManipulating = false;
+			flashParam(value);
+		});
+
+		$scope.$on(PARAM_CHANGE, function(e, value) {
+			flashParam(value);
+		});
+
+		function flashParam(value) {
+			self.paramDisplayText = value;
+			if (!paramManipulating) {
+				clearTimeout(paramDisplayTimer);
+				paramDisplayTimer = setTimeout(function() {
+					self.paramDisplayText = "--";
+					$scope.$apply();
+				}, 1500);
+			}
+		}
+
 		$http.get('roms/ROM1A.SYX')
 			.success(function(data) {
 				self.basePresets = SysexDX7.loadBank(data);
@@ -523,37 +561,6 @@
 				this.onChange();
 			}
 		};
-
-		function traverseParams(paramNode, prefix, paramStrings) {
-			for (var p in paramNode) {
-				if (paramNode.hasOwnProperty(p)) {
-					var name = prefix ? prefix + (parseInt(p) == p|0 ? "[" + p + "]" : "." + p) : p;
-					if (!angular.isObject(paramNode[p]))
-						paramStrings.push(name);
-					else {
-						traverseParams(paramNode[p], name, paramStrings);
-					}
-				}
-			}
-		}
-		var paramStrings = [];
-		traverseParams(defaultPresets[0], null, paramStrings);
-		console.log("paramStrings:", paramStrings);
-		for(var i = 0; i < paramStrings.length; i++) {
-			$scope.$watch('presetCtrl.params.' + paramStrings[i], function(newValue) {
-				updateParamDisplayText(newValue);
-			});
-		}
-
-		var paramDisplayTimer = 0;
-		function updateParamDisplayText(newValue) {
-			clearTimeout(paramDisplayTimer);
-			self.paramDisplayText = newValue;
-			paramDisplayTimer = setTimeout(function() {
-				self.paramDisplayText = "";
-			}, 400);
-
-		}
 
 		$scope.$watch('presetCtrl.params.feedback', function(newValue) {
 			if (newValue !== undefined) {
