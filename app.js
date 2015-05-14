@@ -195,7 +195,7 @@
 				e.stopPropagation();
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', onUp);
-				element[0].focus();
+				element[0].querySelector('.knob').focus();
 				scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
 			});
 
@@ -254,8 +254,8 @@
 			restrict: 'E',
 			replace: true,
 			require: 'ngModel',
-			scope: {'ngModel': '='},
-			template: '<div class="knob" tabindex="0"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div>',
+			scope: {'ngModel': '=', 'label': '@'},
+			template: '<div><div class="param-label">{{ label }}</div><div class="knob" tabindex="0"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div></div>',
 			link: link
 		};
 	});

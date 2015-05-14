@@ -124,13 +124,6 @@ input[type='range']::-webkit-slider-thumb {
     margin: 0;
 }
 
-.param-value {
-  display: none;
-  width: 40px;
-  font-size: 75%;
-  vertical-align: middle;
-}
-
 .group-name {
   margin-bottom: 5px;
   font-weight: bold;
