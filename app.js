@@ -279,6 +279,7 @@
 				window.addEventListener('mousemove', onMove);
 				window.addEventListener('mouseup', onUp);
 				element[0].querySelector('.slider').focus();
+				scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
 			});
 
 			element.on('keydown', function(e) {
@@ -291,7 +292,7 @@
 					} else {
 						scope.ngModel = Math.max(scope.ngModel - 1, min);
 					}
-					scope.$apply();
+					apply();
 				}
 			});
 
@@ -303,14 +304,14 @@
 				} else {
 					scope.ngModel = Math.min(scope.ngModel + increment, max);
 				}
-				scope.$apply();
+				apply();
 			});
 
 			function onMove(e) {
 				if (down) {
 					var dy = (startY - e.clientY) * (max - min) / pixelRange;
 					scope.ngModel = Math.round(Math.max(min, Math.min(max, dy + startModel)));
-					scope.$apply();
+					apply();
 				}
 			}
 
@@ -318,6 +319,12 @@
 				down = false;
 				window.removeEventListener('mousemove', onMove);
 				window.removeEventListener('mouseup', onUp);
+				scope.$emit(PARAM_STOP_MANIPULATION, scope.ngModel);
+			}
+
+			function apply() {
+				scope.$emit(PARAM_CHANGE, scope.ngModel);
+				scope.$apply();
 			}
 
 			scope.getTop = function() {
@@ -509,8 +516,8 @@
 
 		function flashParam(value) {
 			self.paramDisplayText = value;
+			clearTimeout(paramDisplayTimer);
 			if (!paramManipulating) {
-				clearTimeout(paramDisplayTimer);
 				paramDisplayTimer = setTimeout(function() {
 					self.paramDisplayText = "--";
 					$scope.$apply();
