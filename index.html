@@ -77,13 +77,13 @@
 					<div class="param-group param-group-sliders">
 						<div ng-show="$first" class="param-group-heading">EG Rate</div>
 						<div class="param narrow" ng-repeat="i in [0,1,2,3]">
-							<slider step="1" min="0" max="99" to-number ng-model="operator.rates[i]"></slider>
+							<slider step="1" min="0" max="99" to-number label="EG R{{i+1}}" ng-model="operator.rates[i]"></slider>
 						</div>
 					</div>
 					<div class="param-group param-group-sliders">
 						<div ng-show="$first" class="param-group-heading">EG Level</div>
 						<div class="param narrow" ng-repeat="i in [0,1,2,3]">
-							<slider step="1" min="0" max="99" to-number ng-model="operator.levels[i]"></slider>
+							<slider step="1" min="0" max="99" to-number label="EG L{{i+1}}" ng-model="operator.levels[i]"></slider>
 						</div>
 					</div>
 					<div class="param-group">
@@ -149,13 +149,13 @@
 				<div class="param-group param-group-sliders">
 					<div class="param-group-heading below">Pitch EG Rate</div>
 					<div class="param narrow" ng-repeat="i in [0,1,2,3]">
-						<slider step="1" min="0" max="99" to-number ng-model="presetCtrl.params.pitchEnvelope.rates[i]"></slider>
+						<slider step="1" min="0" max="99" to-number label="Pitch R{{i+1}}" ng-model="presetCtrl.params.pitchEnvelope.rates[i]"></slider>
 					</div>
 				</div>
 				<div class="param-group param-group-sliders">
 					<div class="param-group-heading below">Pitch EG Level</div>
 					<div class="param narrow" ng-repeat="i in [0,1,2,3]">
-						<slider step="1" min="0" max="99" to-number ng-model="presetCtrl.params.pitchEnvelope.levels[i]"></slider>
+						<slider step="1" min="0" max="99" to-number label="Pitch L{{i+1}}" ng-model="presetCtrl.params.pitchEnvelope.levels[i]"></slider>
 					</div>
 				</div>
 			</div>

@@ -241,8 +241,8 @@
 			}
 
 			function apply() {
+				scope.$emit(PARAM_CHANGE, scope.label + ": " + scope.ngModel);
 				scope.$apply();
-				scope.$emit(PARAM_CHANGE, scope.ngModel);
 			}
 
 			scope.getDegrees = function() {
@@ -254,7 +254,7 @@
 			restrict: 'E',
 			replace: true,
 			require: 'ngModel',
-			scope: {'ngModel': '=', 'label': '@'},
+			scope: {ngModel: '=', label: '@'},
 			template: '<div><div class="param-label">{{ label }}</div><div class="knob" tabindex="0"><div class="knob-foreground" ng-style="{\'transform\': \'rotate(\' + getDegrees() + \'deg)\'}"></div></div></div>',
 			link: link
 		};
@@ -323,7 +323,7 @@
 			}
 
 			function apply() {
-				scope.$emit(PARAM_CHANGE, scope.ngModel);
+				scope.$emit(PARAM_CHANGE, scope.label + ": " + scope.ngModel);
 				scope.$apply();
 			}
 
@@ -336,7 +336,7 @@
 			restrict: 'E',
 			replace: true,
 			require: 'ngModel',
-			scope: {'ngModel': '='},
+			scope: {ngModel: '=', label: '@'},
 			template: '<div><div class="slider" tabindex="0"><div class="slider-foreground" ng-style="{\'top\': getTop() + \'px\'}"></div></div><div class="slider-meter"></div></div>',
 			link: link
 		};
