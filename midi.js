@@ -1,4 +1,8 @@
 var MIDI = function(synth) {
+  var selectMidi = null;
+  var midiAccess = null;
+  var midiIn = null;
+
   function midiMessageReceived( ev ) {
     var cmd = ev.data[0] >> 4;
     var channel = ev.data[0] & 0xf;
@@ -18,35 +22,36 @@ var MIDI = function(synth) {
     } else if ( cmd == 10 ) {  // poly aftertouch
       synth.polyPressure(noteNumber,velocity/127)
     }
-		// TODO: Implement channel aftertouch
-		// else console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
+    // TODO: Implement channel aftertouch
+    // else console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
   }
 
-  var selectMIDI = null;
-  var midiAccess = null;
-  var midiIn = null;
+  function onSelectMidiChange( ev ) {
+    var index = ev.target.selectedIndex;
+    setMidiIn(index);
+  }
 
-  function selectMIDIIn( ev ) {
+  function setMidiIn(index) {
+    var id = selectMidi[index].value;
     if (midiIn)
       midiIn.onmidimessage = null;
-    var id = ev.target[ev.target.selectedIndex].value;
     if ((typeof(midiAccess.inputs) == "function"))   //Old Skool MIDI inputs() code
-      midiIn = midiAccess.inputs()[ev.target.selectedIndex];
+      midiIn = midiAccess.inputs()[index];
     else
       midiIn = midiAccess.inputs.get(id);
     if (midiIn)
       midiIn.onmidimessage = midiMessageReceived;
   }
 
-  function onMIDIStarted( midi ) {
+  function onMidiStarted( midi ) {
     var preferredIndex = 0;
     midiAccess = midi;
-    selectMIDI=document.getElementById("midiIn");
+    selectMidi=document.getElementById("midiIn");
     if ((typeof(midiAccess.inputs) == "function")) {  //Old Skool MIDI inputs() code
       var list=midiAccess.inputs();
 
       // clear the MIDI input select
-      selectMIDI.options.length = 0;
+      selectMidi.options.length = 0;
 
       for (var i = 0; (i<list.length)&&(preferredIndex==-1); i++) {
         var str = list[i].name.toString();
@@ -55,34 +60,36 @@ var MIDI = function(synth) {
       }
 
       if (list.length) {
-        for (var i = 0; i<list.length; i++) {
-          selectMIDI.appendChild(new Option(list[i].name,list[i].id,i==preferredIndex,i==preferredIndex));
+        for (i = 0; i<list.length; i++) {
+          selectMidi.appendChild(new Option(list[i].name,list[i].id,i==preferredIndex,i==preferredIndex));
         }
         midiIn = list[preferredIndex];
         midiIn.onmidimessage = midiMessageReceived;
       }
     } else {  // new MIDIMap implementation:
       // clear the MIDI input select
-      selectMIDI.options.length = 0;
-      inputs=midiAccess.inputs.values();
-      for ( var input = inputs.next(); input && !input.done; input = inputs.next()){
+      selectMidi.options.length = 0;
+      inputs = midiAccess.inputs.values();
+      for (var input = inputs.next(); input && !input.done; input = inputs.next()){
         input = input.value;
-        var str=input.name.toString().toLowerCase();
+        var str = input.name.toString().toLowerCase();
         var preferred = !midiIn && (
           (str.indexOf("mpk") != -1)||
           (str.indexOf("lpk") != -1)||
           (str.indexOf("keyboard") != -1)||
           (str.indexOf("midi") != -1)
         );
-
-        selectMIDI.appendChild(new Option(input.name||input.manufacturer,input.id,preferred,preferred));
+        selectMidi.appendChild(new Option(input.name||input.manufacturer, input.id, preferred, preferred));
         if (preferred) {
           midiIn = input;
           midiIn.onmidimessage = midiMessageReceived;
         }
       }
+      if (!midiIn) {
+        setMidiIn(0);
+      }
     }
-    selectMIDI.onchange = selectMIDIIn;
+    selectMidi.onchange = onSelectMidiChange;
   }
 
   function onMIDISystemError( err ) {
@@ -92,6 +99,6 @@ var MIDI = function(synth) {
   //init: start up MIDI
   window.addEventListener('load', function() {   
     if (navigator.requestMIDIAccess)
-      navigator.requestMIDIAccess().then( onMIDIStarted, onMIDISystemError );
+      navigator.requestMIDIAccess().then( onMidiStarted, onMIDISystemError );
   });
 };
