@@ -4,7 +4,6 @@ var Synth = (function() {
 	var PITCH_BEND_RANGE = 2; // semitones (in each direction)
 
 	var MIDI_CC_MODULATION = 1,
-		MIDI_CC_AFTERTOUCH = 13,
 		MIDI_CC_SUSTAIN_PEDAL = 64;
 
 	function Synth(voiceClass) {
@@ -12,16 +11,32 @@ var Synth = (function() {
 		this.voiceClass = voiceClass;
 		this.sustainPedalDown = false;
 		this.bend = 0;
+		this.aftertouch = 0;
+		this.mod = 0;
 	}
 
 	Synth.prototype.controller = function(controlNumber, value) {
 		// see http://www.midi.org/techspecs/midimessages.php#3
 		switch (controlNumber) {
+			case MIDI_CC_MODULATION:
+				this.mod = value;
+				this.updateMod();
+				break;
 			case MIDI_CC_SUSTAIN_PEDAL:
 				this.sustainPedal(value > 0.5);
 				break;
 		}
-	}
+	};
+
+	Synth.prototype.channelAftertouch = function(value) {
+		this.aftertouch = value;
+		this.updateMod();
+	};
+
+	Synth.prototype.updateMod = function() {
+		var aftertouch = PARAMS.aftertouchEnabled ? this.aftertouch : 0;
+		PARAMS.controllerModVal = Math.min(1.27, aftertouch + this.mod); // Allow 27% overdrive
+	};
 
 	Synth.prototype.sustainPedal = function(down) {
 		if (down) {
@@ -33,7 +48,7 @@ var Synth = (function() {
 					this.voices[i].noteOff();
 			}
 		}
-	}
+	};
 
 	Synth.prototype.pitchBend = function(value) {
 		this.bend = value * PITCH_BEND_RANGE;

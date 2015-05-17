@@ -8,22 +8,25 @@ var MIDI = function(synth) {
     var channel = ev.data[0] & 0xf;
     var noteNumber = ev.data[1];
     var velocity = ev.data[2];
-
+    // console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
+    // console.log("midi: ch %d, cmd %d, note %d, vel %d", channel, cmd, noteNumber, velocity);
     if (channel == 9)
       return;
-    if ( cmd==8 || ((cmd==9)&&(velocity==0)) ) { // with MIDI, note on with velocity zero is the same as note off
-      synth.noteOff( noteNumber );
+    if (cmd==8 || ((cmd==9)&&(velocity==0))) { // with MIDI, note on with velocity zero is the same as note off
+      synth.noteOff(noteNumber);
     } else if (cmd == 9) {
-      synth.noteOn( noteNumber, velocity/99.0); // changed 127 to 99 to incorporate "overdrive"
+      synth.noteOn(noteNumber, velocity/99.0); // changed 127 to 99 to incorporate "overdrive"
+    } else if (cmd == 10) {
+      synth.polyphonicAftertouch(noteNumber, velocity/127);
     } else if (cmd == 11) {
-      synth.controller( noteNumber, velocity/127.0);
+      synth.controller(noteNumber, velocity/127);
+    } else if (cmd == 12) {
+      synth.programChange(noteNumber);
+    } else if (cmd == 13) {
+      synth.channelAftertouch(noteNumber/127);
     } else if (cmd == 14) {
       synth.pitchBend( ((velocity * 128.0 + noteNumber)-8192)/8192.0 );
-    } else if ( cmd == 10 ) {  // poly aftertouch
-      synth.polyPressure(noteNumber,velocity/127)
     }
-    // TODO: Implement channel aftertouch
-    // else console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
   }
 
   function onSelectMidiChange( ev ) {

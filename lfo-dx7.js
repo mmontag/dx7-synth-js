@@ -120,12 +120,14 @@ var LfoDX7 = (function() {
 
 			// if (this.counter % 10000 == 0 && this.operatorIndex === 0) console.log("lfo amp value", this.ampVal);
 			amp *= this.delayVal;
+			pitchModDepth = 1 +
+				LFO_PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.controllerModVal + PARAMS.lfoPitchModDepth / 99);
 			this.pitchVal = Math.pow(pitchModDepth, amp);
 			// TODO: Simplify ampValTarget calculation.
 			// ampValTarget range = 0 to 1. lfoAmpModSens range = -3 to 3. ampModDepth range =  0 to 1. amp range = -1 to 1.
 			var ampSensDepth = Math.abs(PARAMS.operators[this.operatorIndex].lfoAmpModSens) * 0.333333;
 			var phase = (PARAMS.operators[this.operatorIndex].lfoAmpModSens > 0) ? 1 : -1;
-			this.ampValTarget = 1 - (ampModDepth * ampSensDepth * (amp * phase + 1) * 0.5);
+			this.ampValTarget = 1 - ((ampModDepth + PARAMS.controllerModVal) * ampSensDepth * (amp * phase + 1) * 0.5);
 			this.ampIncrement = (this.ampValTarget - this.ampVal) / LFO_SAMPLE_PERIOD;
 			this.phase += phaseStep;
 			if (this.phase >= PERIOD) {
@@ -145,7 +147,6 @@ var LfoDX7 = (function() {
 	LfoDX7.update = function() {
 		var frequency = LFO_FREQUENCY_TABLE[PARAMS.lfoSpeed];
 		phaseStep = PERIOD * frequency/LFO_RATE; // radians per sample
-		pitchModDepth = 1 + LFO_PITCH_MOD_TABLE[PARAMS.lfoPitchModSens] * (PARAMS.lfoPitchModDepth / 99);
 		ampModDepth = PARAMS.lfoAmpModDepth * 0.01;
 		// ignoring amp mod table for now. it seems shallow LFO_AMP_MOD_TABLE[PARAMS.lfoAmpModDepth];
 		delayTimes[LFO_DELAY_ONSET] = (LFO_RATE * 0.001753 * Math.pow(PARAMS.lfoDelay, 3.10454) + 169.344 - 168) / 1000;

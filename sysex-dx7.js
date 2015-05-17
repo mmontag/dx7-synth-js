@@ -66,7 +66,9 @@ var SysexDX7 = {
 			pitchEnvelope: {
 				rates: [voiceData.charCodeAt(102), voiceData.charCodeAt(103), voiceData.charCodeAt(104), voiceData.charCodeAt(105)],
 				levels: [voiceData.charCodeAt(106), voiceData.charCodeAt(107), voiceData.charCodeAt(108), voiceData.charCodeAt(109)]
-			}
+			},
+			controllerModVal: 0,
+			aftertouchEnabled: 0
 		};
 	}
 };

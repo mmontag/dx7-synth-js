@@ -141,6 +141,11 @@
 					<knob step="1" min="0" max="7" to-number label="Pitch Sens" ng-model="presetCtrl.params.lfoPitchModSens"></knob>
 				</div>
 				<div class="param">
+					<div class="param-label">After Touch</div>
+					<toggle-button ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.aftertouchEnabled"></toggle-button>
+				</div>
+				<!-- TODO: Sync and Pitch EG
+				<div class="param">
 					<div class="param-label">Sync</div>
 					<label for="lfoSync">
 						<toggle-button ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.lfoSync"></toggle-button>
@@ -158,6 +163,7 @@
 						<slider step="1" min="0" max="99" to-number label="Pitch L{{i+1}}" ng-model="presetCtrl.params.pitchEnvelope.levels[i]"></slider>
 					</div>
 				</div>
+				-->
 			</div>
 		</div>
 	</div>
