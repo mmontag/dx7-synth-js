@@ -130,18 +130,9 @@
 		};
 	}, 100);
 
-//	var vizForeground = [47,52,9];
-//	var vizBackground = [206,224,72];
-//	// Setup frequency domain graph
-//	var frequencybox = new SpectrumBox(256, 35, vizForeground, vizBackground, "fftbox", audioContext);
-//	scriptProcessor.connect(frequencybox.getAudioNode());
-	// Setup time domain graph
-//	var wavebox = new SpectrumBox(256, 35, vizForeground, vizBackground, "wavebox", audioContext);
-//	wavebox.setType(SpectrumBox.Types.TIME);
-//	scriptProcessor.connect(wavebox.getAudioNode());
+	// Visualizer
 	var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext);
 	scriptProcessor.connect(visualizer.getAudioNode());
-
 
 	// Polyphony counter
 	setInterval(function() {
