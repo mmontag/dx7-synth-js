@@ -145,6 +145,11 @@
 					<div class="param-label">After Touch</div>
 					<toggle-button ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.aftertouchEnabled"></toggle-button>
 				</div>
+				<select ng-model="midiCtrl.midiFileIndex"
+						ng-options="midiCtrl.midiFiles.indexOf(file) as file for file in midiCtrl.midiFiles"></select>
+				<button class="dx7-button teal" ng-click="midiCtrl.onMidiPlay()">Play</button>
+				<button class="dx7-button teal" ng-click="midiCtrl.onMidiStop()">Stop</button>
+
 				<!-- TODO: Sync and Pitch EG
 				<div class="param">
 					<div class="param-label">Sync</div>
@@ -168,6 +173,9 @@
 			</div>
 		</div>
 	</div>
+	<script src="nfroidure/MIDIFile.js"></script>
+	<script src="nfroidure/MIDIPlayer.js"></script>
+
 	<script src="angular.min.js"></script>
 	<script src="mml-emitter.min.js"></script>
 	<script src="ngStorage.min.js"></script>

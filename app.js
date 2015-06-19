@@ -333,7 +333,42 @@
 		};
 	});
 
-	app.controller('MidiCtrl', function($scope) {
+	app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
+		// MIDI stuff
+		var self = this;
+		this.midiFileIndex = 0;
+		this.midiFiles = [
+			"midi/minute_waltz.mid",
+			"midi/bluebossa.mid",
+			"midi/cantaloup.mid",
+			"midi/chameleon.mid",
+			"midi/tunisia.mid",
+			"midi/sowhat.mid"
+		];
+		this.midiPlayer = new MIDIPlayer({
+			output: {
+				// Loopback MIDI to input handler.
+				send: function(data, timestamp) {
+					//console.log("MIDI File Event:", data, timestamp);
+					midi.send({ data: data, receivedTime: timestamp });
+				}
+			}
+		});
+
+		this.onMidiPlay = function() {
+			$http.get(this.midiFiles[this.midiFileIndex], {responseType: "arraybuffer"})
+				.success(function(data) {
+					console.log("Loaded %d bytes.", data.byteLength);
+					var midiFile = new MIDIFile(data);
+					self.midiPlayer.load(midiFile);
+					self.midiPlayer.play(function() { console.log("MIDI file playback ended."); });
+				});
+		};
+
+		this.onMidiStop = function() {
+			this.midiPlayer.stop();
+		};
+
 		var mml = null;
 		this.vizMode = 0;
 		var mmlDemos = [ "t92 l8 o4 $" +
@@ -465,7 +500,7 @@
 
 		window.addEventListener('keydown', this.onKeyDown, false);
 		window.addEventListener('keyup', this.onKeyUp, false);
-	});
+	}]);
 
 	app.controller('OperatorCtrl', function($scope) {
 		$scope.$watchGroup(['operator.oscMode', 'operator.freqCoarse', 'operator.freqFine', 'operator.detune'], function() {

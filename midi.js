@@ -17,11 +17,11 @@ var MIDI = function(synth) {
     } else if (cmd == 9) {
       synth.noteOn(noteNumber, velocity/99.0); // changed 127 to 99 to incorporate "overdrive"
     } else if (cmd == 10) {
-      synth.polyphonicAftertouch(noteNumber, velocity/127);
+      //synth.polyphonicAftertouch(noteNumber, velocity/127);
     } else if (cmd == 11) {
       synth.controller(noteNumber, velocity/127);
     } else if (cmd == 12) {
-      synth.programChange(noteNumber);
+      //synth.programChange(noteNumber);
     } else if (cmd == 13) {
       synth.channelAftertouch(noteNumber/127);
     } else if (cmd == 14) {
@@ -104,4 +104,7 @@ var MIDI = function(synth) {
     if (navigator.requestMIDIAccess)
       navigator.requestMIDIAccess().then( onMidiStarted, onMIDISystemError );
   });
+
+	// Expose midi message handler
+	this.send = midiMessageReceived;
 };
