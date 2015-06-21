@@ -343,7 +343,8 @@
 			"midi/cantaloup.mid",
 			"midi/chameleon.mid",
 			"midi/tunisia.mid",
-			"midi/sowhat.mid"
+			"midi/sowhat.mid",
+			"midi/got-a-match.mid"
 		];
 		this.midiPlayer = new MIDIPlayer({
 			output: {
@@ -367,6 +368,7 @@
 
 		this.onMidiStop = function() {
 			this.midiPlayer.stop();
+			synth.panic();
 		};
 
 		var mml = null;
