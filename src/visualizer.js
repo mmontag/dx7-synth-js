@@ -1,3 +1,5 @@
+var PIXI = require('pixi.js');
+
 function Visualizer(containerId, width, height, backgroundColor, foregroundColor, audioContext) {
 	this.render = this.render.bind(this);
 	this.width = width;
@@ -65,3 +67,5 @@ Visualizer.prototype.render = function() {
 	this.renderer.render(this.stage);
 	if (this.enabled) requestAnimFrame(this.render);
 };
+
+module.exports = Visualizer;

@@ -72,7 +72,7 @@ var MIDI = function(synth) {
     } else {  // new MIDIMap implementation:
       // clear the MIDI input select
       selectMidi.options.length = 0;
-      inputs = midiAccess.inputs.values();
+      var inputs = midiAccess.inputs.values();
       for (var input = inputs.next(); input && !input.done; input = inputs.next()){
         input = input.value;
         var str = input.name.toString().toLowerCase();
@@ -108,3 +108,5 @@ var MIDI = function(synth) {
 	// Expose midi message handler
 	this.send = midiMessageReceived;
 };
+
+module.exports = MIDI;

@@ -72,3 +72,5 @@ var SysexDX7 = {
 		};
 	}
 };
+
+module.exports = SysexDX7;
