@@ -1,0 +1,43 @@
+{
+  "name": "dx7-synth-js",
+  "version": "0.0.1",
+  "description": "DX7 FM synthesis using the Web Audio and Web MIDI API.",
+  "main": "app.js",
+  "scripts": {
+    "start": "webpack",
+    "dev": "webpack-dev-server --progress --colors --port 9090 --inline --hot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmontag/dx7-synth-js.git"
+  },
+  "keywords": [
+    "yamaha",
+    "dx7",
+    "synth",
+    "synthesizer",
+    "midi",
+    "audio"
+  ],
+  "author": "Matt Montag",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmontag/dx7-synth-js/issues"
+  },
+  "homepage": "https://github.com/mmontag/dx7-synth-js#readme",
+  "devDependencies": {
+    "json-loader": "^0.5.2",
+    "node-libs-browser": "^0.5.2",
+    "webpack": "^1.9.11",
+    "webpack-dev-server": "^1.9.0"
+  },
+  "dependencies": {
+    "angular": "^1.4.1",
+    "midifile": "^1.0.1",
+    "midiplayer": "0.0.2",
+    "mml-emitter": "git+https://github.com/mohayonao/mml-emitter.git",
+    "ngstorage": "^0.3.6",
+    "pixi": "^0.3.1",
+    "pixi.js": "^3.0.6"
+  }
+}

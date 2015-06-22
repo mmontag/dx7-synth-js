@@ -1,5 +1,8 @@
-var angular = require('angular');
+var Angular = require('angular');
+var ngStorage = require('ngstorage');
 var MMLEmitter = require('mml-emitter');
+var MIDIFile = require('midifile');
+var MIDIPlayer = require('midiplayer');
 
 var FMVoice = require('./voice-dx7');
 var MIDI = require('./midi');
@@ -7,7 +10,7 @@ var Synth = require('./synth');
 var SysexDX7 = require('./sysex-dx7');
 var Visualizer = require('./visualizer');
 
-var app = angular.module('synthApp', ['ngStorage']);
+var app = Angular.module('synthApp', ['ngStorage']);
 var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -568,9 +571,9 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 			self.presets = [];
 			for (var i = 0; i < self.basePresets.length; i++) {
 				if (self.$storage[i]) {
-					self.presets[i] = angular.copy(self.$storage[i]);
+					self.presets[i] = Angular.copy(self.$storage[i]);
 				} else {
-					self.presets[i] = angular.copy(self.basePresets[i]);
+					self.presets[i] = Angular.copy(self.basePresets[i]);
 				}
 			}
 			self.onChange();
@@ -592,7 +595,7 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 	};
 
 	this.save = function() {
-		this.$storage[this.selectedIndex] = angular.copy(this.presets[this.selectedIndex]);
+		this.$storage[this.selectedIndex] = Angular.copy(this.presets[this.selectedIndex]);
 		console.log("Saved preset %s.", this.presets[this.selectedIndex].name);
 	};
 
@@ -600,7 +603,7 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 		if (confirm('Are you sure you want to reset this patch?')) {
 			delete this.$storage[this.selectedIndex];
 			console.log("Reset preset %s.", this.presets[this.selectedIndex].name);
-			this.presets[this.selectedIndex] = angular.copy(self.basePresets[this.selectedIndex]);
+			this.presets[this.selectedIndex] = Angular.copy(self.basePresets[this.selectedIndex]);
 			this.onChange();
 		}
 	};
