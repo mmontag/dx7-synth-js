@@ -1,14 +1,11 @@
 var Operator = require('./operator');
 var EnvelopeDX7 = require('./envelope-dx7');
 var LfoDX7 = require('./lfo-dx7');
+var config = require('./config');
 
-// DX7 Synth Globals
-var SAMPLE_RATE = 44100;
-var LFO_RATE = 441;
-var LFO_SAMPLE_PERIOD = Math.floor(SAMPLE_RATE / LFO_RATE);
-var PERIOD = Math.PI * 2;
-var PERIOD_HALF = Math.PI;
-var PERIOD_RECIP = 1 / PERIOD;
+var PARAMS = {};
+var SAMPLE_RATE = config.sampleRate;
+var PERIOD = config.period;
 
 var OUTPUT_LEVEL_TABLE = [
 	0.000000, 0.000337, 0.000476, 0.000674, 0.000952, 0.001235, 0.001602, 0.001905, 0.002265, 0.002694,
@@ -86,10 +83,11 @@ function FMVoice(note, velocity, bend) {
 		// https://github.com/asb2m10/dexed/blob/1eda313316411c873f8388f971157664827d1ac9/Source/msfa/dx7note.cc#L55
 		// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
 		var params = PARAMS.operators[i];
-		var op = new Operator(params,
+		var op = new Operator(
+			params,
 			this.frequency,
 			new EnvelopeDX7(params.levels, params.rates),
-			new LfoDX7(i)
+			new LfoDX7(i, PARAMS)
 			//new EnvelopeDX7(PARAMS.pitchEnvelope.levels, PARAMS.pitchEnvelope.rates, true)
 		);
 		// TODO: DX7 accurate velocity sensitivity map
@@ -98,6 +96,9 @@ function FMVoice(note, velocity, bend) {
 	}
 	this.pitchBend(bend);
 }
+
+FMVoice.aftertouch = 0;
+FMVoice.mod = 0;
 
 FMVoice.frequencyFromNoteNumber = function(note) {
 	return 440 * Math.pow(2,(note-69)/12);
@@ -138,6 +139,21 @@ FMVoice.setPan = function(operatorIndex, value) {
 FMVoice.mapOutputLevel = function(input) {
 	var idx = Math.min(99, Math.max(0, Math.floor(input)));
 	return OUTPUT_LEVEL_TABLE[idx] * 1.27;
+};
+
+FMVoice.channelAftertouch = function(value) {
+	FMVoice.aftertouch = value;
+	FMVoice.updateMod();
+};
+
+FMVoice.modulationWheel = function(value) {
+	FMVoice.mod = value;
+	FMVoice.updateMod();
+};
+
+FMVoice.updateMod = function() {
+	var aftertouch = PARAMS.aftertouchEnabled ? FMVoice.aftertouch : 0;
+	PARAMS.controllerModVal = Math.min(1.27, aftertouch + FMVoice.mod); // Allow 27% overdrive
 };
 
 FMVoice.prototype.render = function() {

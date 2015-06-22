@@ -142,7 +142,7 @@ setTimeout(function() {
 }, 100);
 
 // Visualizer
-var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext);
+var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext );
 scriptProcessor.connect(visualizer.getAudioNode());
 
 // Polyphony counter

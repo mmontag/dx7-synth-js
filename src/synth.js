@@ -5,21 +5,19 @@ var PITCH_BEND_RANGE = 2; // semitones (in each direction)
 var MIDI_CC_MODULATION = 1,
 	MIDI_CC_SUSTAIN_PEDAL = 64;
 
+// TODO: Probably reduce responsibility to voice management; rename VoiceManager, MIDIChannel, etc.
 function Synth(voiceClass) {
 	this.voices = [];
 	this.voiceClass = voiceClass;
 	this.sustainPedalDown = false;
 	this.bend = 0;
-	this.aftertouch = 0;
-	this.mod = 0;
 }
 
 Synth.prototype.controller = function(controlNumber, value) {
 	// see http://www.midi.org/techspecs/midimessages.php#3
 	switch (controlNumber) {
 		case MIDI_CC_MODULATION:
-			this.mod = value;
-			this.updateMod();
+			this.voiceClass.modulationWheel(value);
 			break;
 		case MIDI_CC_SUSTAIN_PEDAL:
 			this.sustainPedal(value > 0.5);
@@ -28,13 +26,7 @@ Synth.prototype.controller = function(controlNumber, value) {
 };
 
 Synth.prototype.channelAftertouch = function(value) {
-	this.aftertouch = value;
-	this.updateMod();
-};
-
-Synth.prototype.updateMod = function() {
-	var aftertouch = PARAMS.aftertouchEnabled ? this.aftertouch : 0;
-	PARAMS.controllerModVal = Math.min(1.27, aftertouch + this.mod); // Allow 27% overdrive
+	this.voiceClass.channelAftertouch(value);
 };
 
 Synth.prototype.sustainPedal = function(down) {
@@ -78,6 +70,7 @@ Synth.prototype.noteOff = function(note) {
 };
 
 Synth.prototype.panic = function() {
+	this.sustainPedalDown = false;
 	for (var i = 0, l = this.voices.length; i < l; i++) {
 		if (this.voices[i])
 			this.voices[i].noteOff();

@@ -1,5 +1,9 @@
+var config = require('./config');
+
 // http://www.chipple.net/dx7/fig09-4.gif
 var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
+var PERIOD = config.period;
+var SAMPLE_RATE = config.sampleRate;
 
 function Operator(params, baseFrequency, envelope, lfo, pitchEnvelope) {
 	this.phase = 0;
@@ -35,3 +39,5 @@ Operator.prototype.noteOff = function() {
 Operator.prototype.isFinished = function() {
 	return this.envelope.isFinished();
 };
+
+module.exports = Operator;

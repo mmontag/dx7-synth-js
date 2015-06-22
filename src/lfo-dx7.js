@@ -1,6 +1,12 @@
-// Constants
-// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L1002
-var LFO_FREQUENCY_TABLE = [
+var config = require('./config');
+
+var PARAMS = {};
+var PERIOD = config.period;
+var PERIOD_HALF = config.period / 2;
+var PERIOD_RECIP = 1 / config.period;
+var LFO_RATE = config.lfoRate;
+var LFO_SAMPLE_PERIOD = config.lfoSamplePeriod;
+var LFO_FREQUENCY_TABLE = [ // see https://github.com/smbolton/hexter/tree/master/src/dx7_voice.c#L1002
 	0.062506,  0.124815,  0.311474,  0.435381,  0.619784,
 	0.744396,  0.930495,  1.116390,  1.284220,  1.496880,
 	1.567830,  1.738994,  1.910158,  2.081322,  2.252486,
@@ -63,7 +69,8 @@ var delayTimes = [0, 0, 0];
 var delayIncrements = [0, 0, 0];
 var delayVals = [0, 0, 1];
 
-function LfoDX7(opIdx) {
+function LfoDX7(opIdx, params) {
+	PARAMS = params;
 	this.operatorIndex = opIdx;
 	this.phase = 0;
 	this.pitchVal = 0;

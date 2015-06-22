@@ -4,7 +4,7 @@
   "description": "DX7 FM synthesis using the Web Audio and Web MIDI API.",
   "main": "app.js",
   "scripts": {
-    "start": "webpack",
+    "start": "webpack --optimize-minimize --optimize-dedupe",
     "dev": "webpack-dev-server --progress --colors --port 9090 --inline --hot"
   },
   "repository": {
