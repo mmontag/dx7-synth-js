@@ -13,46 +13,43 @@ var Visualizer = require('./visualizer');
 var config = require('./config');
 var defaultPresets = require('./default-presets');
 
+var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
+var MS_PER_SAMPLE = 1000 / config.sampleRate;
+var VIZ_MODE_NONE = 0;
+var VIZ_MODE_WAVE = 1;
+var VIZ_MODE_FFT = 2;
+var PARAM_START_MANIPULATION = 'param-start-manipulation';
+var PARAM_STOP_MANIPULATION = 'param-stop-manipulation';
+var PARAM_CHANGE = 'param-change';
+
 var app = Angular.module('synthApp', ['ngStorage']);
 var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
+
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
-var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
-var MS_PER_SAMPLE = 1000 / config.sampleRate;
-var VIZ_MODE_NONE = 0,
-	VIZ_MODE_WAVE = 1,
-	VIZ_MODE_FFT = 2;
-var PARAM_START_MANIPULATION = 'param-start-manipulation',
-	PARAM_STOP_MANIPULATION = 'param-stop-manipulation',
-	PARAM_CHANGE = 'param-change';
+var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext);
 
-// TODO: is setTimeout needed here?
-setTimeout(function() {
-	scriptProcessor.connect(audioContext.destination);
-	scriptProcessor.onaudioprocess = function(e) {
-		var buffer = e.outputBuffer;
-		var outputL = buffer.getChannelData(0);
-		var outputR = buffer.getChannelData(1);
-
-		var sampleTime = performance.now() - BUFFER_SIZE_MS;
-
-		for (var i = 0, length = buffer.length; i < length; i++) {
-			sampleTime += MS_PER_SAMPLE;
-			if (synth.eventQueue.length && synth.eventQueue[0].receivedTime < sampleTime) {
-				synth.processMidiEvent(synth.eventQueue.shift());
-			}
-
-			var output = synth.render();
-			outputL[i] = output[0];
-			outputR[i] = output[1];
-		}
-	};
-}, 100);
-
-// Visualizer
-var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext );
+scriptProcessor.connect(audioContext.destination);
 scriptProcessor.connect(visualizer.getAudioNode());
+scriptProcessor.onaudioprocess = function(e) {
+	var buffer = e.outputBuffer;
+	var outputL = buffer.getChannelData(0);
+	var outputR = buffer.getChannelData(1);
+
+	var sampleTime = performance.now() - BUFFER_SIZE_MS;
+
+	for (var i = 0, length = buffer.length; i < length; i++) {
+		sampleTime += MS_PER_SAMPLE;
+		if (synth.eventQueue.length && synth.eventQueue[0].receivedTime < sampleTime) {
+			synth.processMidiEvent(synth.eventQueue.shift());
+		}
+
+		var output = synth.render();
+		outputL[i] = output[0];
+		outputR[i] = output[1];
+	}
+};
 
 // Polyphony counter
 setInterval(function() {
