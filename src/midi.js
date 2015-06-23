@@ -4,6 +4,9 @@ var MIDI = function(synth) {
   var midiIn = null;
 
   function midiMessageReceived( ev ) {
+		synth.queueMidiEvent(ev);
+		return;
+
     var cmd = ev.data[0] >> 4;
     var channel = ev.data[0] & 0xf;
     var noteNumber = ev.data[1];

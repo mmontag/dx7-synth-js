@@ -11,7 +11,39 @@ function Synth(voiceClass) {
 	this.voiceClass = voiceClass;
 	this.sustainPedalDown = false;
 	this.bend = 0;
+	this.eventQueue = [];
 }
+
+Synth.prototype.queueMidiEvent = function(ev) {
+	this.eventQueue.push(ev);
+};
+
+Synth.prototype.processMidiEvent = function(ev) {
+	var cmd = ev.data[0] >> 4;
+	var channel = ev.data[0] & 0xf;
+	var noteNumber = ev.data[1];
+	var velocity = ev.data[2];
+	// console.log( "" + ev.data[0] + " " + ev.data[1] + " " + ev.data[2])
+	// console.log("midi: ch %d, cmd %d, note %d, vel %d", channel, cmd, noteNumber, velocity);
+	if (channel == 9) // Ignore drum channel
+		return;
+	if (cmd==8 || ((cmd==9)&&(velocity==0))) { // with MIDI, note on with velocity zero is the same as note off
+		this.noteOff(noteNumber);
+	} else if (cmd == 9) {
+		this.noteOn(noteNumber, velocity/99.0); // changed 127 to 99 to incorporate "overdrive"
+	} else if (cmd == 10) {
+		//this.polyphonicAftertouch(noteNumber, velocity/127);
+	} else if (cmd == 11) {
+		this.controller(noteNumber, velocity/127);
+	} else if (cmd == 12) {
+		//this.programChange(noteNumber);
+	} else if (cmd == 13) {
+		this.channelAftertouch(noteNumber/127);
+	} else if (cmd == 14) {
+		this.pitchBend( ((velocity * 128.0 + noteNumber)-8192)/8192.0 );
+	}
+
+};
 
 Synth.prototype.controller = function(controlNumber, value) {
 	// see http://www.midi.org/techspecs/midimessages.php#3
