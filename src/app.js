@@ -16,8 +16,8 @@ var defaultPresets = require('./default-presets');
 var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
 var MS_PER_SAMPLE = 1000 / config.sampleRate;
 var VIZ_MODE_NONE = 0;
-var VIZ_MODE_WAVE = 1;
-var VIZ_MODE_FFT = 2;
+var VIZ_MODE_FFT = 1;
+var VIZ_MODE_WAVE = 2;
 var PARAM_START_MANIPULATION = 'param-start-manipulation';
 var PARAM_STOP_MANIPULATION = 'param-stop-manipulation';
 var PARAM_CHANGE = 'param-change';
@@ -27,7 +27,7 @@ var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
 
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext);
+var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 
 scriptProcessor.connect(audioContext.destination);
@@ -375,19 +375,18 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 	};
 
 	this.onVizClick = function() {
-		this.vizMode = (this.vizMode + 1) % 2;
+		this.vizMode = (this.vizMode + 1) % 3;
 		switch (this.vizMode) {
 			case VIZ_MODE_NONE:
 				visualizer.disable();
-//					frequencybox.disable();
 				break;
 			case VIZ_MODE_FFT:
 				visualizer.enable();
-//					wavebox.disable();
+				visualizer.setModeFFT();
 				break;
 			case VIZ_MODE_WAVE:
-//					frequencybox.disable();
 				visualizer.enable();
+				visualizer.setModeWave();
 				break;
 		}
 	};
