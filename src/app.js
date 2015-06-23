@@ -27,12 +27,13 @@ var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
 
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 var visualizer = new Visualizer("analysis", 256, 35, 0xcee048, 0x2f3409, audioContext);
+var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 
 scriptProcessor.connect(audioContext.destination);
 scriptProcessor.connect(visualizer.getAudioNode());
-scriptProcessor.onaudioprocess = function(e) {
+// Attach to window to avoid GC. http://sriku.org/blog/2013/01/30/taming-the-scriptprocessornode
+scriptProcessor.onaudioprocess = window.audioProcess = function(e) {
 	var buffer = e.outputBuffer;
 	var outputL = buffer.getChannelData(0);
 	var outputR = buffer.getChannelData(1);
