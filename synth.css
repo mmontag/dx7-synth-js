@@ -7,7 +7,7 @@
 
 @font-face {
     font-family: "Digital-7 MonoItalic";
-    src: url("fonts/digital-7__mono_italic_.eot?") format("eot"), url("fonts/digital-7__mono_italic_.woff") format("woff"), url("fonts/digital-7__mono_italic_.ttf") format("truetype"), url("fonts/digital-7__mono_italic_.svg#Digital-7MonoItalic") format("svg");
+    src: url("fonts/digital-7__mono_italic_.eot") format("eot"), url("fonts/digital-7__mono_italic_.woff") format("woff"), url("fonts/digital-7__mono_italic_.ttf") format("truetype"), url("fonts/digital-7__mono_italic_.svg#Digital-7MonoItalic") format("svg");
     font-weight: normal;
     font-style: normal;
 }
