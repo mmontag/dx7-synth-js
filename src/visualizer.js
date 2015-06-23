@@ -15,8 +15,8 @@ function Visualizer(containerId, width, height, backgroundColor, foregroundColor
 	this.data = new Uint8Array(this.analyzer.frequencyBinCount);
 
 	// create a pixi stage and renderer instance
-	this.stage = new PIXI.Stage(backgroundColor);
-	this.renderer = PIXI.autoDetectRenderer(width, height);
+	this.stage = new PIXI.Container();
+	this.renderer = PIXI.autoDetectRenderer(width, height, {backgroundColor : backgroundColor});
 	this.el = this.renderer.view;
 	this.graphics = new PIXI.Graphics();
 	this.graphics.lineStyle(1, foregroundColor);
@@ -35,7 +35,7 @@ Visualizer.prototype.getAudioNode = function() {
 Visualizer.prototype.enable = function() {
 	this.enabled = true;
 	this.el.style.visibility = "visible";
-	requestAnimFrame(this.render);
+	requestAnimationFrame(this.render);
 };
 
 Visualizer.prototype.disable = function() {
@@ -56,6 +56,7 @@ Visualizer.prototype.render = function() {
 	graphics.lineStyle(1, this.foregroundColor, 0.5);
 	graphics.moveTo(0, height);
 	graphics.lineTo(this.width, height);
+
 	graphics.lineStyle(1, this.foregroundColor, 1);
 	for (var i = 0, l = data.length; i < l; i++) {
 		if (data[i] === 0) continue;
@@ -65,7 +66,7 @@ Visualizer.prototype.render = function() {
 
 	// render the stage
 	this.renderer.render(this.stage);
-	if (this.enabled) requestAnimFrame(this.render);
+	if (this.enabled) requestAnimationFrame(this.render);
 };
 
 module.exports = Visualizer;
