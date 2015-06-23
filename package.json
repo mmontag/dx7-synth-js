@@ -37,7 +37,6 @@
     "midiplayer": "0.0.2",
     "mml-emitter": "git+https://github.com/mohayonao/mml-emitter.git",
     "ngstorage": "^0.3.6",
-    "pixi": "^0.3.1",
     "pixi.js": "^3.0.6"
   }
 }
