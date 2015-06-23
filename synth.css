@@ -86,6 +86,7 @@ select.lcd {
     border-radius: 0;
     background-color: transparent;
     appearance: none;
+    -moz-appearance: none;
     -webkit-appearance: none;
     outline: 0;
     width: 160px;
@@ -124,19 +125,27 @@ select.lcd {
 .dx7-button {
     border: 0;
     appearance: none;
+    -moz-appearance: none;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 10.5px;
     padding: 0 5px;
     text-align: left;
-    line-height: 20px;
-    width: 60px;
+    line-height: 18px;
+    min-width: 60px;
     height: 18px;
     background-color: gray;
     color: #ffffff;
     font-family: Helvetica, Arial, sans-serif;
     outline: 0;
     margin-right: 4px;
+}
+
+select.dx7-button {
+    vertical-align: middle;
+    text-transform: none;
+    background-color: #36353b;
+    padding-right: 30px;
 }
 
 .purple {
@@ -296,6 +305,7 @@ select.lcd {
     display: inline-block;
     width: 60px;
     height: 43px;
+    line-height: 20px;
     box-sizing: border-box;
     text-align: center;
     padding: 4px;
@@ -306,6 +316,11 @@ select.lcd {
     letter-spacing: 1px;
     font-size: 20px;
     color: #fa0606;
+}
+@-moz-document url-prefix() {
+    .frequency-display {
+        line-height: 12px;
+    }
 }
 
 .param-label {
