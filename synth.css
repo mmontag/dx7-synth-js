@@ -98,7 +98,6 @@ select.lcd {
 
 .algorithm-diagram {
     position: absolute;
-    background: url(images/algorithm-01.svg);
     width: 80px;
     height: 520px;
     left: 20px;

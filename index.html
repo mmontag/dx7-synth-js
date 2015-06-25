@@ -10,7 +10,7 @@
 			<div class="dx7-top-panel">
 				<div class="dx7-logo"></div>
 				<div class="display">
-					<div class="lcd-text">{{ presetCtrl.paramDisplayText }}</div>
+					<div class="lcd-text" ng-bind="presetCtrl.paramDisplayText"></div>
 					<div id="analysis" class="analysis"></div>
 					<select ng-model="presetCtrl.selectedIndex"
 									ng-change="presetCtrl.onChange($event)"
@@ -61,13 +61,7 @@
 							<knob step="1" min="0" max="31" to-number ng-if="operator.oscMode == 0" label="Coarse" ng-model="operator.freqCoarse"></knob>
 							<knob step="1" min="0" max="3" to-number ng-if="operator.oscMode == 1" label="Coarse" ng-model="operator.freqCoarse"></knob>
 						</div>
-						<div class="frequency-display" ng-if="operator.oscMode == 0">
-							{{ operator.freqRatio | number: 2 }}
-						</div>
-						<div class="frequency-display" ng-if="operator.oscMode == 1">
-							<!-- TODO: make this nicer -->
-							{{ (operator.freqFixed | number).substr(0,5).replace(',','').replace('/\.$/','') }}
-						</div>
+						<div class="frequency-display" ng-bind="freqDisplay"></div>
 						<div class="param">
 							<knob step="1" min="0" max="99" to-number label="Fine" ng-model="operator.freqFine"></knob>
 						</div>

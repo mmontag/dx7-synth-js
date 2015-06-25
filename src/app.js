@@ -83,7 +83,7 @@ app.directive('toggleButton', function() {
 		transclude: true,
 		require: 'ngModel',
 		scope: {'ngModel': '='},
-		template: '<button type="button" class="dx7-toggle ng-class:{\'dx7-toggle-on\':ngModel}" data-toggle="button" ng-click="ngModel = !ngModel" ng-transclude></button>'
+		template: '<button type="button" class="dx7-toggle ng-class:{\'dx7-toggle-on\':ngModel}" data-toggle="button" ng-click="ngModel = 1 - ngModel" ng-transclude></button>'
 	};
 });
 
@@ -424,6 +424,9 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 app.controller('OperatorCtrl', function($scope) {
 	$scope.$watchGroup(['operator.oscMode', 'operator.freqCoarse', 'operator.freqFine', 'operator.detune'], function() {
 		FMVoice.updateFrequency($scope.operator.idx);
+		$scope.freqDisplay = $scope.operator.oscMode === 0 ?
+			parseFloat($scope.operator.freqRatio).toFixed(2).toString() :
+			$scope.operator.freqFixed.toString().substr(0,4).replace(/\.$/,'');
 	});
 	$scope.$watch('operator.volume', function() {
 		FMVoice.setOutputLevel($scope.operator.idx, $scope.operator.volume);
