@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack",
     "prod": "webpack --optimize-minimize --optimize-dedupe",
-    "dev": "webpack-dev-server --progress --colors --port 9090 --inline --hot"
+    "dev": "webpack-dev-server --progress --colors --port 9090 --inline --hot",
+    "deploy": "git checkout gh-pages; git rebase master; npm start; git add bundle.js; git commit -m'Bump bundle.js'; git push --force; git checkout master"
   },
   "repository": {
     "type": "git",
