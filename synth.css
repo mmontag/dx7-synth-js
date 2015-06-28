@@ -16,15 +16,15 @@ color-definitions {
 */
 
 @font-face {
-    font-family:"5x8 LCD HD44780U A02 Regular";
-    src: url("fonts/5x8_lcd_hd44780u_a02.eot") format("eot"),url("fonts/5x8_lcd_hd44780u_a02.woff") format("woff"),url("fonts/5x8_lcd_hd44780u_a02.ttf") format("truetype"),url("fonts/5x8_lcd_hd44780u_a02.svg#5x8-LCD-HD44780U-A02") format("svg");
+    font-family:'5x8 LCD';
+    src: url('fonts/5x8_lcd_hd44780u_a02.eot') format('eot'),url('fonts/5x8_lcd_hd44780u_a02.woff') format('woff'),url('fonts/5x8_lcd_hd44780u_a02.ttf') format('truetype'),url('fonts/5x8_lcd_hd44780u_a02.svg#5x8-LCD-HD44780U-A02') format('svg');
     font-weight:normal;
     font-style:normal;
 }
 
 @font-face {
-    font-family: "Digital-7 MonoItalic";
-    src: url("fonts/digital-7__mono_italic_.eot") format("eot"), url("fonts/digital-7__mono_italic_.woff") format("woff"), url("fonts/digital-7__mono_italic_.ttf") format("truetype"), url("fonts/digital-7__mono_italic_.svg#Digital-7MonoItalic") format("svg");
+    font-family: 'Digital 7';
+    src: url('fonts/digital-7__mono_italic_.eot') format('eot'), url('fonts/digital-7__mono_italic_.woff') format('woff'), url('fonts/digital-7__mono_italic_.ttf') format('truetype'), url('fonts/digital-7__mono_italic_.svg#Digital-7MonoItalic') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -83,7 +83,7 @@ body {
 }
 
 .lcd-text {
-    font-family: '5x8 LCD HD44780U A02 Regular', serif;
+    font-family: '5x8 LCD', serif;
     font-size: 16.27px;
     line-height: 16px;
     color: rgba(0,0,0,0.8);
@@ -93,7 +93,7 @@ body {
 }
 
 select.lcd {
-    font-family: '5x8 LCD HD44780U A02 Regular', serif;
+    font-family: '5x8 LCD', serif;
     font-size: 16.27px;
     line-height: 16px;
     border: 0;
@@ -319,7 +319,7 @@ select.dx7-button {
     background-image: url(images/frequency-display.svg);
     background-position: 0 0;
     background-repeat: no-repeat;
-    font-family: 'Digital-7 MonoItalic', monospace;
+    font-family: 'Digital 7', monospace;
     letter-spacing: 1px;
     font-size: 20px;
     color: #fa0606;
