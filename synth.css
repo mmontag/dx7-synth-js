@@ -29,9 +29,11 @@ color-definitions {
     font-style: normal;
 }
 
+html, body { height: 100%; }
+
 body {
     font-family: Helvetica, Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
     background-color: #4a4950;
     color: #ffffff;
     -webkit-touch-callout: none;
@@ -39,6 +41,19 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    display: flex;
+    flex: 1;
+    overflow: auto;
+    align-items: center;
+}
+
+.dx7-container {
+    background-color: #313036;
+    border: 1px solid #232326;
+    position: relative;
+    width: 1140px;
+    min-width: 1140px;
+    margin: auto;
 }
 
 .display {
@@ -197,13 +212,6 @@ select.dx7-button {
 
 .dx7-toggle-on:active {
     background-image: url('images/dx7-toggle-on-active.svg');
-}
-
-.dx7-container {
-    background-color: #313036;
-    border: 1px solid #232326;
-    position: relative;
-    width: 1140px;
 }
 
 .dx7-top-panel {
