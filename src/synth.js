@@ -10,7 +10,6 @@ function Synth(voiceClass) {
 	this.voices = [];
 	this.voiceClass = voiceClass;
 	this.sustainPedalDown = false;
-	this.bend = 0;
 	this.eventQueue = [];
 }
 
@@ -74,15 +73,15 @@ Synth.prototype.sustainPedal = function(down) {
 };
 
 Synth.prototype.pitchBend = function(value) {
-	this.bend = value * PITCH_BEND_RANGE;
+	this.voiceClass.pitchBend(value * PITCH_BEND_RANGE);
 	for (var i = 0, l = this.voices.length; i < l; i++) {
 		if (this.voices[i])
-			this.voices[i].pitchBend(this.bend);
+			this.voices[i].updatePitchBend();
 	}
 };
 
 Synth.prototype.noteOn = function(note, velocity) {
-		var voice = new this.voiceClass(note, velocity, this.bend);
+		var voice = new this.voiceClass(note, velocity);
 		if (this.voices.length >= POLYPHONY) {
 			// TODO: fade out removed voices
 			this.voices.shift(); // remove first

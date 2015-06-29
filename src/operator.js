@@ -5,12 +5,13 @@ var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
 var PERIOD = config.period;
 var SAMPLE_RATE = config.sampleRate;
 
-function Operator(params, baseFrequency, envelope, lfo, pitchEnvelope) {
+function Operator(params, baseFrequency, envelope, lfo) {
 	this.phase = 0;
 	this.val = 0;
 	this.params = params;
 	this.envelope = envelope;
-//	this.pitchEnvelope = pitchEnvelope;
+	// TODO: Pitch envelope
+	// this.pitchEnvelope = pitchEnvelope;
 	this.lfo = lfo;
 	this.updateFrequency(baseFrequency);
 }

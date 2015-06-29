@@ -71,7 +71,7 @@ var ALGORITHMS = [
 	{ outputMix: [0,1,2,3,4,5], modulationMatrix: [[], [], [], [], [], [5]] }         //32
 ];
 
-function FMVoice(note, velocity, bend) {
+function FMVoice(note, velocity) {
 	this.down = true;
 	this.note = parseInt(note, 10);
 	this.frequency = FMVoice.frequencyFromNoteNumber(this.note);
@@ -94,11 +94,12 @@ function FMVoice(note, velocity, bend) {
 		op.outputLevel = (1 + (this.velocity - 1) * (params.velocitySens / 7)) * params.outputLevel;
 		this.operators[i] = op;
 	}
-	this.pitchBend(bend);
+	this.updatePitchBend();
 }
 
 FMVoice.aftertouch = 0;
 FMVoice.mod = 0;
+FMVoice.bend = 0;
 
 FMVoice.frequencyFromNoteNumber = function(note) {
 	return 440 * Math.pow(2,(note-69)/12);
@@ -156,6 +157,10 @@ FMVoice.updateMod = function() {
 	PARAMS.controllerModVal = Math.min(1.27, aftertouch + FMVoice.mod); // Allow 27% overdrive
 };
 
+FMVoice.pitchBend = function(value) {
+	this.bend = value;
+};
+
 FMVoice.prototype.render = function() {
 	var algorithmIdx = PARAMS.algorithm - 1;
 	var modulationMatrix = ALGORITHMS[algorithmIdx].modulationMatrix;
@@ -204,8 +209,8 @@ FMVoice.prototype.noteOff = function() {
 	}
 };
 
-FMVoice.prototype.pitchBend = function(semitones) {
-	var frequency = FMVoice.frequencyFromNoteNumber(this.note + semitones);
+FMVoice.prototype.updatePitchBend = function() {
+	var frequency = FMVoice.frequencyFromNoteNumber(this.note + FMVoice.bend);
 	for (var i = 0; i < 6; i++) {
 		this.operators[i].updateFrequency(frequency);
 	}
