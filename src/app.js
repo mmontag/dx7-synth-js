@@ -28,6 +28,19 @@ var synth = new Synth(FMVoice);
 var midi = new MIDI(synth);
 
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// Quick and dirty iOS audio workaround. Sound can only be enabled in a user interaction handler.
+if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+	window.addEventListener("touchend", iOSUnlockSound, false);
+	function iOSUnlockSound(event) {
+		var source = audioContext.createBufferSource();
+		source.buffer = audioContext.createBuffer(1, 1, 22050);
+		source.connect(audioContext.destination);
+		source.noteOn(0);
+		console.log("Jump-starting iOS audio.");
+		window.removeEventListener("touchend", iOSUnlockSound, false);
+	}
+}
+
 var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 
@@ -109,6 +122,18 @@ app.directive('knob', function() {
 			scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
 		});
 
+		element.on('touchstart', function(e) {
+			startY = e.targetTouches[0].clientY;
+			startModel = scope.ngModel || 0;
+			down = true;
+			e.preventDefault();
+			e.stopPropagation();
+			window.addEventListener('touchmove', onMove);
+			window.addEventListener('touchend', onUp);
+			element[0].querySelector('.knob').focus();
+			scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
+		});
+
 		element.on('keydown', function(e) {
 			var code = e.keyCode;
 			if (code >= 37 && code <= 40) {
@@ -136,7 +161,10 @@ app.directive('knob', function() {
 
 		function onMove(e) {
 			if (down) {
-				var dy = (startY - e.clientY) * (max - min) / pixelRange;
+				var clientY = e.clientY;
+				if (e.targetTouches && e.targetTouches[0])
+					clientY = e.targetTouches[0].clientY;
+				var dy = (startY - clientY) * (max - min) / pixelRange;
 				// TODO: use 'step' attribute
 				scope.ngModel = Math.round(Math.max(min, Math.min(max, dy + startModel)));
 				apply();
@@ -147,6 +175,8 @@ app.directive('knob', function() {
 			down = false;
 			window.removeEventListener('mousemove', onMove);
 			window.removeEventListener('mouseup', onUp);
+			window.removeEventListener('touchmove', onMove);
+			window.removeEventListener('touchend', onUp);
 			scope.$emit(PARAM_STOP_MANIPULATION, scope.ngModel);
 		}
 
@@ -192,6 +222,18 @@ app.directive('slider', function() {
 			scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
 		});
 
+		element.on('touchstart', function(e) {
+			startY = e.targetTouches[0].clientY;
+			startModel = scope.ngModel || 0;
+			down = true;
+			e.preventDefault();
+			e.stopPropagation();
+			window.addEventListener('touchmove', onMove);
+			window.addEventListener('touchend', onUp);
+			element[0].querySelector('.slider').focus();
+			scope.$emit(PARAM_START_MANIPULATION, scope.ngModel);
+		});
+
 		element.on('keydown', function(e) {
 			var code = e.keyCode;
 			if (code >= 37 && code <= 40) {
@@ -219,7 +261,10 @@ app.directive('slider', function() {
 
 		function onMove(e) {
 			if (down) {
-				var dy = (startY - e.clientY) * (max - min) / pixelRange;
+				var clientY = e.clientY;
+				if (e.targetTouches && e.targetTouches[0])
+					clientY = e.targetTouches[0].clientY;
+				var dy = (startY - clientY) * (max - min) / pixelRange;
 				scope.ngModel = Math.round(Math.max(min, Math.min(max, dy + startModel)));
 				apply();
 			}
@@ -229,6 +274,8 @@ app.directive('slider', function() {
 			down = false;
 			window.removeEventListener('mousemove', onMove);
 			window.removeEventListener('mouseup', onUp);
+			window.removeEventListener('touchmove', onMove);
+			window.removeEventListener('touchend', onUp);
 			scope.$emit(PARAM_STOP_MANIPULATION, scope.ngModel);
 		}
 
