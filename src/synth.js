@@ -1,4 +1,3 @@
-var POLYPHONY = 12;
 var PER_VOICE_LEVEL = 0.125 / 6; // nominal per-voice level borrowed from Hexter
 var PITCH_BEND_RANGE = 2; // semitones (in each direction)
 
@@ -6,9 +5,10 @@ var MIDI_CC_MODULATION = 1,
 	MIDI_CC_SUSTAIN_PEDAL = 64;
 
 // TODO: Probably reduce responsibility to voice management; rename VoiceManager, MIDIChannel, etc.
-function Synth(voiceClass) {
+function Synth(voiceClass, polyphony) {
 	this.voices = [];
 	this.voiceClass = voiceClass;
+	this.polyphony = polyphony || 12;
 	this.sustainPedalDown = false;
 	this.eventQueue = [];
 }
@@ -82,7 +82,7 @@ Synth.prototype.pitchBend = function(value) {
 
 Synth.prototype.noteOn = function(note, velocity) {
 		var voice = new this.voiceClass(note, velocity);
-		if (this.voices.length >= POLYPHONY) {
+		if (this.voices.length >= this.polyphony) {
 			// TODO: fade out removed voices
 			this.voices.shift(); // remove first
 		}

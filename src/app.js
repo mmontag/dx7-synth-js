@@ -24,7 +24,7 @@ var PARAM_STOP_MANIPULATION = 'param-stop-manipulation';
 var PARAM_CHANGE = 'param-change';
 
 var app = Angular.module('synthApp', ['ngStorage']);
-var synth = new Synth(FMVoice);
+var synth = new Synth(FMVoice, config.polyphony);
 var midi = new MIDI(synth);
 
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
