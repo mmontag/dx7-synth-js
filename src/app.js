@@ -29,7 +29,7 @@ var midi = new MIDI(synth);
 
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 // Quick and dirty iOS audio workaround. Sound can only be enabled in a user interaction handler.
-if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
 	window.addEventListener("touchend", iOSUnlockSound, false);
 	function iOSUnlockSound(event) {
 		var source = audioContext.createBufferSource();

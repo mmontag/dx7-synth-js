@@ -5,6 +5,11 @@ var PERIOD = Math.PI * 2;
 var BUFFER_SIZE = 1024;
 var POLYPHONY = 12;
 
+if (/iPad|iPhone|iPod|Android/.test(navigator.userAgent)) {
+	BUFFER_SIZE = 4096;
+	POLYPHONY = 8;
+}
+
 var Config = {
 	sampleRate: SAMPLE_RATE,
 	lfoRate: LFO_RATE,
