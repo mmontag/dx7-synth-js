@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var Angular = require('angular');
 var ngStorage = require('ngstorage');
 var MMLEmitter = require('mml-emitter');
@@ -149,10 +150,10 @@ app.directive('knob', function() {
 			scope.$emit(PARAM_STOP_MANIPULATION, scope.ngModel);
 		}
 
-		function apply() {
+		var apply = _.throttle(function () {
 			scope.$emit(PARAM_CHANGE, scope.label + ": " + scope.ngModel);
 			scope.$apply();
-		}
+		}, 33);
 
 		scope.getDegrees = function() {
 			return (this.ngModel - min) / (max - min) * rotationRange - (rotationRange / 2) ;
@@ -231,10 +232,10 @@ app.directive('slider', function() {
 			scope.$emit(PARAM_STOP_MANIPULATION, scope.ngModel);
 		}
 
-		function apply() {
+		var apply = _.throttle(function() {
 			scope.$emit(PARAM_CHANGE, scope.label + ": " + scope.ngModel);
 			scope.$apply();
-		}
+		}, 33);
 
 		scope.getTop = function() {
 			return positionRange - ((this.ngModel - min) / (max - min) * positionRange);
