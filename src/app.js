@@ -257,6 +257,7 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 	var self = this;
 	this.midiFileIndex = 0;
 	this.midiFiles = [
+		"midi/rachmaninoff-op39-no6.mid",
 		"midi/minute_waltz.mid",
 		"midi/bluebossa.mid",
 		"midi/cantaloup.mid",
