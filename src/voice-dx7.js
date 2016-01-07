@@ -1,11 +1,6 @@
 var Operator = require('./operator');
 var EnvelopeDX7 = require('./envelope-dx7');
 var LfoDX7 = require('./lfo-dx7');
-var config = require('./config');
-
-var PARAMS = {};
-var SAMPLE_RATE = config.sampleRate;
-var PERIOD = config.period;
 
 var OUTPUT_LEVEL_TABLE = [
 	0.000000, 0.000337, 0.000476, 0.000674, 0.000952, 0.001235, 0.001602, 0.001905, 0.002265, 0.002694,
@@ -71,6 +66,8 @@ var ALGORITHMS = [
 	{ outputMix: [0,1,2,3,4,5], modulationMatrix: [[], [], [], [], [], [5]] }         //32
 ];
 
+var params = {};
+
 function FMVoice(note, velocity) {
 	this.down = true;
 	this.note = parseInt(note, 10);
@@ -82,16 +79,16 @@ function FMVoice(note, velocity) {
 		// see https://github.com/smbolton/hexter/blob/621202b4f6ac45ee068a5d6586d3abe91db63eaf/src/dx7_voice.c#L789
 		// https://github.com/asb2m10/dexed/blob/1eda313316411c873f8388f971157664827d1ac9/Source/msfa/dx7note.cc#L55
 		// https://groups.yahoo.com/neo/groups/YamahaDX/conversations/messages/15919
-		var params = PARAMS.operators[i];
+		var opParams = params.operators[i];
 		var op = new Operator(
-			params,
+			opParams,
 			this.frequency,
-			new EnvelopeDX7(params.levels, params.rates),
-			new LfoDX7(i, PARAMS)
-			//new EnvelopeDX7(PARAMS.pitchEnvelope.levels, PARAMS.pitchEnvelope.rates, true)
+			new EnvelopeDX7(opParams.levels, opParams.rates),
+			new LfoDX7(opParams)
+			//new EnvelopeDX7(params.pitchEnvelope.levels, params.pitchEnvelope.rates, true)
 		);
 		// TODO: DX7 accurate velocity sensitivity map
-		op.outputLevel = (1 + (this.velocity - 1) * (params.velocitySens / 7)) * params.outputLevel;
+		op.outputLevel = (1 + (this.velocity - 1) * (opParams.velocitySens / 7)) * opParams.outputLevel;
 		this.operators[i] = op;
 	}
 	this.updatePitchBend();
@@ -105,20 +102,21 @@ FMVoice.frequencyFromNoteNumber = function(note) {
 	return 440 * Math.pow(2,(note-69)/12);
 };
 
-FMVoice.setParams = function(params) {
-	PARAMS = params;
+FMVoice.setParams = function(globalParams) {
+	LfoDX7.setParams(globalParams);
+	params = globalParams;
 };
 
 FMVoice.setFeedback = function(value) {
-	PARAMS.fbRatio = Math.pow(2, (value - 7)); // feedback of range 0 to 7
+	params.fbRatio = Math.pow(2, (value - 7)); // feedback of range 0 to 7
 };
 
 FMVoice.setOutputLevel = function(operatorIndex, value) {
-	PARAMS.operators[operatorIndex].outputLevel = this.mapOutputLevel(value);
+	params.operators[operatorIndex].outputLevel = this.mapOutputLevel(value);
 };
 
 FMVoice.updateFrequency = function(operatorIndex) {
-	var op = PARAMS.operators[operatorIndex];
+	var op = params.operators[operatorIndex];
 	if (op.oscMode == 0) {
 		var freqCoarse = op.freqCoarse || 0.5; // freqCoarse of 0 is used for ratio of 0.5
 		op.freqRatio = freqCoarse * (1 + op.freqFine / 100);
@@ -132,7 +130,7 @@ FMVoice.updateLFO = function() {
 };
 
 FMVoice.setPan = function(operatorIndex, value) {
-	var op = PARAMS.operators[operatorIndex];
+	var op = params.operators[operatorIndex];
 	op.ampL = Math.cos(Math.PI / 2 * (value + 50) / 100);
 	op.ampR = Math.sin(Math.PI / 2 * (value + 50) / 100);
 };
@@ -153,8 +151,8 @@ FMVoice.modulationWheel = function(value) {
 };
 
 FMVoice.updateMod = function() {
-	var aftertouch = PARAMS.aftertouchEnabled ? FMVoice.aftertouch : 0;
-	PARAMS.controllerModVal = Math.min(1.27, aftertouch + FMVoice.mod); // Allow 27% overdrive
+	var aftertouch = params.aftertouchEnabled ? FMVoice.aftertouch : 0;
+	params.controllerModVal = Math.min(1.27, aftertouch + FMVoice.mod); // Allow 27% overdrive
 };
 
 FMVoice.pitchBend = function(value) {
@@ -162,7 +160,7 @@ FMVoice.pitchBend = function(value) {
 };
 
 FMVoice.prototype.render = function() {
-	var algorithmIdx = PARAMS.algorithm - 1;
+	var algorithmIdx = params.algorithm - 1;
 	var modulationMatrix = ALGORITHMS[algorithmIdx].modulationMatrix;
 	var outputMix = ALGORITHMS[algorithmIdx].outputMix;
 	var outputScaling = 1 / outputMix.length;
@@ -170,10 +168,10 @@ FMVoice.prototype.render = function() {
 	var outputR = 0;
 	for (var i = 5; i >= 0; i--) {
 		var mod = 0;
-		if (PARAMS.operators[i].enabled) {
+		if (params.operators[i].enabled) {
 			for (var j = 0, length = modulationMatrix[i].length; j < length; j++) {
 				var modulator = modulationMatrix[i][j];
-				if (PARAMS.operators[modulator].enabled) {
+				if (params.operators[modulator].enabled) {
 					var modOp = this.operators[modulator];
 					if (modulator === i) {
 						// Operator modulates itself; use feedback ratio
@@ -181,7 +179,7 @@ FMVoice.prototype.render = function() {
 						// http://d.pr/i/1kuZ7/3h7jQN7w
 						// https://code.google.com/p/music-synthesizer-for-android/wiki/Dx7Hardware
 						// http://music.columbia.edu/pipermail/music-dsp/2006-June/065486.html
-						mod += modOp.val * PARAMS.fbRatio;
+						mod += modOp.val * params.fbRatio;
 					} else {
 						mod += modOp.val * modOp.outputLevel;
 					}
@@ -191,9 +189,9 @@ FMVoice.prototype.render = function() {
 		this.operators[i].render(mod);
 	}
 	for (var k = 0, length = outputMix.length; k < length; k++) {
-		if (PARAMS.operators[outputMix[k]].enabled) {
+		if (params.operators[outputMix[k]].enabled) {
 			var carrier = this.operators[outputMix[k]];
-			var carrierParams = PARAMS.operators[outputMix[k]];
+			var carrierParams = params.operators[outputMix[k]];
 			var carrierLevel = carrier.val * carrier.outputLevel;
 			outputL += carrierLevel * carrierParams.ampL;
 			outputR += carrierLevel * carrierParams.ampR;
@@ -217,7 +215,7 @@ FMVoice.prototype.updatePitchBend = function() {
 };
 
 FMVoice.prototype.isFinished = function() {
-	var outputMix = ALGORITHMS[PARAMS.algorithm - 1].outputMix;
+	var outputMix = ALGORITHMS[params.algorithm - 1].outputMix;
 	for (var i = 0; i < outputMix.length; i++) {
 		if (!this.operators[outputMix[i]].isFinished()) return false;
 	}
