@@ -26,45 +26,46 @@ var PARAM_CHANGE = 'param-change';
 var app = Angular.module('synthApp', ['ngStorage']);
 var synth = new Synth(FMVoice, config.polyphony);
 var midi = new MIDI(synth);
-
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
+var scriptProcessor = null;
+
 // Quick and dirty iOS audio workaround. Sound can only be enabled in a user interaction handler.
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
 	window.addEventListener("touchend", iOSUnlockSound, false);
 	function iOSUnlockSound(event) {
-		var source = audioContext.createBufferSource();
-		source.buffer = audioContext.createBuffer(1, 1, 22050);
-		source.connect(audioContext.destination);
-		source.noteOn(0);
-		console.log("Jump-starting iOS audio.");
 		window.removeEventListener("touchend", iOSUnlockSound, false);
+		console.log("Jump-starting iOS audio.");
+		initializeAudio();
 	}
+} else {
+	initializeAudio();
 }
 
-var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
-var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
+function initializeAudio() {
+	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
+	scriptProcessor.connect(audioContext.destination);
+	scriptProcessor.connect(visualizer.getAudioNode());
+	// Attach to window to avoid GC. http://sriku.org/blog/2013/01/30/taming-the-scriptprocessornode
+	scriptProcessor.onaudioprocess = window.audioProcess = function (e) {
+		var buffer = e.outputBuffer;
+		var outputL = buffer.getChannelData(0);
+		var outputR = buffer.getChannelData(1);
 
-scriptProcessor.connect(audioContext.destination);
-scriptProcessor.connect(visualizer.getAudioNode());
-// Attach to window to avoid GC. http://sriku.org/blog/2013/01/30/taming-the-scriptprocessornode
-scriptProcessor.onaudioprocess = window.audioProcess = function(e) {
-	var buffer = e.outputBuffer;
-	var outputL = buffer.getChannelData(0);
-	var outputR = buffer.getChannelData(1);
+		var sampleTime = performance.now() - BUFFER_SIZE_MS;
 
-	var sampleTime = performance.now() - BUFFER_SIZE_MS;
+		for (var i = 0, length = buffer.length; i < length; i++) {
+			sampleTime += MS_PER_SAMPLE;
+			if (synth.eventQueue.length && synth.eventQueue[0].receivedTime < sampleTime) {
+				synth.processMidiEvent(synth.eventQueue.shift());
+			}
 
-	for (var i = 0, length = buffer.length; i < length; i++) {
-		sampleTime += MS_PER_SAMPLE;
-		if (synth.eventQueue.length && synth.eventQueue[0].receivedTime < sampleTime) {
-			synth.processMidiEvent(synth.eventQueue.shift());
+			var output = synth.render();
+			outputL[i] = output[0];
+			outputR[i] = output[1];
 		}
-
-		var output = synth.render();
-		outputL[i] = output[0];
-		outputR[i] = output[1];
-	}
-};
+	};
+}
 
 // Polyphony counter
 setInterval(function() {
