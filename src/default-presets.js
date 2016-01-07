@@ -14,9 +14,12 @@ var defaultPresets = [
 			"rates": [0, 0, 0, 0],
 			"levels": [50, 50, 50, 50]
 		},
+		"controllerModVal": 0,
+		"aftertouchEnabled": 0,
 		"operators": [
 			{
 				"idx": 0,
+				"enabled": true,
 				"rates": [96, 0, 12, 70],
 				"levels": [99, 95, 95, 0],
 				"detune": 1,
@@ -31,7 +34,8 @@ var defaultPresets = [
 			},
 			{
 				"idx": 1,
-				"rates": [99, 95, 0, 0],
+				"enabled": true,
+				"rates": [99, 95, 0, 70],
 				"levels": [99, 96, 89, 0],
 				"detune": -1,
 				"velocitySens": 0,
@@ -45,7 +49,8 @@ var defaultPresets = [
 			},
 			{
 				"idx": 2,
-				"rates": [99, 87, 0, 0],
+				"enabled": true,
+				"rates": [99, 87, 0, 70],
 				"levels": [93, 90, 0, 0],
 				"detune": 0,
 				"velocitySens": 0,
@@ -59,6 +64,7 @@ var defaultPresets = [
 			},
 			{
 				"idx": 3,
+				"enabled": true,
 				"rates": [99, 92, 28, 60],
 				"levels": [99, 90, 0, 0],
 				"detune": 2,
@@ -73,7 +79,8 @@ var defaultPresets = [
 			},
 			{
 				"idx": 4,
-				"rates": [99, 99, 97, 0],
+				"enabled": true,
+				"rates": [99, 99, 97, 70],
 				"levels": [99, 65, 60, 0],
 				"detune": -2,
 				"velocitySens": 0,
@@ -87,7 +94,8 @@ var defaultPresets = [
 			},
 			{
 				"idx": 5,
-				"rates": [99, 70, 60, 0],
+				"enabled": true,
+				"rates": [99, 70, 60, 70],
 				"levels": [99, 99, 97, 0],
 				"detune": 0,
 				"velocitySens": 0,
