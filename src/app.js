@@ -123,6 +123,12 @@ app.directive('knob', function() {
 		});
 
 		element.on('touchstart', function(e) {
+			if (e.touches.length > 1) {
+				// Don't interfere with any multitouch gestures
+				onUp(e);
+				return;
+			}
+
 			startY = e.targetTouches[0].clientY;
 			startModel = scope.ngModel || 0;
 			down = true;
@@ -223,6 +229,12 @@ app.directive('slider', function() {
 		});
 
 		element.on('touchstart', function(e) {
+			if (e.touches.length > 1) {
+				// Don't interfere with any multitouch gestures
+				onUp(e);
+				return;
+			}
+
 			startY = e.targetTouches[0].clientY;
 			startModel = scope.ngModel || 0;
 			down = true;
