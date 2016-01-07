@@ -22,6 +22,7 @@ var VIZ_MODE_WAVE = 2;
 var PARAM_START_MANIPULATION = 'param-start-manipulation';
 var PARAM_STOP_MANIPULATION = 'param-stop-manipulation';
 var PARAM_CHANGE = 'param-change';
+var DEFAULT_PARAM_TEXT = '--';
 
 var app = Angular.module('synthApp', ['ngStorage']);
 var synth = new Synth(FMVoice, config.polyphony);
@@ -29,18 +30,6 @@ var midi = new MIDI(synth);
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = null;
-
-// Quick and dirty iOS audio workaround. Sound can only be enabled in a user interaction handler.
-if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-	window.addEventListener("touchend", iOSUnlockSound, false);
-	function iOSUnlockSound(event) {
-		window.removeEventListener("touchend", iOSUnlockSound, false);
-		console.log("Jump-starting iOS audio.");
-		initializeAudio();
-	}
-} else {
-	initializeAudio();
-}
 
 function initializeAudio() {
 	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
@@ -503,12 +492,22 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 
 	this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
 	this.presets = defaultPresets;
-	this.params = this.presets[0]; // TODO: move params into a nested controller/scope?
 	this.selectedIndex = 0;
-	this.paramDisplayText = "--";
+	this.paramDisplayText = DEFAULT_PARAM_TEXT;
 
 	var paramManipulating = false;
 	var paramDisplayTimer = null;
+
+	function flashParam(value) {
+		self.paramDisplayText = value;
+		clearTimeout(paramDisplayTimer);
+		if (!paramManipulating) {
+			paramDisplayTimer = setTimeout(function() {
+				self.paramDisplayText = DEFAULT_PARAM_TEXT;
+				$scope.$apply();
+			}, 1500);
+		}
+	}
 
 	$scope.$on(PARAM_START_MANIPULATION, function(e, value) {
 		paramManipulating = true;
@@ -523,17 +522,6 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 	$scope.$on(PARAM_CHANGE, function(e, value) {
 		flashParam(value);
 	});
-
-	function flashParam(value) {
-		self.paramDisplayText = value;
-		clearTimeout(paramDisplayTimer);
-		if (!paramManipulating) {
-			paramDisplayTimer = setTimeout(function() {
-				self.paramDisplayText = "--";
-				$scope.$apply();
-			}, 1500);
-		}
-	}
 
 	$http.get('roms/ROM1A.SYX')
 		.success(function(data) {
@@ -597,5 +585,22 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 	});
 
 	self.onChange();
+
+  // Dirty iOS audio workaround. Sound can only be enabled in a touch handler.
+	if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+		window.addEventListener("touchend", iOSUnlockSound, false);
+		function iOSUnlockSound() {
+			window.removeEventListener("touchend", iOSUnlockSound, false);
+			var buffer = audioContext.createBuffer(1, 1, 22050);
+			var source = audioContext.createBufferSource();
+			source.buffer = buffer;
+			source.connect(audioContext.destination);
+			if(source.play){ source.play(0); } else if(source.noteOn){ source.noteOn(0); }
+			flashParam("Starting audio...");
+			initializeAudio();
+		}
+	} else {
+		initializeAudio();
+	}
 
 }]);
