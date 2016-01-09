@@ -46,7 +46,7 @@ var SysexDX7 = {
 			operator.freqCoarse = Math.floor(oscData.charCodeAt(15) >> 1);
 			operator.freqFine = oscData.charCodeAt(16);
 			// Extended/non-standard parameters
-			operator.pan = 0;
+			operator.pan = ((i + 1)%3 - 1) * 25; // Alternate panning: -25, 0, 25, -25, 0, 25
 			operator.idx = i;
 			operator.enabled = true;
 		}

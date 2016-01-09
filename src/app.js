@@ -535,11 +535,11 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 					self.presets[i] = Angular.copy(self.basePresets[i]);
 				}
 			}
+			self.selectedIndex = 10; // Select E.PIANO 1
 			self.onChange();
 		});
 
 	this.onChange = function() {
-		console.log("changed preset!", this.selectedIndex);
 		this.params = this.presets[this.selectedIndex];
 		FMVoice.setParams(this.params);
 		// TODO: separate UI parameters from internal synth parameters
