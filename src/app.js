@@ -10,6 +10,7 @@ var MIDI = require('./midi');
 var Synth = require('./synth');
 var SysexDX7 = require('./sysex-dx7');
 var Visualizer = require('./visualizer');
+var Reverb = require('./reverb');
 
 var config = require('./config');
 var defaultPresets = require('./default-presets');
@@ -31,6 +32,10 @@ function setupAudioGraph() {
 	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 	scriptProcessor.connect(audioContext.destination);
 	scriptProcessor.connect(visualizer.getAudioNode());
+	Reverb.extend(audioContext);
+	var reverbNode = audioContext.createReverbFromUrl("impulses/church-saint-laurentius.wav");
+	scriptProcessor.connect(reverbNode);
+	reverbNode.connect(audioContext.destination);
 	var bufferSize = scriptProcessor.bufferSize || config.bufferSize;
 	var bufferSizeMs = 1000 * bufferSize / config.sampleRate;
 	var msPerSample = 1000 / config.sampleRate;
