@@ -45,7 +45,7 @@ function initializeAudio() {
 
 		for (var i = 0, length = buffer.length; i < length; i++) {
 			sampleTime += MS_PER_SAMPLE;
-			if (synth.eventQueue.length && synth.eventQueue[0].receivedTime < sampleTime) {
+			if (synth.eventQueue.length && synth.eventQueue[0].timeStamp < sampleTime) {
 				synth.processMidiEvent(synth.eventQueue.shift());
 			}
 
@@ -319,8 +319,8 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 		output: {
 			// Loopback MIDI to input handler.
 			send: function(data, timestamp) {
-				//console.log("MIDI File Event:", data, timestamp);
-				midi.send({ data: data, receivedTime: timestamp });
+				// Synthetic MIDIMessageEvent
+				midi.send({ data: data, timeStamp: timestamp });
 			}
 		}
 	});
