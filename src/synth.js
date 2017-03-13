@@ -44,6 +44,11 @@ Synth.prototype.processMidiEvent = function(ev) {
 
 };
 
+Synth.prototype.getLatestNoteDown = function() {
+	var voice = this.voices[this.voices.length - 1] || { note: 64 };
+	return voice.note;
+};
+
 Synth.prototype.controller = function(controlNumber, value) {
 	// see http://www.midi.org/techspecs/midimessages.php#3
 	switch (controlNumber) {

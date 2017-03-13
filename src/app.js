@@ -42,6 +42,8 @@ function initializeAudio() {
 		var outputR = buffer.getChannelData(1);
 
 		var sampleTime = performance.now() - BUFFER_SIZE_MS;
+		var visualizerFrequency = FMVoice.frequencyFromNoteNumber(synth.getLatestNoteDown());
+		visualizer.setPeriod(config.sampleRate / visualizerFrequency);
 
 		for (var i = 0, length = buffer.length; i < length; i++) {
 			sampleTime += MS_PER_SAMPLE;
