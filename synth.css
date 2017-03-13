@@ -77,6 +77,11 @@ body {
     width: 256px;
 }
 
+.analysis canvas {
+    height: 100%;
+    width: 100%;
+}
+
 #fftbox, #wavebox {
     position: absolute;
     image-rendering: pixelated;

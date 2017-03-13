@@ -19,7 +19,7 @@ function Visualizer(containerId, width, height, backgroundColor, foregroundColor
 
 	// create a pixi stage and renderer instance
 	this.stage = new PIXI.Container();
-	this.renderer = PIXI.autoDetectRenderer(width, height, {backgroundColor : backgroundColor});
+	this.renderer = PIXI.autoDetectRenderer(width, height, {backgroundColor : backgroundColor, resolution: 2 });
 	this.el = this.renderer.view;
 	this.graphics = new PIXI.Graphics();
 	this.graphics.lineStyle(1, foregroundColor);
