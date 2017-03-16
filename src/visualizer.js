@@ -69,7 +69,7 @@ Visualizer.prototype.setModeDisabled = function() {
 Visualizer.prototype.setModeFFT = function() {
 	this.mode = MODE_FFT;
 	this.enable();
-	this.analyzer.fftSize = Math.pow(2, Math.ceil(Math.log(this.width) / Math.LN2)) * 4;
+	this.analyzer.fftSize = Math.pow(2, Math.ceil(Math.log(this.width) / Math.LN2)) * 16;
 	this.data = new Uint8Array(this.analyzer.frequencyBinCount);
 };
 
@@ -105,19 +105,23 @@ Visualizer.prototype.render = function() {
 			data = this.data;
 			this.analyzer.getByteFrequencyData(data);
 
-			graphics.lineStyle(1, this.foregroundColor, 0.3);
+			graphics.lineStyle(1, this.foregroundColor, 0.2);
 			graphics.moveTo(0, height);
 			graphics.lineTo(this.width, height);
 
-			graphics.lineStyle(1, this.foregroundColor, 1);
+			graphics.lineStyle(1, this.foregroundColor, 0.66);
 			for (i = 0, l = data.length; i < l; i++) {
 				if (data[i] === 0) continue;
-				graphics.moveTo(i, height);
-				graphics.lineTo(i, height - (data[i] >> 3));
+				graphics.moveTo(i/4, height);
+				graphics.lineTo(i/4, height - (data[i] >> 3));
 			}
 		} else if (this.mode == MODE_WAVE) {
 			data = this.floatData;
 			this.analyzer.getFloatTimeDomainData(data);
+
+			graphics.lineStyle(1, this.foregroundColor, 0.2);
+			graphics.moveTo(0, height/2);
+			graphics.lineTo(this.width, height/2);
 
 			// Normalize...
 			var max = data.reduce(function (a, b) {
