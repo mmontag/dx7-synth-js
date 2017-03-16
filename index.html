@@ -10,7 +10,7 @@
 				<div class="dx7-logo"></div>
 				<div class="display">
 					<div class="lcd-text" ng-bind="presetCtrl.paramDisplayText"></div>
-					<div id="analysis" class="analysis"></div>
+					<div id="analysis" class="analysis" ng-click="midiCtrl.onVizClick()"></div>
 					<select ng-model="presetCtrl.selectedIndex"
 									ng-change="presetCtrl.onChange($event)"
 									ng-options="presetCtrl.presets.indexOf(preset) as preset.name for preset in presetCtrl.presets"
