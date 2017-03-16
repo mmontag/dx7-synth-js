@@ -16,9 +16,6 @@ var defaultPresets = require('./default-presets');
 
 var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
 var MS_PER_SAMPLE = 1000 / config.sampleRate;
-var VIZ_MODE_NONE = 0;
-var VIZ_MODE_FFT = 1;
-var VIZ_MODE_WAVE = 2;
 var PARAM_START_MANIPULATION = 'param-start-manipulation';
 var PARAM_STOP_MANIPULATION = 'param-stop-manipulation';
 var PARAM_CHANGE = 'param-change';
@@ -343,7 +340,6 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 	};
 
 	var mml = null;
-	this.vizMode = 0;
 	var mmlDemos = [ "t92 l8 o4 $" +
 		"[>cg<cea]2.        [>cg<ceg]4" +
 		"[>>a<a<c+fa+]2.    [>>a <a <c+ e a]4" +
@@ -428,20 +424,7 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 	};
 
 	this.onVizClick = function() {
-		this.vizMode = (this.vizMode + 1) % 3;
-		switch (this.vizMode) {
-			case VIZ_MODE_NONE:
-				visualizer.disable();
-				break;
-			case VIZ_MODE_FFT:
-				visualizer.enable();
-				visualizer.setModeFFT();
-				break;
-			case VIZ_MODE_WAVE:
-				visualizer.enable();
-				visualizer.setModeWave();
-				break;
-		}
+		visualizer.cycleMode();
 	};
 
 	this.onKeyDown = function(ev) {

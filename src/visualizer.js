@@ -1,7 +1,10 @@
 var PIXI = require('pixi.js');
 
-var MODE_WAVE = 0;
-var MODE_FFT = 1;
+var MODE_DISABLED = 0;
+var MODE_WAVE = 1;
+var MODE_FFT = 2;
+var MODE_COUNT = 3;
+
 var WAVE_PIXELS_PER_SAMPLE = 0.4;
 
 function Visualizer(containerId, width, height, backgroundColor, foregroundColor, audioContext) {
@@ -14,7 +17,6 @@ function Visualizer(containerId, width, height, backgroundColor, foregroundColor
 	// set up audio analyser node
 	this.analyzer = audioContext.createAnalyser();
 	this.analyzer.smoothingTimeConstant = 0.25;
-	this.setModeFFT();
 	this.setPeriod(this.width);
 
 	// create a pixi stage and renderer instance
@@ -28,7 +30,9 @@ function Visualizer(containerId, width, height, backgroundColor, foregroundColor
 	// add the renderer view element to the DOM
 	var containerEl = document.getElementById(containerId);
 	containerEl.appendChild(this.el);
-	this.disable();
+
+	// set default mode
+	this.setModeWave();
 }
 
 Visualizer.prototype.getAudioNode = function() {
@@ -41,25 +45,44 @@ Visualizer.prototype.enable = function() {
 	requestAnimationFrame(this.render);
 };
 
-Visualizer.prototype.disable = function() {
+Visualizer.prototype.cycleMode = function() {
+	this.mode = (this.mode + 1) % MODE_COUNT;
+	switch (this.mode) {
+		case MODE_DISABLED:
+			this.setModeDisabled();
+			break;
+		case MODE_WAVE:
+			this.setModeWave();
+			break;
+		case MODE_FFT:
+			this.setModeFFT();
+			break;
+	}
+};
+
+Visualizer.prototype.setModeDisabled = function() {
+	this.mode = MODE_DISABLED;
 	this.enabled = false;
 	this.el.style.visibility = "hidden";
 };
 
 Visualizer.prototype.setModeFFT = function() {
 	this.mode = MODE_FFT;
+	this.enable();
 	this.analyzer.fftSize = Math.pow(2, Math.ceil(Math.log(this.width) / Math.LN2)) * 4;
 	this.data = new Uint8Array(this.analyzer.frequencyBinCount);
 };
 
 Visualizer.prototype.setModeWave = function() {
 	this.mode = MODE_WAVE;
+	this.enable();
 	// Analyzer needs extra data padding to do phase alignment across frames
 	this.analyzer.fftSize = 2048;
 	this.floatData = new Float32Array(this.analyzer.frequencyBinCount);
 };
 
 Visualizer.prototype.setPeriod = function(samplePeriod) {
+	// TODO: make WAVE_PIXELS_PER_SAMPLE dynamic so that low freqs don't get cut off
 	if (this.mode != MODE_WAVE) return;
 	this.period = samplePeriod;
 };
