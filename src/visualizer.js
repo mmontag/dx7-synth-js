@@ -80,7 +80,12 @@ Visualizer.prototype.setModeDisabled = function() {
 Visualizer.prototype.setModeFFT = function() {
 	this.mode = MODE_FFT;
 	this.enable();
-	this.analyzer.fftSize = Math.pow(2, Math.ceil(Math.log(this.width) / Math.LN2)) * 16;
+	try {
+		this.analyzer.fftSize = Math.pow(2, Math.ceil(Math.log(this.width) / Math.LN2)) * 16;
+	} catch (e) {
+		// Probably went over a browser limitation, try 2048...
+		this.analyzer.fftSize = 2048;
+	}
 	this.data = new Uint8Array(this.analyzer.frequencyBinCount);
 };
 
@@ -135,12 +140,12 @@ Visualizer.prototype.render = function() {
 			graphics.lineTo(this.width, height/2);
 
 			// Normalize...
-			var max = data.reduce(function (a, b) {
-				a = Math.abs(a);
-				b = Math.abs(b);
-				return a > b ? a : b;
-			}, 0);
-			var scale = Math.min(1 / max, 16) * 0.48;
+			var max = 0;
+			for (i = 0, l = data.length; i < l; i++) {
+				var abs = Math.abs(data[i]);
+				if (abs > max) max = abs;
+			}
+			var scale = Math.min(1 / max, 4) * 0.48;
 			var sampleOffset = (sampleTime) % this.period - this.period;
 
 			graphics.lineStyle(1, this.foregroundColor, 1);
