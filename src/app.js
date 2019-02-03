@@ -28,7 +28,7 @@ var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = null;
 
-function initializeAudio() {
+function setupAudioGraph() {
 	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 	scriptProcessor.connect(audioContext.destination);
 	scriptProcessor.connect(visualizer.getAudioNode());
@@ -54,6 +54,8 @@ function initializeAudio() {
 		}
 	};
 }
+
+setupAudioGraph();
 
 // Polyphony counter
 setInterval(function() {
@@ -485,6 +487,7 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 
 	function flashParam(value) {
 		self.paramDisplayText = value;
+		$scope.$apply();
 		clearTimeout(paramDisplayTimer);
 		if (!paramManipulating) {
 			paramDisplayTimer = setTimeout(function() {
@@ -571,21 +574,27 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 
 	self.onChange();
 
-  // Dirty iOS audio workaround. Sound can only be enabled in a touch handler.
-	if (/iPad|iPhone|iPod/.test(navigator.platform)) {
-		window.addEventListener("touchend", iOSUnlockSound, false);
-		function iOSUnlockSound() {
-			window.removeEventListener("touchend", iOSUnlockSound, false);
-			var buffer = audioContext.createBuffer(1, 1, 22050);
-			var source = audioContext.createBufferSource();
-			source.buffer = buffer;
-			source.connect(audioContext.destination);
-			if(source.play){ source.play(0); } else if(source.noteOn){ source.noteOn(0); }
-			flashParam("Starting audio...");
-			initializeAudio();
+	// Audio context unlock that should work in both iOS and Chrome
+	function unlockAudioContext(context) {
+		if (context.state === 'suspended') {
+			var events = ['touchstart', 'touchend', 'mousedown', 'keydown'];
+			var unlock = function unlock() {
+				events.forEach(function (event) {
+					document.body.removeEventListener(event, unlock)
+				});
+
+				console.log("Resuming audio context...");
+				context.resume();
+				flashParam("** DX7-JS **");
+
+			};
+
+			events.forEach(function (event) {
+				document.body.addEventListener(event, unlock, false)
+			});
 		}
-	} else {
-		initializeAudio();
 	}
+
+	unlockAudioContext(audioContext);
 
 }]);
