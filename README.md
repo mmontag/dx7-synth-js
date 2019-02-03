@@ -8,6 +8,16 @@ Use a MIDI or QWERTY keyboard to play the synth.
 
 [Live demo of DX7 Synth JS](http://mmontag.github.io/dx7-synth-js/)
 
+Controls: 
+
+1. **QWERTY keys** to play notes
+1. **Space bar** panic (all notes off)
+1. **Control** hold down to increase QWERTY velocity
+1. **Mouse wheel** over knobs and sliders to increase/decrease value
+1. **Click or touch and drag up/down** on knobs and sliders to increase/decrease value
+1. **Arrow up/down** on knobs and sliders to increase/decrease value
+1. **Tab** moves between controls
+
 Many thanks to:
 
 - John Chowning and Yamaha
