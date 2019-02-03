@@ -28,10 +28,13 @@
   },
   "homepage": "https://github.com/mmontag/dx7-synth-js#readme",
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
     "json-loader": "^0.5.2",
     "node-libs-browser": "^0.5.2",
-    "webpack": "^1.9.11",
-    "webpack-dev-server": "^1.9.0"
+    "webpack": "^4.16.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
     "angular": "^1.4.1",
