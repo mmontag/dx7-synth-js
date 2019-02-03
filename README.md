@@ -1,4 +1,4 @@
-DX7 Synth
+DX7 Synth JS
 =================
 
 ![](images/yamaha-dx-7.png)
