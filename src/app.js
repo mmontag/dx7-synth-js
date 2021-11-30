@@ -24,8 +24,6 @@ var synth = new Synth(FMVoice, config.polyphony);
 var midi = new MIDI(synth);
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 config.sampleRate = audioContext.sampleRate;
-var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
-var MS_PER_SAMPLE = 1000 / config.sampleRate;
 var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = null;
 
@@ -33,18 +31,21 @@ function setupAudioGraph() {
 	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
 	scriptProcessor.connect(audioContext.destination);
 	scriptProcessor.connect(visualizer.getAudioNode());
+	var bufferSize = scriptProcessor.bufferSize || config.bufferSize;
+	var bufferSizeMs = 1000 * bufferSize / config.sampleRate;
+	var msPerSample = 1000 / config.sampleRate;
 	// Attach to window to avoid GC. http://sriku.org/blog/2013/01/30/taming-the-scriptprocessornode
 	scriptProcessor.onaudioprocess = window.audioProcess = function (e) {
 		var buffer = e.outputBuffer;
 		var outputL = buffer.getChannelData(0);
 		var outputR = buffer.getChannelData(1);
 
-		var sampleTime = performance.now() - BUFFER_SIZE_MS;
+		var sampleTime = performance.now() - bufferSizeMs;
 		var visualizerFrequency = FMVoice.frequencyFromNoteNumber(synth.getLatestNoteDown());
 		visualizer.setPeriod(config.sampleRate / visualizerFrequency);
 
 		for (var i = 0, length = buffer.length; i < length; i++) {
-			sampleTime += MS_PER_SAMPLE;
+			sampleTime += msPerSample;
 			if (synth.eventQueue.length && synth.eventQueue[0].timeStamp < sampleTime) {
 				synth.processMidiEvent(synth.eventQueue.shift());
 			}
