@@ -32,7 +32,9 @@ function Visualizer(containerId, width, height, backgroundColor, foregroundColor
 
 	// create a pixi stage and renderer instance
 	this.stage = new PIXI.Container();
-	this.renderer = PIXI.autoDetectRenderer(width, height, {backgroundColor : backgroundColor, resolution: 2 });
+	this.renderer = PIXI.autoDetectRenderer(width, height, {backgroundColor : backgroundColor, resolution: 1 });
+	// Kill PIXI mouse event listeners (https://github.com/pixijs/pixijs/issues/1672).
+	this.renderer.plugins.interaction.destroy()
 	this.el = this.renderer.view;
 	this.graphics = new PIXI.Graphics();
 	this.graphics.lineStyle(1, foregroundColor);
@@ -99,7 +101,7 @@ Visualizer.prototype.setModeWave = function() {
 
 Visualizer.prototype.setPeriod = function(samplePeriod) {
 	// TODO: make WAVE_PIXELS_PER_SAMPLE dynamic so that low freqs don't get cut off
-	if (this.mode != MODE_WAVE) return;
+	if (this.mode !== MODE_WAVE) return;
 	this.period = samplePeriod;
 };
 
@@ -112,12 +114,12 @@ Visualizer.prototype.render = function() {
 
 	// The time and data are sometimes duplicated. In this case we can bypass rendering.
 	var sampleTime = this.analyzer.context.sampleRate * this.analyzer.context.currentTime;
-	if (sampleTime != this.lastTime) {
+	if (sampleTime !== this.lastTime) {
 
 		graphics.clear();
 		this.lastTime = sampleTime;
 
-		if (this.mode == MODE_FFT) {
+		if (this.mode === MODE_FFT) {
 			data = this.data;
 			this.analyzer.getByteFrequencyData(data);
 
@@ -131,7 +133,7 @@ Visualizer.prototype.render = function() {
 				graphics.moveTo(i/4, height);
 				graphics.lineTo(i/4, height - (data[i] >> 3));
 			}
-		} else if (this.mode == MODE_WAVE) {
+		} else if (this.mode === MODE_WAVE) {
 			data = this.floatData;
 			this.analyzer.getFloatTimeDomainData(data);
 
