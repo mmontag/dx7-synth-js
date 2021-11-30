@@ -1,9 +1,8 @@
 var config = require('./config');
 
-var PERIOD = config.period;
-var PERIOD_HALF = config.period / 2;
-var PERIOD_RECIP = 1 / config.period;
-var LFO_RATE = config.lfoRate;
+var PERIOD = Math.PI * 2;
+var PERIOD_HALF = PERIOD / 2;
+var PERIOD_RECIP = 1 / PERIOD;
 var LFO_SAMPLE_PERIOD = config.lfoSamplePeriod;
 var LFO_FREQUENCY_TABLE = [ // see https://github.com/smbolton/hexter/tree/master/src/dx7_voice.c#L1002
 	0.062506,  0.124815,  0.311474,  0.435381,  0.619784,
@@ -84,7 +83,7 @@ function LfoDX7(opParams) {
 
 LfoDX7.prototype.render = function() {
 	var amp;
-	if (this.counter % LFO_SAMPLE_PERIOD == 0) {
+	if (this.counter % LFO_SAMPLE_PERIOD === 0) {
 		switch (params.lfoWaveform) {
 			case LFO_MODE_TRIANGLE:
 				if (this.phase < PERIOD_HALF)
@@ -154,11 +153,12 @@ LfoDX7.setParams = function(globalParams) {
 
 LfoDX7.update = function() {
 	var frequency = LFO_FREQUENCY_TABLE[params.lfoSpeed];
-	phaseStep = PERIOD * frequency/LFO_RATE; // radians per sample
+	var lfoRate = config.sampleRate/LFO_SAMPLE_PERIOD;
+	phaseStep = PERIOD * frequency/lfoRate; // radians per sample
 	ampModDepth = params.lfoAmpModDepth * 0.01;
 	// ignoring amp mod table for now. it seems shallow LFO_AMP_MOD_TABLE[params.lfoAmpModDepth];
-	delayTimes[LFO_DELAY_ONSET] = (LFO_RATE * 0.001753 * Math.pow(params.lfoDelay, 3.10454) + 169.344 - 168) / 1000;
-	delayTimes[LFO_DELAY_RAMP] = (LFO_RATE * 0.321877 * Math.pow(params.lfoDelay, 2.01163) + 494.201 - 168) / 1000;
+	delayTimes[LFO_DELAY_ONSET] = (lfoRate * 0.001753 * Math.pow(params.lfoDelay, 3.10454) + 169.344 - 168) / 1000;
+	delayTimes[LFO_DELAY_RAMP] = (lfoRate * 0.321877 * Math.pow(params.lfoDelay, 2.01163) + 494.201 - 168) / 1000;
 	delayIncrements[LFO_DELAY_RAMP] = 1 / (delayTimes[LFO_DELAY_RAMP] - delayTimes[LFO_DELAY_ONSET]);
 };
 

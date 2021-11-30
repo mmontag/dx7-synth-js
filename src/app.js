@@ -14,8 +14,6 @@ var Visualizer = require('./visualizer');
 var config = require('./config');
 var defaultPresets = require('./default-presets');
 
-var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
-var MS_PER_SAMPLE = 1000 / config.sampleRate;
 var PARAM_START_MANIPULATION = 'param-start-manipulation';
 var PARAM_STOP_MANIPULATION = 'param-stop-manipulation';
 var PARAM_CHANGE = 'param-change';
@@ -25,6 +23,9 @@ var app = Angular.module('synthApp', ['ngStorage']);
 var synth = new Synth(FMVoice, config.polyphony);
 var midi = new MIDI(synth);
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+config.sampleRate = audioContext.sampleRate;
+var BUFFER_SIZE_MS = 1000 * config.bufferSize / config.sampleRate;
+var MS_PER_SAMPLE = 1000 / config.sampleRate;
 var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = null;
 

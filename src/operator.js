@@ -2,8 +2,7 @@ var config = require('./config');
 
 // http://www.chipple.net/dx7/fig09-4.gif
 var OCTAVE_1024 = 1.0006771307; //Math.exp(Math.log(2)/1024);
-var PERIOD = config.period;
-var SAMPLE_RATE = config.sampleRate;
+var PERIOD = Math.PI * 2;
 
 function Operator(params, baseFrequency, envelope, lfo) {
 	this.phase = 0;
@@ -20,7 +19,7 @@ Operator.prototype.updateFrequency = function(baseFrequency) {
 	var frequency = this.params.oscMode ?
 		this.params.freqFixed :
 		baseFrequency * this.params.freqRatio * Math.pow(OCTAVE_1024, this.params.detune);
-	this.phaseStep = PERIOD * frequency / SAMPLE_RATE; // radians per sample
+	this.phaseStep = PERIOD * frequency / config.sampleRate; // radians per sample
 };
 
 Operator.prototype.render = function(mod) {
