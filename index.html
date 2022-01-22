@@ -139,6 +139,9 @@
 					<div class="param-label">After Touch</div>
 					<toggle-button ng-true-value="1" ng-false-value="0" ng-model="presetCtrl.params.aftertouchEnabled"></toggle-button>
 				</div>
+				<div class="param">
+					<knob step="1" min="0" max="99" to-number label="Reverb" ng-model="presetCtrl.reverb"></knob>
+				</div>
 				<select class="dx7-button"
 						ng-model="midiCtrl.midiFileIndex"
 						ng-options="midiCtrl.midiFiles.indexOf(file) as file for file in midiCtrl.midiFiles"></select>

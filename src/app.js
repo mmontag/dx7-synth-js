@@ -27,15 +27,21 @@ var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 config.sampleRate = audioContext.sampleRate;
 var visualizer = new Visualizer("analysis", 256, 35, 0xc0cf35, 0x2f3409, audioContext);
 var scriptProcessor = null;
+var reverbGainNode = null;
 
 function setupAudioGraph() {
-	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
-	scriptProcessor.connect(audioContext.destination);
-	scriptProcessor.connect(visualizer.getAudioNode());
 	Reverb.extend(audioContext);
 	var reverbNode = audioContext.createReverbFromUrl("impulses/church-saint-laurentius.wav");
+	reverbGainNode = audioContext.createGain();
+	reverbNode.connect(reverbGainNode);
+
+	scriptProcessor = audioContext.createScriptProcessor(config.bufferSize, 0, 2);
+	scriptProcessor.connect(visualizer.getAudioNode());
 	scriptProcessor.connect(reverbNode);
-	reverbNode.connect(audioContext.destination);
+
+	scriptProcessor.connect(audioContext.destination);
+	reverbGainNode.connect(audioContext.destination);
+
 	var bufferSize = scriptProcessor.bufferSize || config.bufferSize;
 	var bufferSizeMs = 1000 * bufferSize / config.sampleRate;
 	var msPerSample = 1000 / config.sampleRate;
@@ -574,6 +580,11 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 		'presetCtrl.params.lfoWaveform'
 	], function() {
 		FMVoice.updateLFO();
+	});
+
+	$scope.presetCtrl.reverb = 33;
+	$scope.$watch('presetCtrl.reverb', (value) => {
+		reverbGainNode.gain.value = 4 * value / 100;
 	});
 
 	self.onChange();
