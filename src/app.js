@@ -46,10 +46,7 @@ function setupAudioGraph() {
 
 		for (var i = 0, length = buffer.length; i < length; i++) {
 			sampleTime += msPerSample;
-			if (synth.eventQueue.length && synth.eventQueue[0].timeStamp < sampleTime) {
-				synth.processMidiEvent(synth.eventQueue.shift());
-			}
-
+			synth.processQueuedEventsUpToSampleTime(sampleTime);
 			var output = synth.render();
 			outputL[i] = output[0];
 			outputR[i] = output[1];
