@@ -3,38 +3,9 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 30 24" style="enable-background:new 0 0 30 24;" xml:space="preserve">
 <g>
-	<rect x="0" style="fill:#313036;" width="30" height="24"/>
-	<rect x="1" y="1" style="fill:#CCCCCC;" width="28" height="6"/>
-	<rect x="10" y="3" style="fill:#2F171A;" width="10" height="2"/>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
+	<rect style="fill:#3F3D43;" width="30" height="24"/>
+	<rect x="1" y="1" style="fill:#564A66;" width="28" height="7"/>
+	<rect style="opacity:0.08;fill:#000;" width="30" height="24"/>
+	<rect x="9" y="3" style="fill:#2f171a;" width="12" height="3"/>
 </g>
 </svg>
