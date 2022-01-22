@@ -6,7 +6,7 @@ DX7 Synth JS
 DX7 FM synthesis using the Web Audio and Web MIDI API. Works in Chrome and Firefox.
 Use a MIDI or QWERTY keyboard to play the synth.
 
-[Live demo of DX7 Synth JS](http://mmontag.github.io/dx7-synth-js/)
+[Live demo of DX7 Synth JS](https://mmontag.github.io/dx7-synth-js/)
 
 Controls: 
 
