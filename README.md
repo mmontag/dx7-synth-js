@@ -8,6 +8,8 @@ Use a MIDI or QWERTY keyboard to play the synth.
 
 [Live demo of DX7 Synth JS](https://mmontag.github.io/dx7-synth-js/)
 
+This is a high-level emulation of DX7 using FM synthesis principles. It's not super accurate, but good enough to produce most DX7 presets. Stereo panning has been added to the operators.
+
 Controls: 
 
 1. **QWERTY keys** to play notes
