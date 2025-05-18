@@ -253,7 +253,7 @@ app.directive('slider', function() {
 			if (code >= 37 && code <= 40) {
 				e.preventDefault();
 				e.stopPropagation();
-				if (code == 38 || code == 39) {
+				if (code === 38 || code === 39) {
 					scope.ngModel = Math.min(scope.ngModel + 1, max);
 				} else {
 					scope.ngModel = Math.max(scope.ngModel - 1, min);
@@ -427,7 +427,7 @@ app.controller('MidiCtrl', ['$scope', function($scope) {
 	};
 
 	this.onDemoClick = function(idx) {
-		if (mml && mml._ended == 0) {
+		if (mml && mml._ended === 0) {
 			mml.stop();
 			synth.panic();
 			mml = null;
@@ -444,7 +444,9 @@ app.controller('MidiCtrl', ['$scope', function($scope) {
 	this.onKeyDown = function(ev) {
 		var note = qwertyNotes[ev.keyCode];
 		if (ev.metaKey) return false;
-		if (ev.keyCode == 32) {
+		if (ev.keyCode === 32) {
+			if (mml) { mml.stop(); mml = null; }
+			self.midiPlayer.stop();
 			synth.panic();
 			ev.stopPropagation();
 			ev.preventDefault();
