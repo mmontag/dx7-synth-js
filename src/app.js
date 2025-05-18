@@ -4,6 +4,7 @@ var ngStorage = require('ngstorage');
 var MMLEmitter = require('mml-emitter');
 var MIDIFile = require('midifile');
 var MIDIPlayer = require('midiplayer');
+var axios = require('axios').default;
 
 var FMVoice = require('./voice-dx7');
 var MIDI = require('./midi');
@@ -312,7 +313,7 @@ app.directive('slider', function() {
 	};
 });
 
-app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('MidiCtrl', ['$scope', function($scope) {
 	// MIDI stuff
 	var self = this;
 	this.midiFileIndex = 0;
@@ -337,8 +338,9 @@ app.controller('MidiCtrl', ['$scope', '$http', function($scope, $http) {
 	});
 
 	this.onMidiPlay = function() {
-		$http.get(this.midiFiles[this.midiFileIndex], {responseType: "arraybuffer"})
-			.success(function(data) {
+		axios.get(this.midiFiles[this.midiFileIndex], {responseType: "arraybuffer"})
+			.then(function(response) {
+				const data = response.data;
 				console.log("Loaded %d bytes.", data.byteLength);
 				var midiFile = new MIDIFile(data);
 				self.midiPlayer.load(midiFile);
@@ -484,7 +486,7 @@ app.controller('OperatorCtrl', function($scope) {
 	});
 });
 
-app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($scope, $localStorage, $http) {
+app.controller('PresetCtrl', ['$scope', '$localStorage', function ($scope, $localStorage) {
 	var self = this;
 
 	this.lfoWaveformOptions = [ 'Triangle', 'Saw Down', 'Saw Up', 'Square', 'Sine', 'Sample & Hold' ];
@@ -521,8 +523,9 @@ app.controller('PresetCtrl', ['$scope', '$localStorage', '$http', function ($sco
 		flashParam(value);
 	});
 
-	$http.get('roms/ROM1A.SYX')
-		.success(function(data) {
+	axios.get('roms/ROM1A.SYX')
+		.then(function(response) {
+			var data = response.data;
 			self.basePresets = SysexDX7.loadBank(data);
 			self.$storage = $localStorage;
 			self.presets = [];
